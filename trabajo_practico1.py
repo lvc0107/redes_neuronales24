@@ -123,6 +123,8 @@ def il(x, p):
     return gl * (v - vl)
 
 
+
+
 # correspondientes tiempos caracteristicos y valores de equilibrios
 
 
@@ -190,6 +192,39 @@ def f(x, t, p):
     )
 
 
+
+
+
+
+# EJERCICiO 2.2
+
+
+plt.xlabel("$v$ [mV]")
+plt.xlim(-50, 120)
+plt.ylim(0.1, 1.1)
+v = np.linspace(-50, 120, 1000)
+
+plt.plot(v, 0*v, label="", linestyle="--", c="red")
+plt.plot(v, 0*v+1, label="", linestyle="--", c="red")
+plt.plot(v, np.vectorize(n_inf)(v), label="$n_{\\infty}$", c="orange")
+plt.plot(v, np.vectorize(m_inf)(v), label="$m_{\\infty}$", c="green")
+plt.plot(v, np.vectorize(h_inf)(v), label="$h_{\\infty}$", c="cyan")
+
+plt.show()
+
+
+# EJERCICiO 2.3
+ #TODO HACER
+
+
+
+
+# EJERCICiO 3.1
+
+
+
+#condiciones iniciales
+
 # parametros para las probabilidades de activacion o inactivacion de las compuertas
 v = 0  # potencial de la membrana
 nt = 0  # probabilidad de activacion de K (potasio)
@@ -205,57 +240,38 @@ gl = 0.3 #0.3𝑚𝑆/𝑐𝑚2
 vna = 120 #120𝑚𝑉
 vk = -12 #−12𝑚𝑉
 vl = 10.6 #10.6𝑚𝑉
-i = 10 #∼10𝜇𝐴/𝑐𝑚2
+
+
+def i(t):
+    """
+    ∼ 10𝜇𝐴/𝑐𝑚2  : corriente de entrada al tiempo 𝑡
+    """
+    return 10 
 p = [c, gna, gk, gl, vna, vk, vl, i]
 
 
+a = 0      # tiempo inicial
+b = 500    # tiempo final
+h = 0.01   # paso
+k = int((b - a) / h) # canitdad de pasos en el tiempo dado
+
+ 
+#3.1)
+t, w = integrador_ode(rk4, f, x, a, b, k, p)
+print(w[0, :])
 
 
 
 
+#3.2) GRAficar lo anterior
 
 
 
+plt.xlabel("$t$ [ms]")
+plt.ylabel("$VTODO completar que estamos graficando")
+valores_t = t
+valores_v = w[0, :]
 
 
-
-
-
-
-
-
-# =============================================================================
-# 
-# 
-# 
-# 
-# x0 = 1.0  # condiciones iniciales
-# y0 = 1.0
-# z0 = 1.0
-# r0 = np.array([x0, y0, z0])  # inicio de trayectoria
-# 
-# 
-# a = 0
-# b = 300
-# h = 0.01
-# k = int((b - a) / h)
-# 
-# t, r = integrador_ode(rk4, f, r0, a, b, k, p)
-# t3 = t
-# x3, y3, z3 = r
-# =============================================================================
-
-
-plt.xlabel("$v$ [mV]")
-plt.xlim(-50, 120)
-plt.ylim(0.1, 1.1)
-v = np.linspace(-50, 120, 1000)
-
-plt.plot(v, 0*v, label="", linestyle="--", c="red")
-plt.plot(v, 0*v+1, label="", linestyle="--", c="red")
-plt.plot(v, np.vectorize(n_inf)(v), label="$n_{\\infty}$", c="orange")
-plt.plot(v, np.vectorize(m_inf)(v), label="$m_{\\infty}$", c="green")
-plt.plot(v, np.vectorize(h_inf)(v), label="$h_{\\infty}$", c="cyan")
-
-plt.show()
+plt.plot(valores_t, valores_v, label="COMPLETAR", linestyle="-", c="red")
 
