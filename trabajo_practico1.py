@@ -203,7 +203,6 @@ def f(x, t, p):
 
 # graficamos valores de equilibrio de las distintas fracciones de compuertas
 
-
 plt.xlabel("$v$ [mV]")
 plt.xlim(-50, 120)
 plt.ylim(-0.1, 1.1)
@@ -218,9 +217,25 @@ plt.title("Valores de equilibrio de las distintas fracciones de compuertas abier
 plt.legend()
 plt.show()
 
+# EJERCICiO 2.3 Grafique los tiempos característicos de activación  𝜏𝑚 ,  𝜏𝑛  e inactivación  𝜏ℎ  asociados a los distintos tipos de canales, en función de la diferencia de potencial de membrana  𝑣 .
 
-# EJERCICiO 2.3
- #TODO HACER
+plt.xlabel("$v$ [mV]")
+plt.ylabel("$\\tau$ [ms]")
+
+plt.xlim(-50, 120)
+v = np.linspace(-50, 120, 1000)
+
+plt.plot(v, 0*v, label="", linestyle="--", c="blue")
+plt.plot(v, np.vectorize(tau_n)(v), label="$\\tau_n$", c="orange")
+plt.plot(v, np.vectorize(tau_m)(v), label="$\\tau_m$", c="green")
+plt.plot(v, np.vectorize(tau_h)(v), label="$\\tau_h$", c="red")
+plt.title("Tiempos Caracteristicos")
+plt.legend()
+plt.show()
+
+
+
+
 
 
 
