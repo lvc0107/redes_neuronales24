@@ -182,6 +182,9 @@ def f(x, t, p):
     c = p[0]
     i = p[7]
 
+    """
+    Sistema de 4 ecuaciones ODE acopladas
+    """
     return np.array(
         [
             (i(t) - ina(x, p) - ik(x, p) - il(x, p)) / c,  # ecuacion para dv/dt
@@ -198,10 +201,12 @@ def f(x, t, p):
 
 # EJERCICiO 2.2
 
+# graficamos valores de equilibrio de las distintas fracciones de compuertas
+
 
 plt.xlabel("$v$ [mV]")
 plt.xlim(-50, 120)
-plt.ylim(0.1, 1.1)
+plt.ylim(-0.1, 1.1)
 v = np.linspace(-50, 120, 1000)
 
 plt.plot(v, 0*v, label="", linestyle="--", c="red")
@@ -209,7 +214,8 @@ plt.plot(v, 0*v+1, label="", linestyle="--", c="red")
 plt.plot(v, np.vectorize(n_inf)(v), label="$n_{\\infty}$", c="orange")
 plt.plot(v, np.vectorize(m_inf)(v), label="$m_{\\infty}$", c="green")
 plt.plot(v, np.vectorize(h_inf)(v), label="$h_{\\infty}$", c="cyan")
-
+plt.title("Valores de equilibrio de las distintas fracciones de compuertas abiertas")
+plt.legend()
 plt.show()
 
 
