@@ -267,7 +267,7 @@ def i(t):
     """
     ∼ 10𝜇𝐴/𝑐𝑚2  : corriente de entrada al tiempo 𝑡
     """
-    return 10 
+    return 0  # por ahora
 p = [c, gna, gk, gl, vna, vk, vl, i]
 
 
@@ -284,15 +284,18 @@ print(w[0, :])
 
 
 
-#3.2) GRAficar lo anterior
+#3.2)  Grafique el potencial de membrana en función del tiempo, i.e. grafique  𝑣(𝑡)  vs  𝑡  en el rango calculado.
 
 
+plt.title("Potencial de Membrana")
 
 plt.xlabel("$t$ [ms]")
-plt.ylabel("$VTODO completar que estamos graficando")
-valores_t = t
-valores_v = w[0, :]
+plt.ylabel("$ v(t) [mV] ")
+plt.xlim(0, 50)
+plt.ylim(-20, 120)
 
 
-plt.plot(valores_t, valores_v, label="COMPLETAR", linestyle="-", c="red")
-
+plt.plot(t, 0*t, linestyle="--", c="red")
+plt.plot(t, w[0], linestyle="-", c="b")
+plt.legend()
+plt.show()
