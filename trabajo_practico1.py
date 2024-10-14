@@ -373,6 +373,29 @@ Esta corriente representa un estímulo débil seguido de uno fuerte.
 Grafíque la corriente  𝑖(𝑡)  vs  𝑡  en el rango  𝑡∈[0𝑚𝑠,20𝑚𝑠] .
 """
 
+
+
+def i(t):
+    if 2 <= t <=2.5:
+        return 10
+    if 10 <= t <=10.5:
+        return 30
+    return 0
+
+
+
+plt.title("Corriente")
+
+plt.xlabel("$t$ [ms]")
+plt.ylabel("Micro Amperes ")
+plt.xlim(0, 20)
+t = range(0, 20)
+plt.plot(t, [i(_) for _ in t], c="cyan")
+
+plt.legend()
+plt.show()
+
+
 """
 
 4.2) Integre nuevamente el sistema de ODEs del modelo de Hodgkin y Huxley
@@ -381,6 +404,20 @@ Grafíque la corriente  𝑖(𝑡)  vs  𝑡  en el rango  𝑡∈[0𝑚𝑠,20�
     ejercicio anterior. Integre hasta el tiempo final  𝑡𝑓=500𝑚𝑠
     usando un paso temporal  𝑑𝑡=0.01𝑚𝑠 .
 """
+
+
+p = [c, gna, gk, gl, vna, vk, vl, i]
+
+
+a = 0  # tiempo inicial
+b = 500  # tiempo final
+h = 0.01  # paso
+k = int((b - a) / h)  # canitdad de pasos en el tiempo dado
+
+
+# 3.1)
+t, w = integrador_ode(rk4, f, x, a, b, k, p)
+print(w[0, :])
 
 
 """
