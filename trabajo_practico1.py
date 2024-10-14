@@ -384,7 +384,7 @@ def i2(t):
 
 
 
-plt.title("Corriente")
+plt.title("Corriente i_2")
 
 plt.xlabel("$t$ [ms]")
 plt.ylabel("Micro Amperes ")
@@ -469,11 +469,32 @@ plt.show()
 Ejercicio 5) ráfaga
 5.1) Implemente la corriente de membrana
 
-𝑖(𝑡)={10𝜇𝐴/𝑐𝑚2,0𝜇𝐴/𝑐𝑚2,𝑡∈[5𝑚𝑠,∞𝑚𝑠)𝑐.𝑐.
+    𝑖(𝑡) = { 10𝜇𝐴/𝑐𝑚2, 𝑡∈[5𝑚𝑠,∞𝑚𝑠)
+            0𝜇𝐴/𝑐𝑚2, 𝑐.𝑐.
 
 Esta corriente representa un estímulo constante.
 
 """
+
+
+def i3(t):
+    if t >=5.0:
+        return 10.0
+    return 0.0
+
+
+
+
+plt.title("Corriente i_3")
+
+plt.xlabel("$t$ [ms]")
+plt.ylabel("Micro Amperes ")
+plt.xlim(0, 20)
+t_i = range(0, 20)
+plt.plot(t_i, [i3(_) for _ in t_i], c="cyan")
+
+plt.legend()
+plt.show()
 
 """
 
@@ -482,15 +503,58 @@ Esta corriente representa un estímulo constante.
     y un paso de integración 𝑑𝑡=0.01.
 """
 
+
+a = 0  # tiempo inicial
+b = 100  # tiempo final
+h = 0.01  # paso
+k = int((b - a) / h)  # canitdad de pasos en el tiempo dado
+p = [c, gna, gk, gl, vna, vk, vl, i3]
+
+t, w = integrador_ode(rk4, f, valores_equilibrio, a, b, k, p)
+print(w[0, :])
+
+
 """
 5.3) Grafique nuevamente el potencial de membrana en el rango de tiempos
      calculado.
 """
 
+plt.title("Potencial de Membrana para funcion de corriente i_3")
+
+plt.xlabel("$t$ [ms]")
+plt.ylabel("$ v(t) [mV] ")
+plt.xlim(0, 20)
+plt.ylim(-20, 120)
+
+
+plt.plot(t, t * 0, linestyle="--", c="red")
+plt.plot(t, w[0], linestyle="-", c="b")
+plt.legend()
+plt.show()
+
+
 """
 5.4) Grafique nuevamente fracciones de canales activos e inactivos vs el
     tiempo.
 """
+
+plt.title("Fraccion de canales activos e inactivos para i_3")
+
+plt.xlabel("$t$ [ms]")
+plt.xlim(0, 20)
+plt.ylim(-0.1, 1.1)
+
+
+plt.plot(t, 0 * t, linestyle="--", c="gray")
+plt.plot(t, 0 * t + 1, linestyle="--", c="gray")
+
+plt.plot(t, w[1], label="$n(t)$", c="r")
+plt.plot(t, w[2], label="$m(t)$", c="b")
+plt.plot(t, w[3], label="$h(t)$", c="g")
+
+plt.legend()
+plt.show()
+
 
 """
 5.5) Discuta lo que observa y explique.
