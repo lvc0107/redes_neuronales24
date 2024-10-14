@@ -662,12 +662,32 @@ plt.show()
 Ejercicio 7) exitaciones espontáneas en respuesta al ruido
 
 7.1) Implemente una corriente estocástica que retorne un valor
-      𝑖(𝑡)∼𝑖0𝑁(0,1)
+      
+              𝑖(𝑡) ∼ 𝑖 0 𝑁(0,1)
 
      (i.e. 𝑖0 por un valor aleatorio obtenido de una
      distribución normal de media 0 y varianza 1)
      para cada valor de 𝑡 en el que sea evaluada.
 """
+
+i0 =50
+
+def i5(t):
+    return i0 * np.random.normal()
+
+
+plt.title("Corriente i_5")
+
+plt.xlabel("$t$ [ms]")
+plt.ylabel("Micro Amperes ")
+plt.xlim(-1, 50)
+t_i = np.linspace(-1, 100, 1000)
+plt.plot(t_i, np.vectorize(i5)(t_i), c="cyan")
+
+plt.legend()
+plt.show()
+
+
 
 """
 7.2) Integre nuevamente las ODEs para 𝑡∈[0𝑚𝑠,500𝑚𝑠], usando la corriente
@@ -675,18 +695,63 @@ Ejercicio 7) exitaciones espontáneas en respuesta al ruido
      equilibrio derivados en el inciso 6) y un paso de integración 𝑑𝑡=0.01.
 """
 
+
+a = 0  # tiempo inicial
+b = 500  # tiempo final
+h = 0.01  # paso
+k = int((b - a) / h)  # cantidad de pasos en el tiempo dado
+p = [c, gna, gk, gl, vna, vk, vl, i5]
+
+t, w = integrador_ode(rk4, f, valores_equilibrio, a, b, k, p)
+
+
 """
 7.3) Grafique nuevamente el potencial de membrana en el rango de tiempos
      calculado.
 """
+
+
+plt.title("Potencial de Membrana para funcion de corriente i_5")
+
+plt.xlabel("$t$ [ms]")
+plt.ylabel("$ v(t) [mV] ")
+plt.xlim(0, 500)
+plt.ylim(-20, 120)
+
+
+plt.plot(t, t * 0, linestyle="--", c="red")
+plt.plot(t, w[0], linestyle="-", c="b")
+plt.legend()
+plt.show()
+
 
 """
 7.4) Grafique nuevamente fracciones de canales activos e inactivos vs el
      tiempo.
 """
 
+
+plt.title("Fraccion de canales activos e inactivos para i_5")
+
+plt.xlabel("$t$ [ms]")
+plt.xlim(0, 500)
+plt.ylim(-0.1, 1.1)
+
+
+plt.plot(t, 0 * t, linestyle="--", c="gray")
+plt.plot(t, 0 * t + 1, linestyle="--", c="gray")
+
+plt.plot(t, w[1], label="$n(t)$", c="r")
+plt.plot(t, w[2], label="$m(t)$", c="b")
+plt.plot(t, w[3], label="$h(t)$", c="g")
+
+plt.legend()
+plt.show()
+
 """
 7.5) Observa picos de activación cada tanto? Aparecen con regularidad?
       Estime con que frecuencia observa los picos.
 
 """
+
+
