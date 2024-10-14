@@ -375,11 +375,11 @@ Grafíque la corriente  𝑖(𝑡)  vs  𝑡  en el rango  𝑡∈[0𝑚𝑠,20�
 
 
 
-def i(t):
+def i2(t):
     if 2 <= t <=2.5:
-        return 10
+        return 10.0
     if 10 <= t <=10.5:
-        return 30
+        return 30.0
     return 0
 
 
@@ -389,8 +389,8 @@ plt.title("Corriente")
 plt.xlabel("$t$ [ms]")
 plt.ylabel("Micro Amperes ")
 plt.xlim(0, 20)
-t = range(0, 20)
-plt.plot(t, [i(_) for _ in t], c="cyan")
+t_i = range(0, 20)
+plt.plot(t_i, [i2(_) for _ in t_i], c="cyan")
 
 plt.legend()
 plt.show()
@@ -406,25 +406,34 @@ plt.show()
 """
 
 
-p = [c, gna, gk, gl, vna, vk, vl, i]
 
 
 a = 0  # tiempo inicial
 b = 500  # tiempo final
 h = 0.01  # paso
 k = int((b - a) / h)  # canitdad de pasos en el tiempo dado
+p = [c, gna, gk, gl, vna, vk, vl, i2]
 
-
-# 3.1)
-t, w = integrador_ode(rk4, f, x, a, b, k, p)
-print(w[0, :])
+t2, w2 = integrador_ode(rk4, f, x, a, b, k, p)
+print(w2[0, :])
 
 
 """
 4.3) Grafique el potencial de membrana en función del tiempo, i.e.  𝑣(𝑡)
     vs  𝑡  en el rango calculado.
 """
+plt.title("Potencial de Membrana para funcion de corriente i_2")
 
+plt.xlabel("$t$ [ms]")
+plt.ylabel("$ v(t) [mV] ")
+plt.xlim(0, 20)
+plt.ylim(-20, 120)
+
+
+plt.plot(t2, 0 * t2, linestyle="--", c="red")
+plt.plot(t2, w2[0], linestyle="-", c="b")
+plt.legend()
+plt.show()
 
 """
 4.4) Grafique la evolución de las fraciones de canales activos e inactivos,
