@@ -272,12 +272,11 @@ p = [c, gna, gk, gl, vna, vk, vl, i]
 a = 0  # tiempo inicial
 b = 500  # tiempo final
 h = 0.01  # paso
-k = int((b - a) / h)  # canitdad de pasos en el tiempo dado
+k = int((b - a) / h)  # cantidad de pasos en el tiempo dado
 
 
 # 3.1)
 t, w = integrador_ode(rk4, f, x, a, b, k, p)
-print(w[0, :])
 
 
 """
@@ -411,11 +410,11 @@ plt.show()
 a = 0  # tiempo inicial
 b = 500  # tiempo final
 h = 0.01  # paso
-k = int((b - a) / h)  # canitdad de pasos en el tiempo dado
+k = int((b - a) / h)  # cantidad de pasos en el tiempo dado
 p = [c, gna, gk, gl, vna, vk, vl, i2]
 
 t, w = integrador_ode(rk4, f, valores_equilibrio, a, b, k, p)
-print(w[0, :])
+
 
 
 """
@@ -507,11 +506,10 @@ plt.show()
 a = 0  # tiempo inicial
 b = 100  # tiempo final
 h = 0.01  # paso
-k = int((b - a) / h)  # canitdad de pasos en el tiempo dado
+k = int((b - a) / h)  # cantidad de pasos en el tiempo dado
 p = [c, gna, gk, gl, vna, vk, vl, i3]
 
 t, w = integrador_ode(rk4, f, valores_equilibrio, a, b, k, p)
-print(w[0, :])
 
 
 """
@@ -523,7 +521,7 @@ plt.title("Potencial de Membrana para funcion de corriente i_3")
 
 plt.xlabel("$t$ [ms]")
 plt.ylabel("$ v(t) [mV] ")
-plt.xlim(0, 20)
+plt.xlim(0, 100)
 plt.ylim(-20, 120)
 
 
@@ -541,7 +539,7 @@ plt.show()
 plt.title("Fraccion de canales activos e inactivos para i_3")
 
 plt.xlabel("$t$ [ms]")
-plt.xlim(0, 20)
+plt.xlim(0, 100)
 plt.ylim(-0.1, 1.1)
 
 
@@ -565,14 +563,40 @@ plt.show()
 Ejercicio 6) período refractario
 6.1) Implemente la corriente de membrana
 
-𝑖(𝑡)={10𝜇𝐴/𝑐𝑚2,0𝜇𝐴/𝑐𝑚2,𝑡∈[10𝑚𝑠𝑘,10𝑚𝑠𝑘+2𝑚𝑠],𝑘∈{1,2,3,4,5,...}𝑐.𝑐.
+      𝑖(𝑡) = {
+          10𝜇𝐴/𝑐𝑚2, 𝑡 ∈[10𝑚𝑠𝑘,10𝑚𝑠𝑘+2𝑚𝑠]m 𝑘 ∈ {1,2,3,4,5,...} 
+          0𝜇𝐴/𝑐𝑚2,𝑐.𝑐.
 """
+
+
+
+
+def i4(t):
+    for i in range(1, 10):
+        if 10 * i  <= t <= 10 * i+2:
+            return 10.0
+    return 0.0
+
+
+
+plt.title("Corriente i_4")
+
+plt.xlabel("$t$ [ms]")
+plt.ylabel("Micro Amperes ")
+plt.xlim(-1, 50)
+t_i = np.linspace(-1, 100, 1000)
+plt.plot(t_i, np.vectorize(i4)(t_i), c="cyan")
+
+plt.legend()
+plt.show()
+
 
 """
 6.2) Integre nuevamente las ODEs para 𝑡∈[0𝑚𝑠,100𝑚𝑠], usando la corriente del
      inciso 12), la condición incial los valores de equilibrio derivados
      en el inciso 6) y un paso de integración 𝑑𝑡=0.01.
 """
+
 
 """
 6.3) Grafique nuevamente el potencial de membrana en el rango de tiempos
