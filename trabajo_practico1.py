@@ -415,6 +415,7 @@ p = [c, gna, gk, gl, vna, vk, vl, i2]
 
 t, w = integrador_ode(rk4, f, valores_equilibrio, a, b, k, p)
 
+valores_equilibrio2 = w[:, -1]
 
 
 """
@@ -512,6 +513,7 @@ p = [c, gna, gk, gl, vna, vk, vl, i3]
 t, w = integrador_ode(rk4, f, valores_equilibrio, a, b, k, p)
 
 
+
 """
 5.3) Grafique nuevamente el potencial de membrana en el rango de tiempos
      calculado.
@@ -598,16 +600,59 @@ plt.show()
 """
 
 
+a = 0  # tiempo inicial
+b = 100  # tiempo final
+h = 0.01  # paso
+k = int((b - a) / h)  # cantidad de pasos en el tiempo dado
+p = [c, gna, gk, gl, vna, vk, vl, i4]
+
+t, w = integrador_ode(rk4, f, valores_equilibrio, a, b, k, p)
+
+
+
+
 """
 6.3) Grafique nuevamente el potencial de membrana en el rango de tiempos
     calculado.
 """
 
 
+plt.title("Potencial de Membrana para funcion de corriente i_4")
+
+plt.xlabel("$t$ [ms]")
+plt.ylabel("$ v(t) [mV] ")
+plt.xlim(0, 100)
+plt.ylim(-20, 120)
+
+
+plt.plot(t, t * 0, linestyle="--", c="red")
+plt.plot(t, w[0], linestyle="-", c="b")
+plt.legend()
+plt.show()
+
+
 """
 6.4) Grafique nuevamente fracciones de canales activos e inactivos
      vs el tiempo.
 """
+
+plt.title("Fraccion de canales activos e inactivos para i_4")
+
+plt.xlabel("$t$ [ms]")
+plt.xlim(0, 100)
+plt.ylim(-0.1, 1.1)
+
+
+plt.plot(t, 0 * t, linestyle="--", c="gray")
+plt.plot(t, 0 * t + 1, linestyle="--", c="gray")
+
+plt.plot(t, w[1], label="$n(t)$", c="r")
+plt.plot(t, w[2], label="$m(t)$", c="b")
+plt.plot(t, w[3], label="$h(t)$", c="g")
+
+plt.legend()
+plt.show()
+
 
 """
 6.5) Discuta lo que observa y explique.
