@@ -157,131 +157,242 @@ El objetivo de este trabajo es estudiar el comportamiento del modelo de Hodgkin-
 El modelo de Hodgkin y Huxley describe cómo se inician y transmiten los potenciales de acción en las neuronas.
 
 Consiste en un conjunto de cuatro ecuaciones diferenciales ordinarias acopladas no lineales, que aproximan las características eléctricas de células excitables como las neuronas.
-~\cite{hertz1999introduction}.
+~\cite{HodgkinyHuxleyWikipedia}.
 
 \section{Teoría}
 
 Las siguientes ecuaciones diferenciales
-detalladas en ~\cite{hertz1999introduction}
-son las  que modelan el comportamiento del potencial de las neuronas cuando son ejercitadas con inpulsos de iones.
-
+detalladas en ~\cite{HodgkinyHuxleyWikipedia} 
+son las que modelan el comportamiento del potencial de las neuronas cuando son ejercitadas con impulsos de iones.
 \begin{eqnarray*}
 \dot{n}&=&\alpha_n(v)(1-n)-\beta_n(v) n\\
 \dot{m}&=&\alpha_m(v)(1-m)-\beta_m(v) m\\
 \dot{h}&=&\alpha_h(v)(1-h)-\beta_h(v) h\\
 \dot{v}&=&c^{-1}(i-\bar{g}_{\mathrm{Na}}m^3h(v-v_{\mathrm{Na}})-\bar{g}_{\mathrm{K}}n^4(v-v_{\mathrm{K}})-g_{l}(v-v_{l}))
 \end{eqnarray*}
+donde $\dot{n}$, $\dot{m}$ y $\dot{h}$
+representan las probabilidades de cambio de las compuertas (permitir o bloquear paso de iones) en cada uno de los canales de la membrana que proteje a la neurona. $\dot{v}$ representa el potencial de la membrana.
 
-Utilizando el metodo de integracon de Runge Kutta se logra aproximar COMPLETAR o MEJORAR
+Utilizando el método de integración de Runge-Kutta de 4to orden  sobre el sistema de ecuaciones se logra aproximar las trayectorias de dichas variables.
+Nos resulta de interes estimar la razon de cambio del voltaje
 
 
-
-Se definieron varias funciones que modelan el impuslo de corriente
- denominadas como i, i2, etc
-
- la fucncion de integracion toma como parametros las ecuaciones diferenciasles que a su vez en cada expermiento estan parametrizadas por cada una de las funciones de corrientes
- Se realizaron 5 experimentos.
+Se definieron varias funciones que modelan el impulso de corriente
+denominadas como i, i2, etc
+La función de integración toma como parametros las ecuaciones diferenciales que a su vez en cada expermiento estan parametrizadas por cada una de las funciones de corrientes.
+Se realizaron 5 experimentos.
  
-COMPLETAR o MEJORAR
 
 \section{Resultados}
 
-Experimento 1) Se utilizo una funcon de corriente que devuelve la constante 0. MODELAR O COMPLETAR.
+Experimento 1) Se utilizo una función de corriente que devuelve la constante 0. fig.~\ref{fig1}..
+
+
 El potencial de la membrana modelado muestra que:
- MODELAR O COMPLETAR. Ver fig.~\ref{fig1}.
+ COMPLETAR.
 
 \begin{figure}[h!]
 \centering
-\begin {subfigure}{0.45\textwidth}
-\centering
-\includegraphics [width=1\textwidth]{figs/potencial_de_membrana.png}
-\caption{zaraza}
-\label{fig1}
-\end{subfigure}\\
-
-\begin {subfigure} {0.45\textwidth}
-\centering
-\includegraphics [width=1\textwidth] {figs/fraccion_de_canales_activos_e_inactivos}
-\caption{zaraza2}
-\end{subfigure}
-\caption{zaraza3}
-\label{fig1}
+\includegraphics[scale=.4]{figs/potencial_de_membrana.png}
+%\vspace{-0.25cm}
+\caption{Potencial de membrana con función de corriente constante 0. \label{fig1}}
 \end{figure}
 
 
-Experimento 2) Se utilizo una funcon de orriente que devuelve la constante 0. MODELAR O COMPLETAR.
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
 
-El potencial de la membrana modelado muestra que:
- MODELAR O COMPLETAR.
-
-Ver fig.~\ref{fig2}.
 
 \begin{figure}[h!]
 \centering
-\begin {subfigure}{0.45\textwidth}
-\centering
-\includegraphics [width=1\textwidth]{figs/potencial_membrana_i_2.png}
-\caption{zaraza}
-\label{fig1}
-\end{subfigure}\\
-
-\begin {subfigure} {0.45\textwidth}
-\centering
-\includegraphics [width=1\textwidth] {figs/fraccion_de_canales_activos_e_inactivos_para_i_2.png}
-\caption{zaraza2}
-\end{subfigure}
-\caption{zaraza3}
-\label{fig1}
+\includegraphics[scale=.4]{figs/fraccion_de_canales_activos_e_inactivos}
+%\vspace{-0.25cm}
+\caption{Fracción de canales activos e inactivos. \label{fig2}}
 \end{figure}
 
 
+Experimento 2) Se utilizo una función de corriente que devuelve X
+. COMPLETAR.
 
-Experimento 3) Se utilizo una funcon de corriente que devuelve la constante 0. MODELAR O COMPLETAR.
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
 
-El potencial de la membra
-Ver fig.~\ref{fig3}.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=.4]{figs/potencial_membrana_i_2.png}
+%\vspace{-0.25cm}
+\caption{Potencial de membrana función i2. \label{fig3}}
+\end{figure}
+
+
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=.4]{figs/fraccion_de_canales_activos_e_inactivos_para_i_2.png}
+%\vspace{-0.25cm}
+\caption{Potencial de membrana función i2. \label{fig4}}
+\end{figure}
+
+Experimento 3) Se utilizo una función de corriente que devuelve X
+El potencial de la membraNa
+
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+
+
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=.4]{figs/potencial_membrana_i_3.png}
 %\vspace{-0.25cm}
-\caption{
-Potencial de membrana función i3. \label{fig3}
-}
+\caption{Potencial de membrana función i3. \label{fig5}}
+\end{figure}
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=.4]{figs/fraccion_de_canales_activos_e_inactivos_para_i_3.png}
+%\vspace{-0.25cm}
+\caption{Fracción de canales activos e inactivos i3. \label{fig6}}
 \end{figure}
 
-Experimento 4) Se utilizo una funcon de orriente que devuelve la constante 0. MODELAR O COMPLETAR.
+Experimento 4) Se utilizo una función de corriente que devuelve X
 
-El potencial de la membra
-Ver fig.~\ref{fig4}.
-
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=.4]{figs/potencial_membrana_i_4.png}
 %\vspace{-0.25cm}
-\caption{
-Potencial de membrana función i4.\label{fig4}
-}
+\caption{Potencial de membrana función i4.\label{fig7}}
+\end{figure}
+\begin{figure}[h!]
+
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+
+
+\centering
+\includegraphics[scale=.4]{figs/fraccion_de_canales_activos_e_inactivos_para_i_4.png}
+%\vspace{-0.25cm}
+\caption{Fracción de canales activos e inactivos i4. \label{fig8}}
 \end{figure}
 
-Experimento ) Se utilizo una funcon de orriente que devuelve la constante 0. MODELAR O COMPLETAR.
+Experimento 5) Se utilizo una función de corriente que devuelve X
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
 
-El potencial de la membra
-Ver fig.~\ref{fig5}.
+
 
 \begin{figure}[h!]
 \centering
-\includegraphics[scale=.35]{figs/potencial_membrana_i_5.png}
+\includegraphics[scale=.4]{figs/potencial_membrana_i_5.png}
 %\vspace{-0.25cm}
-\caption{
-Potencial de membrana función i5. \label{fig5}
-}
+\caption{Potencial de membrana función i5. \label{fig9}}
 \end{figure}
 
 
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
 
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=.4]{figs/fraccion_de_canales_activos_e_inactivos_para_i_5.png}
+%\vspace{-0.25cm}
+\caption{Fracción de canales activos e inactivos i5. \label{fig10}}
+\end{figure}
 
-
-
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX
 
 
 
