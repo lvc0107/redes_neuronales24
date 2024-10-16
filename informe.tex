@@ -131,8 +131,6 @@ Estudio del modelo de Hodgkin y Huxley
 \email[]{danniela.vr31@gmail.com}
 \affiliation{Facultad de Matem\'atica, Astronom\'ia, F\'isica y Computaci\'on, Universidad Nacional de C\'ordoba, Ciudad Universitaria, 5000 C\'ordoba, Argentina}
 
-
-
 %Collaboration name if desired (requires use of superscriptaddress
 %option in \documentclass). \noaffiliation is required (may also be
 %used with the \author command).
@@ -163,7 +161,7 @@ Consiste en un conjunto de cuatro ecuaciones diferenciales ordinarias acopladas 
 
 Las siguientes ecuaciones diferenciales
 detalladas en ~\cite{HodgkinyHuxleyWikipedia} 
-son las que modelan el comportamiento de la neurona en función del cambio de la diferencia del potencial de la membrana que proteje a la neurona. Es decir la taza de cambio del potencial 'v' entre el interior y el exterior de la membrana a lo largo del tiempo y a su vez en función de las probabilidades de ciertos canales internos de la membrana  que dependen del cambio de potencial antes mencionado, cuando la membrana es ejercitada con impulsos de iones.
+son las que modelan el comportamiento de la neurona en función del cambio de la diferencia del potencial de la membrana que proteje a la neurona. Es decir en función de la taza de cambio del potencial $v$ entre el interior y el exterior de la membrana a lo largo del tiempo y a su vez en función de las probabilidades de ciertos canales internos de la membrana  que dependen del cambio de potencial antes mencionado, cuando la membrana es ejercitada con impulsos de iones.
 
 \begin{eqnarray*}
 \dot{n}&=&\alpha_n(v)(1-n)-\beta_n(v) n\\
@@ -172,23 +170,33 @@ son las que modelan el comportamiento de la neurona en función del cambio de la
 \dot{v}&=&c^{-1}(i-\bar{g}_{\mathrm{Na}}m^3h(v-v_{\mathrm{Na}})-\bar{g}_{\mathrm{K}}n^4(v-v_{\mathrm{K}})-g_{l}(v-v_{l}))
 \end{eqnarray*}
 Acá $\dot{n}$, $\dot{m}$ y $\dot{h}$
-representan las probabilidades de que el canal de sodio este áctivo, el canal de potasio este áctivo y el canal de sodio este inactivo, respectivamente permitiendo el paso de iones a traves membrana. $\dot{v}$ representa la diferencia del potencial de la membrana.
-Las tres primeras ecuaciones dependen del potencial. Cuando el potencial sufre un cambio, debido a una inyección o interrupción de inyección de iones, las probabilidades suben o bajan.
+representan las probabilidades de que el canal de sodio este áctivo, el canal de potasio este áctivo y el canal de sodio este inactivo, respectivamente permitiendo el paso de iones a traves de la membrana. $\dot{v}$ representa la diferencia del potencial de la membrana.
+Las tres primeras ecuaciones dependen del potencial. Cuando el potencial sufre un cambio, debido a una inyección o interrupción de inyección de iones, las probabilidades suben o bajan abriendo o cerrando los canales.
 
 
 Utilizando el método de integración de Runge-Kutta de 4to orden  sobre el sistema de ecuaciones se logra aproximar las trayectorias de dichas variables.
 
 
 Para estudiar el comportamiento de la neurona se definieron varias funciones que modelan el impulso de corriente de iones
-denominadas como i, i2, etc
+denominadas como $i$, $i2$, etc
 La función de integración toma como parametros las ecuaciones diferenciales que a su vez en cada expermiento estan parametrizadas por cada una de las funciones de corrientes.
  
 
 \section{Resultados}
 Se realizaron 5 experimentos.
 
-Experimento 1) Se utilizo una función de corriente que devuelve la constante 0. 
-fig.~\ref{fig1}. El objectivo es analizar como es el estado estacionario de la neurona cuando no recibe corriente. Cuando inicia el modelado en los primeros [ms] El potencial de la membrana sufre un pico pero luego se estabiliza en 0. 
+Experimento 1: \textbf{Valores de equilibrio}. Se utilizo una función de corriente que devuelve la constante 0. El objetivo es analizar como es el estado estacionario de la neurona cuando no recibe corriente.
+Para integrar numericamente el sistema, se parametrizo con los siguientes valores iniciales:
+
+\begin{eqnarray*}
+{v}&=&0.0:&potencial de la membrana\\
+{nt}&=&0.0:&probabilidad de activacion de K (potasio)\\
+{mt}&=&0.0:&probabilidad de activacion de Na (sodio)\\
+{ht}&=&0.0:probabilidad de inactivacion Na (sodio)\\
+&
+\end{eqnarray*}
+
+Cuando inicia el modelado en los primeros [ms] El potencial de la membrana sufre un pico pero luego se estabiliza en 0. fig.~\ref{fig1}.
 
 \begin{figure}[h!]
 \centering
@@ -198,16 +206,7 @@ fig.~\ref{fig1}. El objectivo es analizar como es el estado estacionario de la n
 \end{figure}
 
 
-Como resultado de la taza de cambio del potencial anterior en los primeros [ms] las probabilidades o fraciones de canales activos de sodio n(t) se estabilizan en 0.6. La Fraccion de canales de Potasio m(t) se estabilizan en 0.4 y la fracicon de canales inactivos de sodio se estabilizan en aproximadamente por encima de 0. fig.~\ref{fig2}.
-
-
-
-
-
-
-
-
-
+Como resultado de la taza de cambio del potencial anterior en los primeros [ms] las probabilidades o fracciones de canales activos de sodio $n(t)$ se estabilizan en aproximadamente 0.6. La fracción de canales de Potasio $m(t)$ se estabilizan en aproximadamente 0.3 y la fracción de canales inactivos de sodio $h(t)$ se estabilizan en aproximadamente por encima de 0. fig.~\ref{fig2}. Estos son valores de equilibrio que seran utilizados como valores iniciales en los siguientes experimentos.
 
 
 \begin{figure}[h!]
@@ -218,20 +217,17 @@ Como resultado de la taza de cambio del potencial anterior en los primeros [ms] 
 \end{figure}
 
 
-Experimento 2) Se utilizo una función de corriente i2 que...EXPLICAR QUE PASA CON LA DIFERENCIA DE POTENCIAL Y CON LAS FRACCIONES en los tiempos 0,2.5 y 10.5 ms. 
-Tambienn explicar que se utilizaron los valores de equilibrio (para los canales de sodio, potasio, etec) obternidos del primer experimento. arrancan en 0.2, 0.4 y 0.6
-
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-
+Experimento 2: \textbf{Estímulo débil y estímulo fuerte}. Se utilizo la siguiente función de corriente $i2$.
+$$
+i2(t) = \left\{
+\begin{array}{ll}
+10 \mu A/cm^2, & t\in [2ms,2.5ms] \\
+30 \mu A/cm^2, & t\in [10ms,10.5ms] \\
+0 \mu A/cm^2, & c.c. \\
+\end{array}
+\right.
+$$
+En fig.~\ref{fig3}. se observa  que la cantidad de amperes inyectados en el periodo de tiempo [2ms,2.5ms]  no es suficiente como para activar el potencial de membrana. Sin embargo en el periodo de tiempo [10ms,12.5ms], el potencial de membrana alcanza un pico que  dispara la activación de las fracciones de canales activos e inactivos.  fig.~\ref{fig4}. 
 
 \begin{figure}[h!]
 \centering
@@ -240,40 +236,33 @@ XXXXXXXXXXXXXXXXXXXXX
 \caption{Potencial de membrana función i2. \label{fig3}}
 \end{figure}
 
-
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
+En concreto se observa que la Fracción de $nt$ y $mt$ sube a valores altos entre [0.8, 1] y baja a cerca de  0 para $h(t)$ en el periodo de tiempo [10ms,12.5ms], 
+fig.~\ref{fig4}. lo cual indica que en ese periodo de tiempo la carga de iones puede pasar por la membrana.
+Luego del disparo, las fracciones vuelven a valores de equilibrio.
+Observar que este modelo inicia en los valores de equilibrio obtenidos en el experimento 1).\newline
 
 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=.4]{figs/fraccion_de_canales_activos_e_inactivos_para_i_2.png}
 %\vspace{-0.25cm}
-\caption{Potencial de membrana función i2. \label{fig4}}
+\caption{Fracción de canales activos e inactivos i2. \label{fig4}}
 \end{figure}
 
-Experimento 3) Se utilizo una función de corriente que devuelve X
-El potencial de la membraNa
+Experimento 3: \textbf{Ráfaga}. Se utilizo la siguiente función de corriente $i3$ para modelar una rafaga de carga de iones.
+$$
+i3(t) = \left\{
+\begin{array}{ll}
+10 \mu A/cm^2, & t\in [5ms,\infty ms) \\
+0 \mu A/cm^2, & c.c. \\
+\end{array}
+\right.
+$$
 
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
+Luego de 5[ms] se envía constantemente 10$uA$
+El potencial se activa siempre a partir de ese tiempo y hasta el infinito.
+Luego de unos [ms] vuelve a estado refractario y luego vuelve a disparar en un ciclo infinito. fig.~\ref{fig5}.
+
 
 
 \begin{figure}[h!]
@@ -282,16 +271,12 @@ XXXXXXXXXXXXXXXXXXXXX
 %\vspace{-0.25cm}
 \caption{Potencial de membrana función i3. \label{fig5}}
 \end{figure}
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
+
+Al igual que en el experimento 2 se observa que las fracciones de canales activos e inactivos inician a partir de los valores de equilibrio.fig.~\ref{fig6}.
+Ahora en un ciclo infinito $n(t)$ y $m(t)$ suben a valores altos entre
+[0.8, 1] y luego vuelven a bajar a sus respectivos (aprox. 0.3), (aprox. 0.0), valores de equilibrio, 
+y $h(t)$ baja a cerca de 0   luego vuelve a subir a su valor de equilibrio. (aprox. 0.6).
+
 
 
 \begin{figure}[h!]
@@ -301,19 +286,32 @@ XXXXXXXXXXXXXXXXXXXXX
 \caption{Fracción de canales activos e inactivos i3. \label{fig6}}
 \end{figure}
 
-Experimento 4) Se utilizo una función de corriente que devuelve X
 
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
+Experimento 4: \textbf{Período refractario}. Se utilizo la siguiente función de corriente $i4$ para analizar un período refractario.
+$$
+i4(t) = \left\{
+\begin{array}{ll}
+10 \mu A/cm^2, & t\in [10ms\, k,10 ms\, k + 2ms], k > 0\\
+0 \mu A/cm^2, & c.c. \\
+\end{array}
+\right.
+$$
+
+En fig.~\ref{fig7}. se observa  que 
+XXXXXXXXXXXX.  
+
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+
+
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=.4]{figs/potencial_membrana_i_4.png}
@@ -322,16 +320,15 @@ XXXXXXXXXXXXXXXXXXXXX
 \end{figure}
 \begin{figure}[h!]
 
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
+fig.~\ref{fig8}.
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
 
 
 \centering
@@ -340,22 +337,26 @@ XXXXXXXXXXXXXXXXXXXXX
 \caption{Fracción de canales activos e inactivos i4. \label{fig8}}
 \end{figure}
 
-Experimento 5) Se utilizo una función de corriente que devuelve X
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
+
+
+Experimento 5: \textbf{Exitaciones espontáneas en respuesta al ruido}. Se utilizo la siguiente función de corriente $i5(t)\sim i_0 N(0,1)$ (i.e. $i_0$ por un valor aleatorio obtenido de una distribución normal de media 0 y varianza 1) para cada valor de $t$ en el que sea evaluada.
+
+La corriente en este experimento se modela como un flujo de impulsos aleatorios.
+
+En fig.~\ref{fig9}.
+
+
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+
+XXXXXXXX  fig.~\ref{fig10}.
+Observar que este modelo inicia en los valores de equilibrio obtenidos en el experimento 1).
+
 
 
 
@@ -367,15 +368,17 @@ XXXXXXXXXXXXXXXXXXXXX
 \end{figure}
 
 
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
+
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+
+
 
 \begin{figure}[h!]
 \centering
@@ -384,14 +387,16 @@ XXXXXXXXXXXXXXXXXXXXX
 \caption{Fracción de canales activos e inactivos i5. \label{fig10}}
 \end{figure}
 
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
+
+
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
 
 
 
@@ -405,8 +410,8 @@ La comparación de .............................................................
 
 \section{Conclusiones}
 
-Concluyendo ................................................................
-........................................................
+Consideramos que estudiar el modelo de Hodgkin y Huxley es muy propicio para poner en practica los conocimientos adqueridos en cuanto a resolucion de sistema de ecuaciones diferenciales. Utilizar herramientas de integracion numerica como RK4 implementado en python es tambien un buen inicio para profundizar el conocimiento en redes neuronales.
+
 
 % If in two-column mode, this environment will change to single-column
 % format so that long equations can be displayed. Use
@@ -480,7 +485,7 @@ Concluyendo ................................................................
 \section{Agradecimientos}
 
 \begin{acknowledgments}
-JIP, BM y MA agradecen el finaciamiento y el apoyo de CONICET, SeCyT y la UNC.
+a FaMAF, siempre FaMAF y a la educación publica.
 \end{acknowledgments}
 % Create the reference section using BibTeX:
 \bibliography{ref}
@@ -492,7 +497,6 @@ JIP, BM y MA agradecen el finaciamiento y el apoyo de CONICET, SeCyT y la UNC.
 
 \appendix
 
-Bla bla bla...
 
 \end{document}
 %
