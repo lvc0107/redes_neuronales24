@@ -163,33 +163,32 @@ Consiste en un conjunto de cuatro ecuaciones diferenciales ordinarias acopladas 
 
 Las siguientes ecuaciones diferenciales
 detalladas en ~\cite{HodgkinyHuxleyWikipedia} 
-son las que modelan el comportamiento del potencial de las neuronas cuando son ejercitadas con impulsos de iones.
+son las que modelan el comportamiento de la neurona en función del cambio de la diferencia del potencial de la membrana que proteje a la neurona. Es decir la taza de cambio del potencial 'v' entre el interior y el exterior de la membrana a lo largo del tiempo y a su vez en función de las probabilidades de ciertos canales internos de la membrana  que dependen del cambio de potencial antes mencionado, cuando la membrana es ejercitada con impulsos de iones.
+
 \begin{eqnarray*}
 \dot{n}&=&\alpha_n(v)(1-n)-\beta_n(v) n\\
 \dot{m}&=&\alpha_m(v)(1-m)-\beta_m(v) m\\
 \dot{h}&=&\alpha_h(v)(1-h)-\beta_h(v) h\\
 \dot{v}&=&c^{-1}(i-\bar{g}_{\mathrm{Na}}m^3h(v-v_{\mathrm{Na}})-\bar{g}_{\mathrm{K}}n^4(v-v_{\mathrm{K}})-g_{l}(v-v_{l}))
 \end{eqnarray*}
-donde $\dot{n}$, $\dot{m}$ y $\dot{h}$
-representan las probabilidades de cambio de las compuertas (permitir o bloquear paso de iones) en cada uno de los canales de la membrana que proteje a la neurona. $\dot{v}$ representa el potencial de la membrana.
+Acá $\dot{n}$, $\dot{m}$ y $\dot{h}$
+representan las probabilidades de que el canal de sodio este áctivo, el canal de potasio este áctivo y el canal de sodio este inactivo, respectivamente permitiendo el paso de iones a traves membrana. $\dot{v}$ representa la diferencia del potencial de la membrana.
+Las tres primeras ecuaciones dependen del potencial. Cuando el potencial sufre un cambio, debido a una inyección o interrupción de inyección de iones, las probabilidades suben o bajan.
+
 
 Utilizando el método de integración de Runge-Kutta de 4to orden  sobre el sistema de ecuaciones se logra aproximar las trayectorias de dichas variables.
-Nos resulta de interes estimar la razon de cambio del voltaje
 
 
-Se definieron varias funciones que modelan el impulso de corriente
+Para estudiar el comportamiento de la neurona se definieron varias funciones que modelan el impulso de corriente de iones
 denominadas como i, i2, etc
 La función de integración toma como parametros las ecuaciones diferenciales que a su vez en cada expermiento estan parametrizadas por cada una de las funciones de corrientes.
-Se realizaron 5 experimentos.
  
 
 \section{Resultados}
+Se realizaron 5 experimentos.
 
-Experimento 1) Se utilizo una función de corriente que devuelve la constante 0. fig.~\ref{fig1}..
-
-
-El potencial de la membrana modelado muestra que:
- COMPLETAR.
+Experimento 1) Se utilizo una función de corriente que devuelve la constante 0. 
+fig.~\ref{fig1}. El objectivo es analizar como es el estado estacionario de la neurona cuando no recibe corriente. Cuando inicia el modelado en los primeros [ms] El potencial de la membrana sufre un pico pero luego se estabiliza en 0. 
 
 \begin{figure}[h!]
 \centering
@@ -199,16 +198,16 @@ El potencial de la membrana modelado muestra que:
 \end{figure}
 
 
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
+Como resultado de la taza de cambio del potencial anterior en los primeros [ms] las probabilidades o fraciones de canales activos de sodio n(t) se estabilizan en 0.6. La Fraccion de canales de Potasio m(t) se estabilizan en 0.4 y la fracicon de canales inactivos de sodio se estabilizan en aproximadamente por encima de 0. fig.~\ref{fig2}.
+
+
+
+
+
+
+
+
+
 
 
 \begin{figure}[h!]
@@ -219,8 +218,8 @@ XXXXXXXXXXXXXXXXXXXXX
 \end{figure}
 
 
-Experimento 2) Se utilizo una función de corriente que devuelve X
-. COMPLETAR.
+Experimento 2) Se utilizo una función de corriente i2 que...EXPLICAR QUE PASA CON LA DIFERENCIA DE POTENCIAL Y CON LAS FRACCIONES en los tiempos 0,2.5 y 10.5 ms. 
+Tambienn explicar que se utilizaron los valores de equilibrio (para los canales de sodio, potasio, etec) obternidos del primer experimento. arrancan en 0.2, 0.4 y 0.6
 
 XXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXX

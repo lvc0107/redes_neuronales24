@@ -1,502 +1,756 @@
-%% ****** Start of file apstemplate.tex ****** %
-%%
-%%
-%%   This file is part of the APS files in the REVTeX 4.2 distribution.
-%%   Version 4.2a of REVTeX, January, 2015
-%%
-%%
-%%   Copyright (c) 2015 The American Physical Society.
-%%
-%%   See the REVTeX 4 README file for restrictions and more information.
-%%
-%
-% This is a template for producing manuscripts for use with REVTEX 4.2
-% Copy this file to another name and then work on that file.
-% That way, you always have this original template file to use.
-%
-% Group addresses by affiliation; use superscriptaddress for long
-% author lists, or if there are many overlapping affiliations.
-% For Phys. Rev. appearance, change preprint to twocolumn.
-% Choose pra, prb, prc, prd, pre, prl, prstab, prstper, or rmp for journal
-%  Add 'draft' option to mark overfull boxes with black boxes
-%  Add 'showkeys' option to make keywords appear
-%\documentclass[aps,prl,preprint,groupedaddress]{revtex4-2}
-\documentclass[aps,prl,twocolumn,groupedaddress]{revtex4-2}
-%\documentclass[aps,prl,preprint,superscriptaddress]{revtex4-2}
-%\documentclass[aps,prl,reprint,groupedaddress]{revtex4-2}
-
-% You should use BibTeX and apsrev.bst for references
-% Choosing a journal automatically selects the correct APS
-% BibTeX style file (bst file), so only uncomment the line
-% below if necessary.
-%\bibliographystyle{apsrev4-2}
-
-\usepackage{graphicx}
-\usepackage{subcaption}
-\usepackage{caption}
-
-\usepackage{epstopdf}
-%\usepackage{amsmath}% http://ctan.org/pkg/amsmath
-%\usepackage{amsthm}
-%\usepackage{amsfonts}
-%\usepackage{subfigure}
-%\usepackage{hhline}
-%\usepackage[miktex]{gnuplottex}
-%\usepackage{xcolor}
-\usepackage{amssymb}
-\usepackage{amsmath}
-\usepackage{color}
-\usepackage{hyperref}
-%\usepackage[percent]{overpic}
-\usepackage{tikz}
-\usepackage{mathrsfs}
-\usepackage{wasysym}
-\usepackage{tikz-cd}
-%\usepackage{stix} %\fisheye
-\usepackage{stackengine,scalerel}
-
-% so sections, subsections, etc. become numerated.
-\setcounter{secnumdepth}{3}
-
-% Comandos proprios
-\DeclareMathOperator*{\argmax}{arg\,max}
-\DeclareMathOperator*{\argmin}{arg\,min}
-\newcommand{\avrg}[1]{\left\langle #1 \right\rangle}
-\newcommand{\nelta}{\bar{\delta}}
-\newcommand{\bra}[1]{\left\langle #1\right|}
-\newcommand{\ket}[1]{\left| #1 \right\rangle}
-\newcommand{\sbra}[1]{\langle #1|}
-\newcommand{\sket}[1]{| #1 \rangle}
-\newcommand{\bek}[3]{\left\langle #1 \right| #2 \left| #3 \right\rangle}
-\newcommand{\sbek}[3]{\langle #1 | #2 | #3 \rangle}
-\newcommand{\braket}[2]{\left\langle #1 \middle| #2 \right\rangle}
-\newcommand{\ketbra}[2]{\left| #1 \middle\rangle \middle\langle #2  \right|}
-\newcommand{\sbraket}[2]{\langle #1 | #2 \rangle}
-\newcommand{\sketbra}[2]{| #1 \rangle  \langle #2 |}
-\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
-\newcommand{\snorm}[1]{\lVert#1\rVert}
-\newcommand{\bvec}[1]{\boldsymbol{\mathsf{#1}}}
-\newcommand{\bcov}[1]{\boldsymbol{#1}}
-\newcommand{\bdua}[1]{\boldsymbol{\check{#1}}}
-%\newcommand{\bdov}[1]{\boldsymbol{\breve{#1}}}
-\newcommand{\bdov}[1]{\breve{#1}}
-%\newcommand{\bten}[1]{\boldsymbol{\mathfrak{#1}}}
-\newcommand{\bten}[1]{\boldsymbol{\mathfrak{#1}}}
-\newcommand{\forany}{\tilde{\forall}}
-\newcommand{\qed}{$\overset{\circ}{.}\;$}
-
-\newcommand\bigeye{\ensurestackMath{\stackinset{c}{}{c}{-.3pt}%
-  {\bullet}{\scriptstyle\bigcirc}}}
-\newcommand\eye{\scalerel*{\bigeye}{x}}
-%\newcommand*{\fisheye}{%
-%    \mathbin{%
-%        \ooalign{$\circledcirc$\cr\hidewidth$\bullet$\hidewidth}%
-%    }%
-%}
-\renewcommand{\appendixname}{Apéndice} % Change "Appendix" to "Apéndice"
-
-\begin{document}
-
-% Use the \preprint command to place your local institutional report
-% number in the upper righthand corner of the title page in preprint mode.
-% Multiple \preprint commands are allowed.
-% Use the 'preprintnumbers' class option to override journal defaults
-% to display numbers if necessary
-%\preprint{}
+#!/usr/bin/env python3
+"""
+Created on Sun Aug 25 20:41:09 2024
 
-%Title of paper
-\title{
-Estudio del modelo de Hodgkin y Huxley
-}
-
-% repeat the \author .. \affiliation  etc. as needed
-% \email, \thanks, \homepage, \altaffiliation all apply to the current
-% author. Explanatory text should go in the []'s, actual e-mail
-% address or url should go in the {}'s for \email and \homepage.
-% Please use the appropriate macro foreach each type of information
+@author: luisvargas
+"""
 
-% \affiliation command applies to all authors since the last
-% \affiliation command. The \affiliation command should follow the
-% other information
-% \affiliation can be followed by \email, \homepage, \thanks as well.
-\author{Luis Miguel Vargas Calderon}
-\email[]{miguel.vargas@unc.edu.ar}
-%\homepage[]{Your web page}
-%\thanks{}
-%\altaffiliation{}
-%\affiliation{}
-\affiliation{Facultad de Matem\'atica, Astronom\'ia, F\'isica y Computaci\'on, Universidad Nacional de C\'ordoba, Ciudad Universitaria, 5000 C\'ordoba, Argentina}
+import matplotlib.pyplot as plt
+import numpy as np
 
-\author{Daniela Ruiz}
-\email[]{danniela.vr31@gmail.com}
-\affiliation{Facultad de Matem\'atica, Astronom\'ia, F\'isica y Computaci\'on, Universidad Nacional de C\'ordoba, Ciudad Universitaria, 5000 C\'ordoba, Argentina}
-
-
-
-%Collaboration name if desired (requires use of superscriptaddress
-%option in \documentclass). \noaffiliation is required (may also be
-%used with the \author command).
-%\collaboration can be followed by \email, \homepage, \thanks as well.
-%\collaboration{Juan Perez}
-%\noaffiliation
-
-\date{\today}
-
-\begin{abstract}
-El objetivo de este trabajo es estudiar el comportamiento del modelo de Hodgkin-Huxley, utilizando métodos de integración numérica.
-\end{abstract}
-
-% insert suggested keywords - APS authors don't need to do this
-%\keywords{}
-
-%\maketitle must follow title, authors, abstract, and keywords
-\maketitle
-
-\section{Introducción}
-
-El modelo de Hodgkin y Huxley describe cómo se inician y transmiten los potenciales de acción en las neuronas.
-
-Consiste en un conjunto de cuatro ecuaciones diferenciales ordinarias acopladas no lineales, que aproximan las características eléctricas de células excitables como las neuronas.
-~\cite{HodgkinyHuxleyWikipedia}.
-
-\section{Teoría}
-
-Las siguientes ecuaciones diferenciales
-detalladas en ~\cite{HodgkinyHuxleyWikipedia} 
-son las que modelan el comportamiento de la neurona en funcion del cambio de probabilidades de ciertos canales internos de la membrana y del cambio de potencial sobre la membrana cuando es ejercitada con impulsos de iones.
-\begin{eqnarray*}
-\dot{n}&=&\alpha_n(v)(1-n)-\beta_n(v) n\\
-\dot{m}&=&\alpha_m(v)(1-m)-\beta_m(v) m\\
-\dot{h}&=&\alpha_h(v)(1-h)-\beta_h(v) h\\
-\dot{v}&=&c^{-1}(i-\bar{g}_{\mathrm{Na}}m^3h(v-v_{\mathrm{Na}})-\bar{g}_{\mathrm{K}}n^4(v-v_{\mathrm{K}})-g_{l}(v-v_{l}))
-\end{eqnarray*}
-Acá $\dot{n}$, $\dot{m}$ y $\dot{h}$
-representan las probabilidades de que el canal de sodio este áctivo, el canal de potasio este áctivo y el canal de sodio este inactivo, respectivamente permitiendo el paso de iones a traves membrana que proteje a la neurona. $\dot{v}$ representa el potencial de la membrana. Las 3 primeras ecuaciones dependen del potencial. Cuando el potencial sufre un cambio, debido a una inyeccion o interrupcion de inyeccion de iones, las probabilidades suben o bajan.
-
-
-Utilizando el método de integración de Runge-Kutta de 4to orden  sobre el sistema de ecuaciones se logra aproximar las trayectorias de dichas variables.
-
-
-Para estudiar el comportamiento de la neurona se definieron varias funciones que modelan el impulso de corriente de iones
-denominadas como i, i2, etc
-La función de integración toma como parametros las ecuaciones diferenciales que a su vez en cada expermiento estan parametrizadas por cada una de las funciones de corrientes.
- 
-
-\section{Resultados}
-Se realizaron 5 experimentos.
-
-Experimento 1) Se utilizo una función de corriente que devuelve la constante 0. fig.~\ref{fig1}..
-
-
-El potencial de la membrana modelado muestra que:
- COMPLETAR.
-
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=.4]{figs/potencial_de_membrana.png}
-%\vspace{-0.25cm}
-\caption{Potencial de membrana con función de corriente constante 0. \label{fig1}}
-\end{figure}
-
-
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-
-
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=.4]{figs/fraccion_de_canales_activos_e_inactivos}
-%\vspace{-0.25cm}
-\caption{Fracción de canales activos e inactivos. \label{fig2}}
-\end{figure}
-
-
-Experimento 2) Se utilizo una función de corriente que devuelve X
-. COMPLETAR.
-
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-
-
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=.4]{figs/potencial_membrana_i_2.png}
-%\vspace{-0.25cm}
-\caption{Potencial de membrana función i2. \label{fig3}}
-\end{figure}
-
-
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-
-
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=.4]{figs/fraccion_de_canales_activos_e_inactivos_para_i_2.png}
-%\vspace{-0.25cm}
-\caption{Potencial de membrana función i2. \label{fig4}}
-\end{figure}
-
-Experimento 3) Se utilizo una función de corriente que devuelve X
-El potencial de la membraNa
-
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-
-
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=.4]{figs/potencial_membrana_i_3.png}
-%\vspace{-0.25cm}
-\caption{Potencial de membrana función i3. \label{fig5}}
-\end{figure}
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-
-
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=.4]{figs/fraccion_de_canales_activos_e_inactivos_para_i_3.png}
-%\vspace{-0.25cm}
-\caption{Fracción de canales activos e inactivos i3. \label{fig6}}
-\end{figure}
-
-Experimento 4) Se utilizo una función de corriente que devuelve X
-
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=.4]{figs/potencial_membrana_i_4.png}
-%\vspace{-0.25cm}
-\caption{Potencial de membrana función i4.\label{fig7}}
-\end{figure}
-\begin{figure}[h!]
-
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-
-
-\centering
-\includegraphics[scale=.4]{figs/fraccion_de_canales_activos_e_inactivos_para_i_4.png}
-%\vspace{-0.25cm}
-\caption{Fracción de canales activos e inactivos i4. \label{fig8}}
-\end{figure}
-
-Experimento 5) Se utilizo una función de corriente que devuelve X
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-
-
-
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=.4]{figs/potencial_membrana_i_5.png}
-%\vspace{-0.25cm}
-\caption{Potencial de membrana función i5. \label{fig9}}
-\end{figure}
-
-
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=.4]{figs/fraccion_de_canales_activos_e_inactivos_para_i_5.png}
-%\vspace{-0.25cm}
-\caption{Fracción de canales activos e inactivos i5. \label{fig10}}
-\end{figure}
-
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXX
-
-
-
-\section{Discusión}
-
-La comparación de ................................................................
-...............................................................
-.. bla bla bla ................................................................
-...............................................................
-.. bla bla bla
-
-\section{Conclusiones}
-
-Concluyendo ................................................................
-........................................................
-
-% If in two-column mode, this environment will change to single-column
-% format so that long equations can be displayed. Use
-% sparingly.
-%\begin{widetext}
-% put long equation here
-%\end{widetext}
-
-% figures should be put into the text as floats.
-% Use the graphics or graphicx packages (distributed with LaTeX2e)
-% and the \includegraphics macro defined in those packages.
-% See the LaTeX Graphics Companion by Michel Goosens, Sebastian Rahtz,
-% and Frank Mittelbach for instance.
-%
-% Here is an example of the general form of a figure:
-% Fill in the caption in the braces of the \caption{} command. Put the label
-% that you will use with \ref{} command in the braces of the \label{} command.
-% Use the figure* environment if the figure should span across the
-% entire page. There is no need to do explicit centering.
-
-% \begin{figure}
-% \includegraphics{}%
-% \caption{\label{}}
-% \end{figure}
-
-% Surround figure environment with turnpage environment for landscape
-% figure
-% \begin{turnpage}
-% \begin{figure}
-% \includegraphics{}%
-% \caption{\label{}}
-% \end{figure}
-% \end{turnpage}
-
-% tables should appear as floats within the text
-%
-% Here is an example of the general form of a table:
-% Fill in the caption in the braces of the \caption{} command. Put the label
-% that you will use with \ref{} command in the braces of the \label{} command.
-% Insert the column specifiers (l, r, c, d, etc.) in the empty braces of the
-% \begin{tabular}{} command.
-% The ruledtabular enviroment adds doubled rules to table and sets a
-% reasonable default table settings.
-% Use the table* environment to get a full-width table in two-column
-% Add \usepackage{longtable} and the longtable (or longtable*}
-% environment for nicely formatted long tables. Or use the the [H]
-% placement option to break a long table (with less control than 
-% in longtable).
-% \begin{table}%[H] add [H] placement to break table across pages
-% \caption{\label{}}
-% \begin{ruledtabular}
-% \begin{tabular}{}
-% Lines of table here ending with \\
-% \end{tabular}
-% \end{ruledtabular}
-% \end{table}
-
-% Surround table environment with turnpage environment for landscape
-% table
-% \begin{turnpage}
-% \begin{table}
-% \caption{\label{}}
-% \begin{ruledtabular}
-% \begin{tabular}{}
-% \end{tabular}
-% \end{ruledtabular}
-% \end{table}
-% \end{turnpage}
-
-%\section{Aknowledgments}
-\section{Agradecimientos}
-
-\begin{acknowledgments}
-JIP, BM y MA agradecen el finaciamiento y el apoyo de CONICET, SeCyT y la UNC.
-\end{acknowledgments}
-% Create the reference section using BibTeX:
-\bibliography{ref}
-
-% Specify following sections are appendices. Use \appendix* if there
-% only one appendix.
-
-\onecolumngrid
-
-\appendix
-
-Bla bla bla...
-
-\end{document}
-%
-% ****** End of file apstemplate.tex ******
+from ode import integrador_ode, rk4
 
+
+def alpha_n(v):
+    return 0.01 * (10.0 - v) / (np.exp((10.0 - v) / 10.0) - 1.0)
+
+
+def alpha_m(v):
+    return 0.1 * (25.0 - v) / (np.exp((25.0 - v) / 10.0) - 1.0)
+
+
+def alpha_h(v):
+    return 0.07 * np.exp(-v / 20.0)
+
+
+def beta_n(v):
+    return 0.125 * np.exp(-v / 80.0)
+
+
+def beta_m(v):
+    return 4.0 * np.exp(-v / 18.0)
+
+
+def beta_h(v):
+    return 1.0 / (np.exp((30.0 - v) / 10.0) + 1.0)
+
+
+def ina(x, p):
+    """
+    Ganancia de la corriente i por una canal de Sodio Na
+
+    Parameters
+    ----------
+    x : TYPE
+        DESCRIPTION. parametros para ?
+    p : TYPE
+        DESCRIPTION. parametros para?
+
+    Returns
+    -------
+    La ganancia de iones que pasan a traves de un canal de sodio
+
+     El Canal de Sodio tiene 3 compuertas de tipo m que se abren y dejan pasar
+     la corriente y una de tipo h que debe estar inactiva para que dejen pasar
+     la corriente
+    """
+    v = x[0]  # potencial
+    m = x[2]  # probabilidad de que m este abierta
+    h = x[3]  # probabilidad de que h este inactiva
+    gna = p[1]  # gna
+    vna = p[4]  # vna
+    """
+    para que pase i deben habrirse las 3 compuertas m y la h debe estar
+    inactiva
+    """
+    pna = m**3 * h
+    """
+    gna * (v- vna) : conductividad promedio o ganancia promedio
+    """
+    return gna * (v - vna) * pna
+
+
+def ik(x, p):
+    """
+
+    Ganancia de la corriente i por una canal de Potasio K
+
+    Parameters
+    ----------
+    x : TYPE
+        DESCRIPTION. parametros para probabilidades
+    p : TYPE
+        DESCRIPTION. parametros para formulas
+
+    Returns
+    -------
+    La ganancia de iones que pasan a traves de un canal de Potasio
+
+     El Canal de Sodio tiene 4 compuertas de tipo m que se abren y dejan
+     pasar la corriente
+
+    """
+    v = x[0]
+    n = x[1]
+    gk = p[2]
+    vk = p[5]
+    """
+    para que pase i deben habrirse las 4 compuertas de tipo n al mismo tiempo
+    """
+    pk = n**4
+    return gk * (v - vk) * pk
+
+
+def il(x, p):
+    """
+
+    perdida de la corriente i
+
+    Parameters
+    ----------
+    x : TYPE
+        DESCRIPTION. parametros para probabilidades
+    p : TYPE
+        DESCRIPTION. parametros para formulas
+
+
+    Returns
+    -------
+        TODO completar
+
+    """
+    v = x[0]
+    gl = p[3]
+    vl = p[6]
+    return gl * (v - vl)
+
+
+# correspondientes tiempos caracteristicos y valores de equilibrios
+
+
+def tau_n(v):
+    return 1.0 / (alpha_n(v) + beta_n(v))
+
+
+def tau_m(v):
+    return 1.0 / (alpha_m(v) + beta_m(v))
+
+
+def tau_h(v):
+    return 1.0 / (alpha_h(v) + beta_h(v))
+
+
+def n_inf(v):
+    return alpha_n(v) * tau_n(v)
+
+
+def m_inf(v):
+    return alpha_m(v) * tau_m(v)
+
+
+def h_inf(v):
+    return alpha_h(v) * tau_h(v)
+
+
+def f(x, t, p):
+    """
+
+    x[0] = v(t): potencial de la membrana
+    x[1] = n(t): probabilidad de activacion de K (potasio)
+    x[2] = m(t): probabilidad de activacion Na (sodio)
+    x[3] = n(t): probabilidad de inactivacion Na (sodio)
+
+    t: 𝑡∼5𝑚𝑠  : tiempo  en milisegundos
+
+    p[0] = c = 1𝜇𝐹/𝑐𝑚2  : capacitancia de membrana (microF/cm **2)
+    p[1] = 𝑔¯Na = 120𝑚𝑆/𝑐𝑚2: conductancia máxima de Na
+    p[2] = 𝑔¯K = 36𝑚𝑆/𝑐𝑚2: conductancia máxima de  K
+    p[3] = 𝑔𝑙 = 0.3𝑚𝑆/𝑐𝑚2: conductancia máxima de perdida
+    p[4] = 𝑣Na=120𝑚𝑉: potencial de reversión de la corriente de Na
+    (potencial de Nernst de Na)
+    p[5] = 𝑣K=−12𝑚𝑉: potencial de reversión de la corriente de  K
+    (potencial de Nernst de K)
+    p[6] = 𝑣𝑙=10.6𝑚𝑉: potencial de reversión de la corriente de perdida
+    (potencial de Nernst de la correinte de perdida)
+    p[7] = 𝑖(𝑡)∼10𝜇𝐴/𝑐𝑚2: corriente de entrada al tiempo 𝑡
+
+    """
+
+    v = x[0]
+    n = x[1]
+    m = x[2]
+    h = x[3]
+    c = p[0]
+    i = p[7]
+
+    """
+    Sistema de 4 ecuaciones ODE acopladas
+    """
+    return np.array(
+        [
+            # ecuacion para dv/dt
+            (i(t) - ina(x, p) - ik(x, p) - il(x, p)) / c,
+            alpha_n(v) * (1.0 - n) - beta_n(v) * n,  # ecuacion para dn/dt
+            alpha_m(v) * (1.0 - m) - beta_m(v) * m,  # ecuacion para dm/dt
+            alpha_h(v) * (1.0 - h) - beta_h(v) * h,  # ecuacion para dh/dt
+        ]
+    )
+
+
+# EJERCICiO 2.2
+
+# graficamos valores de equilibrio de las distintas fracciones de compuertas
+
+plt.xlabel("$v$ [mV]")
+plt.xlim(-50, 120)
+plt.ylim(-0.1, 1.1)
+v = np.linspace(-50, 120, 1000)
+
+plt.plot(v, 0 * v, label="", linestyle="--", c="red")
+plt.plot(v, 0 * v + 1, label="", linestyle="--", c="red")
+plt.plot(v, np.vectorize(n_inf)(v), label="$n_{\\infty}$", c="orange")
+plt.plot(v, np.vectorize(m_inf)(v), label="$m_{\\infty}$", c="green")
+plt.plot(v, np.vectorize(h_inf)(v), label="$h_{\\infty}$", c="cyan")
+plt.title("Valores de equilibrio de las distintas fracciones de compuertas abiertas")
+plt.legend()
+plt.show()
+
+"""
+EJERCICiO 2.3
+Grafique los tiempos característicos de activación  𝜏𝑚 ,  𝜏𝑛  e
+inactivación  𝜏ℎ
+asociados a los distintos tipos de canales, en función de la diferencia de
+potencial de membrana  𝑣 .
+"""
+plt.xlabel("$v$ [mV]")
+plt.ylabel("$\\tau$ [ms]")
+
+plt.xlim(-50, 120)
+v = np.linspace(-50, 120, 1000)
+
+plt.plot(v, 0 * v, label="", linestyle="--", c="blue")
+plt.plot(v, np.vectorize(tau_n)(v), label="$\\tau_n$", c="orange")
+plt.plot(v, np.vectorize(tau_m)(v), label="$\\tau_m$", c="green")
+plt.plot(v, np.vectorize(tau_h)(v), label="$\\tau_h$", c="red")
+plt.title("Tiempos Caracteristicos")
+plt.legend()
+plt.show()
+
+
+"""
+# EJERCICiO 3.1
+
+parametros para las probabilidades de activacion o inactivacion de las
+compuertas
+"""
+v = 0.0  # potencial de la membrana
+nt = 0.0  # probabilidad de activacion de K (potasio)
+mt = 0.0  # probabilidad de activacion de Na (sodio)
+ht = 0.0  # probabilidad de inactivacion Na (sodio)
+x = [v, nt, mt, ht]
+
+# parametros para formulas
+c = 1  # 1𝜇𝐹/𝑐𝑚2
+gna = 120.0  # 120𝑚𝑆/𝑐𝑚2
+gk = 36.0  # 36𝑚𝑆/𝑐𝑚2
+gl = 0.3  # 0.3𝑚𝑆/𝑐𝑚2
+vna = 120.0  # 120𝑚𝑉
+vk = -12.0  # −12𝑚𝑉
+vl = 10.6  # 10.6𝑚𝑉
+
+
+def i(t):
+    """
+    ∼ 10𝜇𝐴/𝑐𝑚2  : corriente de entrada al tiempo 𝑡
+    """
+    return 0  # por ahora
+
+
+p = [c, gna, gk, gl, vna, vk, vl, i]
+
+
+a = 0  # tiempo inicial
+b = 500  # tiempo final
+h = 0.01  # paso
+k = int((b - a) / h)  # cantidad de pasos en el tiempo dado
+
+
+# 3.1)
+t, w = integrador_ode(rk4, f, x, a, b, k, p)
+
+
+"""
+3.2)  Grafique el potencial de membrana en función del tiempo,
+    i.e. grafique  𝑣(𝑡)  vs  𝑡  en el rango calculado.
+"""
+
+plt.title("Potencial de Membrana")
+
+plt.xlabel("$t$ [ms]")
+plt.ylabel("$ v(t) [mV] ")
+plt.xlim(0, 50)
+plt.ylim(-20, 120)
+
+
+plt.plot(t, 0 * t, linestyle="--", c="red")
+plt.plot(t, w[0], linestyle="-", c="b")
+plt.legend()
+plt.show()
+
+"""
+
+3.3) Grafique las diferentes corrientes de iones cruzando la membrana en
+    función del tiempo, i.e. grafique la corriente de iones de sodio
+    𝑖𝑁𝑎(𝑡) , la corriente de iones de potasio  𝑖𝐾(𝑡)  y la corriente de pérdida
+    𝑖𝑙(𝑡)  vs  𝑡  en el rango calculado.
+"""
+
+plt.title("Corrientes")
+
+plt.xlabel("$t$ [ms]")
+plt.ylabel("Micro Amperes ")
+plt.xlim(0, 50)
+plt.ylim(-30, 30)
+
+plt.plot(t, 0 * t, linestyle="--", c="gray")
+plt.plot(t, [ina(w[:, j], p) for j in range(len(t))], label="i_Na", c="r")
+plt.plot(t, [ik(w[:, j], p) for j in range(len(t))], label="i_K", c="b")
+plt.plot(t, [il(w[:, j], p) for j in range(len(t))], label="i_l", c="g")
+
+plt.legend()
+plt.show()
+
+"""
+3.4) Grafique las fracción de canales activados e inactivados de cada
+    tipo en función del tiempo, i.e. grafique  𝑛(𝑡)
+    (fracción de canales de potasio  𝐾  activos),  𝑚(𝑡)
+    (fracción de canales de sodio  𝑁𝑎  activos) y  ℎ(𝑡)
+    (fracción de canales de sodio  𝑁𝑎  inactivos)
+    vs  𝑡  en el rango calculado.
+"""
+plt.title("Fraccion de canales activos e inactivos")
+
+plt.xlabel("$t$ [ms]")
+plt.xlim(0, 50)
+plt.ylim(-0.1, 1.1)
+
+
+plt.plot(t, 0 * t, linestyle="--", c="gray")
+plt.plot(t, 0 * t + 1, linestyle="--", c="gray")
+
+plt.plot(t, w[1], label="$n(t)$", c="r")
+plt.plot(t, w[2], label="$m(t)$", c="b")
+plt.plot(t, w[3], label="$h(t)$", c="g")
+
+plt.legend()
+plt.show()
+
+
+"""
+3.5) Almacene los valores de equilibrio a corriente nula de las variables
+    dinámicas usando los valores de las mismas obtenidos a tiempos largos.
+    Es decir,
+    almacene los valores  𝑣∗≈𝑣(𝑡𝑓) ,  𝑛∗≈𝑛(𝑡𝑓) ,  𝑚∗≈𝑚(𝑡𝑓)  y  ℎ∗≈ℎ(𝑡𝑓) ,
+    para ser utilizado como condiciones iniciales en futuras integraciones de
+    las ODEs del modelo de Hodgkin y Huxley.
+"""
+valores_equilibrio = w[:, -1]
+
+
+"""
+
+Ejercicio 4) estímulo débil y estímulo fuerte
+
+    1) Implemente una función de corriente de entrada o membrana dada por:
+
+    𝑖(𝑡) =
+    10𝜇𝐴/𝑐𝑚2, 𝑡∈[2𝑚𝑠,2.5𝑚𝑠]
+    30𝜇𝐴/𝑐𝑚2, 𝑡∈[10𝑚𝑠,10.5𝑚𝑠]
+    0𝜇𝐴/𝑐𝑚2,𝑐.𝑐.
+
+Esta corriente representa un estímulo débil seguido de uno fuerte.
+Grafíque la corriente  𝑖(𝑡)  vs  𝑡  en el rango  𝑡∈[0𝑚𝑠,20𝑚𝑠] .
+"""
+
+
+
+def i2(t):
+    if 2.0 <= t <=2.5:
+        return 10.0
+    if 10.0 <= t <=10.5:
+        return 30.0
+    return 0.0
+
+
+
+plt.title("Corriente i_2")
+
+plt.xlabel("$t$ [ms]")
+plt.ylabel("Micro Amperes ")
+plt.xlim(0, 20)
+t_i = range(0, 20)
+plt.plot(t_i, [i2(_) for _ in t_i], c="cyan")
+
+plt.legend()
+plt.show()
+
+
+"""
+
+4.2) Integre nuevamente el sistema de ODEs del modelo de Hodgkin y Huxley
+    sujeto a la corriente del inciso anterior. Use como condición inicial
+    a tiempo  𝑡=0  los valores de equilibrio estimados en el
+    ejercicio anterior. Integre hasta el tiempo final  𝑡𝑓=500𝑚𝑠
+    usando un paso temporal  𝑑𝑡=0.01𝑚𝑠 .
+"""
+
+
+
+
+a = 0  # tiempo inicial
+b = 500  # tiempo final
+h = 0.01  # paso
+k = int((b - a) / h)  # cantidad de pasos en el tiempo dado
+p = [c, gna, gk, gl, vna, vk, vl, i2]
+
+t, w = integrador_ode(rk4, f, valores_equilibrio, a, b, k, p)
+
+valores_equilibrio2 = w[:, -1]
+
+
+"""
+4.3) Grafique el potencial de membrana en función del tiempo, i.e.  𝑣(𝑡)
+    vs  𝑡  en el rango calculado.
+"""
+plt.title("Potencial de Membrana para funcion de corriente i_2")
+
+plt.xlabel("$t$ [ms]")
+plt.ylabel("$ v(t) [mV] ")
+plt.xlim(0, 20)
+plt.ylim(-20, 120)
+
+
+plt.plot(t, t * 0, linestyle="--", c="red")
+plt.plot(t, w[0], linestyle="-", c="b")
+plt.legend()
+plt.show()
+
+"""
+4.4) Grafique la evolución de las fraciones de canales activos e inactivos,
+    𝑛(𝑡) ,  𝑚(𝑡)  y  ℎ(𝑡)  vs  𝑡 .
+"""
+
+plt.title("Fraccion de canales activos e inactivos para i_2")
+
+plt.xlabel("$t$ [ms]")
+plt.xlim(0, 20)
+plt.ylim(-0.1, 1.1)
+
+
+plt.plot(t, 0 * t, linestyle="--", c="gray")
+plt.plot(t, 0 * t + 1, linestyle="--", c="gray")
+
+plt.plot(t, w[1], label="$n(t)$", c="r")
+plt.plot(t, w[2], label="$m(t)$", c="b")
+plt.plot(t, w[3], label="$h(t)$", c="g")
+
+plt.legend()
+plt.show()
+
+
+"""
+4.5) Discuta como responde la neurona en el primer impulso a 𝑡=2𝑚𝑠 .
+    Luego, como responde al segundo impulso a  𝑡=10𝑚𝑠.
+    Existe una diferencia? Explique.
+"""
+
+
+"""
+Ejercicio 5) ráfaga
+5.1) Implemente la corriente de membrana
+
+    𝑖(𝑡) = { 10𝜇𝐴/𝑐𝑚2, 𝑡∈[5𝑚𝑠,∞𝑚𝑠)
+            0𝜇𝐴/𝑐𝑚2, 𝑐.𝑐.
+
+Esta corriente representa un estímulo constante.
+
+"""
+
+
+def i3(t):
+    if t >=5.0:
+        return 10.0
+    return 0.0
+
+
+
+
+plt.title("Corriente i_3")
+
+plt.xlabel("$t$ [ms]")
+plt.ylabel("Micro Amperes ")
+plt.xlim(0, 20)
+t_i = range(0, 20)
+plt.plot(t_i, [i3(_) for _ in t_i], c="cyan")
+
+plt.legend()
+plt.show()
+
+"""
+
+5.2) Integre nuevamente las ODEs para 𝑡∈[0𝑚𝑠,100𝑚𝑠], usando como condición
+    inicial los valores de equilibrio derivados en el inciso 6)
+    y un paso de integración 𝑑𝑡=0.01.
+"""
+
+
+a = 0  # tiempo inicial
+b = 100  # tiempo final
+h = 0.01  # paso
+k = int((b - a) / h)  # cantidad de pasos en el tiempo dado
+p = [c, gna, gk, gl, vna, vk, vl, i3]
+
+t, w = integrador_ode(rk4, f, valores_equilibrio, a, b, k, p)
+
+
+
+"""
+5.3) Grafique nuevamente el potencial de membrana en el rango de tiempos
+     calculado.
+"""
+
+plt.title("Potencial de Membrana para funcion de corriente i_3")
+
+plt.xlabel("$t$ [ms]")
+plt.ylabel("$ v(t) [mV] ")
+plt.xlim(0, 100)
+plt.ylim(-20, 120)
+
+
+plt.plot(t, t * 0, linestyle="--", c="red")
+plt.plot(t, w[0], linestyle="-", c="b")
+plt.legend()
+plt.show()
+
+
+"""
+5.4) Grafique nuevamente fracciones de canales activos e inactivos vs el
+    tiempo.
+"""
+
+plt.title("Fraccion de canales activos e inactivos para i_3")
+
+plt.xlabel("$t$ [ms]")
+plt.xlim(0, 100)
+plt.ylim(-0.1, 1.1)
+
+
+plt.plot(t, 0 * t, linestyle="--", c="gray")
+plt.plot(t, 0 * t + 1, linestyle="--", c="gray")
+
+plt.plot(t, w[1], label="$n(t)$", c="r")
+plt.plot(t, w[2], label="$m(t)$", c="b")
+plt.plot(t, w[3], label="$h(t)$", c="g")
+
+plt.legend()
+plt.show()
+
+
+"""
+5.5) Discuta lo que observa y explique.
+"""
+
+
+"""
+Ejercicio 6) período refractario
+6.1) Implemente la corriente de membrana
+
+      𝑖(𝑡) = {
+          10𝜇𝐴/𝑐𝑚2, 𝑡 ∈[10𝑚𝑠𝑘,10𝑚𝑠𝑘+2𝑚𝑠]m 𝑘 ∈ {1,2,3,4,5,...} 
+          0𝜇𝐴/𝑐𝑚2,𝑐.𝑐.
+"""
+
+
+
+
+def i4(t):
+    for i in range(1, 10):
+        if 10 * i  <= t <= 10 * i+2:
+            return 10.0
+    return 0.0
+
+
+
+plt.title("Corriente i_4")
+
+plt.xlabel("$t$ [ms]")
+plt.ylabel("Micro Amperes ")
+plt.xlim(-1, 50)
+t_i = np.linspace(-1, 100, 1000)
+plt.plot(t_i, np.vectorize(i4)(t_i), c="cyan")
+
+plt.legend()
+plt.show()
+
+
+"""
+6.2) Integre nuevamente las ODEs para 𝑡∈[0𝑚𝑠,100𝑚𝑠], usando la corriente del
+     inciso 12), la condición incial los valores de equilibrio derivados
+     en el inciso 6) y un paso de integración 𝑑𝑡=0.01.
+"""
+
+
+a = 0  # tiempo inicial
+b = 100  # tiempo final
+h = 0.01  # paso
+k = int((b - a) / h)  # cantidad de pasos en el tiempo dado
+p = [c, gna, gk, gl, vna, vk, vl, i4]
+
+t, w = integrador_ode(rk4, f, valores_equilibrio, a, b, k, p)
+
+
+
+
+"""
+6.3) Grafique nuevamente el potencial de membrana en el rango de tiempos
+    calculado.
+"""
+
+
+plt.title("Potencial de Membrana para funcion de corriente i_4")
+
+plt.xlabel("$t$ [ms]")
+plt.ylabel("$ v(t) [mV] ")
+plt.xlim(0, 100)
+plt.ylim(-20, 120)
+
+
+plt.plot(t, t * 0, linestyle="--", c="red")
+plt.plot(t, w[0], linestyle="-", c="b")
+plt.legend()
+plt.show()
+
+
+"""
+6.4) Grafique nuevamente fracciones de canales activos e inactivos
+     vs el tiempo.
+"""
+
+plt.title("Fraccion de canales activos e inactivos para i_4")
+
+plt.xlabel("$t$ [ms]")
+plt.xlim(0, 100)
+plt.ylim(-0.1, 1.1)
+
+
+plt.plot(t, 0 * t, linestyle="--", c="gray")
+plt.plot(t, 0 * t + 1, linestyle="--", c="gray")
+
+plt.plot(t, w[1], label="$n(t)$", c="r")
+plt.plot(t, w[2], label="$m(t)$", c="b")
+plt.plot(t, w[3], label="$h(t)$", c="g")
+
+plt.legend()
+plt.show()
+
+
+"""
+6.5) Discuta lo que observa y explique.
+"""
+
+"""
+Ejercicio 7) exitaciones espontáneas en respuesta al ruido
+
+7.1) Implemente una corriente estocástica que retorne un valor
+      
+              𝑖(𝑡) ∼ 𝑖 0 𝑁(0,1)
+
+     (i.e. 𝑖0 por un valor aleatorio obtenido de una
+     distribución normal de media 0 y varianza 1)
+     para cada valor de 𝑡 en el que sea evaluada.
+"""
+
+i0 =50
+
+def i5(t):
+    return i0 * np.random.normal()
+
+
+plt.title("Corriente i_5")
+
+plt.xlabel("$t$ [ms]")
+plt.ylabel("Micro Amperes ")
+plt.xlim(-1, 50)
+t_i = np.linspace(-1, 100, 1000)
+plt.plot(t_i, np.vectorize(i5)(t_i), c="cyan")
+
+plt.legend()
+plt.show()
+
+
+
+"""
+7.2) Integre nuevamente las ODEs para 𝑡∈[0𝑚𝑠,500𝑚𝑠], usando la corriente
+     del inciso 22) para 𝑖0=50𝜇𝐴, la condición incial los valores de
+     equilibrio derivados en el inciso 6) y un paso de integración 𝑑𝑡=0.01.
+"""
+
+
+a = 0  # tiempo inicial
+b = 500  # tiempo final
+h = 0.01  # paso
+k = int((b - a) / h)  # cantidad de pasos en el tiempo dado
+p = [c, gna, gk, gl, vna, vk, vl, i5]
+
+t, w = integrador_ode(rk4, f, valores_equilibrio, a, b, k, p)
+
+
+"""
+7.3) Grafique nuevamente el potencial de membrana en el rango de tiempos
+     calculado.
+"""
+
+
+plt.title("Potencial de Membrana para funcion de corriente i_5")
+
+plt.xlabel("$t$ [ms]")
+plt.ylabel("$ v(t) [mV] ")
+plt.xlim(0, 500)
+plt.ylim(-20, 120)
+
+
+plt.plot(t, t * 0, linestyle="--", c="red")
+plt.plot(t, w[0], linestyle="-", c="b")
+plt.legend()
+plt.show()
+
+
+"""
+7.4) Grafique nuevamente fracciones de canales activos e inactivos vs el
+     tiempo.
+"""
+
+
+plt.title("Fraccion de canales activos e inactivos para i_5")
+
+plt.xlabel("$t$ [ms]")
+plt.xlim(0, 500)
+plt.ylim(-0.1, 1.1)
+
+
+plt.plot(t, 0 * t, linestyle="--", c="gray")
+plt.plot(t, 0 * t + 1, linestyle="--", c="gray")
+
+plt.plot(t, w[1], label="$n(t)$", c="r")
+plt.plot(t, w[2], label="$m(t)$", c="b")
+plt.plot(t, w[3], label="$h(t)$", c="g")
+
+plt.legend()
+plt.show()
+
+"""
+7.5) Observa picos de activación cada tanto? Aparecen con regularidad?
+      Estime con que frecuencia observa los picos.
+
+"""
 
