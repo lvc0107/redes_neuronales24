@@ -34,6 +34,7 @@
 \usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage{caption}
+\usepackage[font={small,it}]{caption}
 
 \usepackage{epstopdf}
 %\usepackage{amsmath}% http://ctan.org/pkg/amsmath
@@ -154,14 +155,13 @@ El objetivo de este trabajo es estudiar el comportamiento del modelo de Hodgkin-
 
 El modelo de Hodgkin y Huxley describe cómo se inician y transmiten los potenciales de acción en las neuronas.
 
-Consiste en un conjunto de cuatro ecuaciones diferenciales ordinarias acopladas no lineales, que aproximan las características eléctricas de células excitables como las neuronas.
-~\cite{HodgkinyHuxleyWikipedia}.
+Consiste en un conjunto de cuatro ecuaciones diferenciales ordinarias acopladas no lineales, que aproximan las características eléctricas de células excitables como las neuronas.~\cite{HodgkinyHuxleyWikipedia}.
 
 \section{Teoría}
 
 Las siguientes ecuaciones diferenciales
 detalladas en ~\cite{HodgkinyHuxleyWikipedia} 
-son las que modelan el comportamiento de la neurona en función del cambio de la diferencia del potencial de la membrana que proteje a la neurona. Es decir en función de la taza de cambio del potencial $v$ entre el interior y el exterior de la membrana a lo largo del tiempo y a su vez en función de las probabilidades de ciertos canales internos de la membrana  que dependen del cambio de potencial antes mencionado, cuando la membrana es ejercitada con impulsos de iones.
+son las que modelan el comportamiento de la neurona en función del cambio de la diferencia del potencial de la membrana que proteje a la neurona. Es decir en función de la razon de cambio del potencial $v$ entre el interior y el exterior de la membrana a lo largo del tiempo y a su vez en función de las probabilidades de activación o inactivación de ciertos canales internos de la membrana  que dependen del cambio de potencial antes mencionado, cuando la membrana es ejercitada con impulsos de iones.
 
 \begin{eqnarray*}
 \dot{n}&=&\alpha_n(v)(1-n)-\beta_n(v) n\\
@@ -170,15 +170,15 @@ son las que modelan el comportamiento de la neurona en función del cambio de la
 \dot{v}&=&c^{-1}(i-\bar{g}_{\mathrm{Na}}m^3h(v-v_{\mathrm{Na}})-\bar{g}_{\mathrm{K}}n^4(v-v_{\mathrm{K}})-g_{l}(v-v_{l}))
 \end{eqnarray*}
 Acá $\dot{n}$, $\dot{m}$ y $\dot{h}$
-representan las probabilidades de que el canal de sodio este áctivo, el canal de potasio este áctivo y el canal de sodio este inactivo, respectivamente permitiendo el paso de iones a traves de la membrana. $\dot{v}$ representa la diferencia del potencial de la membrana.
-Las tres primeras ecuaciones dependen del potencial. Cuando el potencial sufre un cambio, debido a una inyección o interrupción de inyección de iones, las probabilidades suben o bajan abriendo o cerrando los canales.
+representan la razon de cambio de las fracciones de canales de sodio  $Na$ abiertas, la razon de cambio de las fracciones de canales de potasio $K$ abiertas y la razon de cambio de las fracciones de canales de sodio $Na$ inactivos, respectivamente permitiendo el paso de iones a traves de la membrana. $\dot{v}$ representa la diferencia del potencial de la membrana.
+Las tres primeras ecuaciones dependen del potencial. Cuando el potencial sufre un cambio, debido a una inyección o interrupción de iones, las fracciones de canales de cada tipo suben o bajan abriendo o cerrando los canales.
 
 
 Utilizando el método de integración de Runge-Kutta de 4to orden  sobre el sistema de ecuaciones se logra aproximar las trayectorias de dichas variables.
 
 
 Para estudiar el comportamiento de la neurona se definieron varias funciones que modelan el impulso de corriente de iones
-denominadas como $i$, $i2$, etc
+denominadas como $i$, $i2$, etc.
 La función de integración toma como parametros las ecuaciones diferenciales que a su vez en cada expermiento estan parametrizadas por cada una de las funciones de corrientes.
  
 
@@ -206,7 +206,7 @@ Cuando inicia el modelado en los primeros [ms] El potencial de la membrana sufre
 \end{figure}
 
 
-Como resultado de la taza de cambio del potencial anterior en los primeros [ms] las probabilidades o fracciones de canales activos de sodio $n(t)$ se estabilizan en aproximadamente 0.6. La fracción de canales de Potasio $m(t)$ se estabilizan en aproximadamente 0.3 y la fracción de canales inactivos de sodio $h(t)$ se estabilizan en aproximadamente por encima de 0. fig.~\ref{fig2}. Estos son valores de equilibrio que seran utilizados como valores iniciales en los siguientes experimentos.
+Como resultado de la razon de cambio del potencial anterior en los primeros [ms] las fracciones de canales activos de sodio $n(t)$ se estabilizan en aproximadamente 0.6. La fracción de canales de Potasio $m(t)$ se estabilizan en aproximadamente 0.3 y la fracción de canales inactivos de sodio $h(t)$ se estabilizan aproximadamente por encima de 0. Esto se da para ${t \to \infty}$. fig.~\ref{fig2}. Estos son valores de equilibrio que seran utilizados como valores iniciales en los siguientes experimentos.
 
 
 \begin{figure}[h!]
