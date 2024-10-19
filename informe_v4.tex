@@ -153,31 +153,20 @@ El objetivo de este trabajo es estudiar el comportamiento del modelo de Hodgkin-
 
 \section{Introducción}
 
-El modelo de Hodgkin y Huxley, basado en experimentos con neuronas del calamar gigante, describe el comportamiento eléctrico de una neurona como un circuito equivalente a un capacitor con resistencias asociadas al flujo de iones. Los canales iónicos de la membrana permiten la entrada y salida de sodio (Na) y potasio (K), lo que genera cambios en el potencial de membrana. Mediante ecuaciones diferenciales, el modelo predice el proceso de excitación y conducción neuronal.
-Consiste en un conjunto de cuatro ecuaciones diferenciales ordinarias acopladas.~\cite{HodgkinyHuxleyWikipedia}
+El modelo de Hodgkin y Huxley, basado en experimentos con neuronas del calamar gigante, describe el comportamiento eléctrico de una neurona como un circuito equivalente a un capacitor con resistencias asociadas al flujo de iones. Mediante un conjunto de cuatro ecuaciones diferenciales ordinarias acopladas, el modelo predice el proceso de excitación y conducción neuronal.~\cite{HodgkinyHuxleyWikipedia}
 \section{Teoría}
 
-Una neurona se puede modelar a través de los siguientes estados y comportamientos:\\
-
-\textbf{Estado de reposo}: En este estado, la neurona no está activa y mantiene un potencial de membrana negativo, típicamente alrededor de -70 $mV$. Esto ocurre porque los canales de potasio ($\mathrm{K}^+$) están abiertos, permitiendo la salida de $\mathrm{K}^+$, mientras que los canales de sodio ($\mathrm{Na}^+$) están cerrados. Este estado es descrito por las ecuaciones que modelan el equilibrio iónico, donde los movimientos de $\mathrm{K}^+$ y $\mathrm{Na}^+$ se mantienen en balance para estabilizar el potencial de reposo.
-
-\textbf{Despolarización}: Cuando un estímulo alcanza el umbral necesario, los canales de sodio se abren rápidamente, permitiendo la entrada masiva de $\mathrm{Na}^+$ al interior de la neurona. Esto provoca un cambio rápido en el potencial de membrana, haciéndolo menos negativo (llegando incluso a ser positivo). Esta fase está controlada por la apertura de los canales de $\mathrm{Na}^+$ y el aumento de la conductancia de sodio.
-
-\textbf{Repolarización}: Después de la despolarización, los canales de sodio comienzan a cerrarse y los canales de potasio se abren, lo que permite la salida de $\mathrm{K}^+$ de la neurona. Esto causa que el potencial de membrana vuelva a valores negativos. Esta fase se explica mediante la disminución de la conductancia de sodio y el aumento de la conductancia de potasio, lo que restaura el potencial de membrana hacia su valor de reposo.\\
-
-\textbf{Hiperpolarización}: A veces, la salida de $\mathrm{K}^+$ es tan grande que el potencial de membrana se vuelve más negativo que el estado de reposo. Este estado es llamado hiperpolarización. En el modelo, se refleja en la lenta inactivación de los canales de potasio, que regula el retorno al equilibrio.
-
-\textbf{Período refractario}: Es el tiempo en el cual una neurona no puede ser activada nuevamente inmediatamente después de un potencial de acción. Esto se explica por la inactivación temporal de los canales de sodio y la lenta vuelta a la configuración original de los canales de potasio.\\
-
-Con estos estados el modelo de Hodgkin y Huxley considera que la membrana de la neurona funciona como un circuito eléctrico, compuesto por tres elementos:\\
+El modelo de Hodgkin y Huxley considera que la membrana de la neurona funciona como un circuito eléctrico, compuesto por tres elementos:\\
 
 \textbf{Capacitor}: representa la membrana celular, ya que existe una diferencia de potencial entre el interior y el exterior de la neurona debido a las concentraciones de iones.\\
 
 \textbf{Resistencias}: son los canales iónicos que permiten el paso de iones de sodio (Na) y potasio (K). Estos canales pueden abrirse o cerrarse según el estado de la neurona, y son selectivos, es decir, algunos solo permiten el paso de iones específicos, como $\mathrm{K}^+$. La conductancia de los canales depende del número de compuertas abiertas.\\
 
-\textbf{Baterías}: representan el potencial de equilibrio de cada ion, conocido como el potencial de Nernst, que varía para cada tipo de ion.
+\textbf{Baterías}: representan el potencial de equilibrio de cada ion, conocido como el potencial de Nernst, que varía para cada tipo de ion.\\
 
-El modelo describe cómo, ante un estímulo eléctrico, los canales de sodio (Na) se abren, permitiendo la entrada de $\mathrm{Na}^+$ y despolarizando la membrana, es decir, el potencial de membrana se vuelve menos negativo e incluso positivo. Posteriormente, los canales de sodio se cierran y los de potasio (K) se abren, permitiendo la salida de $\mathrm{K}^+$. Esto repolariza la neurona, restaurando el potencial de membrana a valores negativos y devolviéndolo a su estado de reposo.
+El modelo de Hodgkin y Huxley describe cómo, cuando un estímulo eléctrico alcanza el umbral necesario, los canales de sodio ($\mathrm{Na}^+$) en la membrana neuronal se abren rápidamente, permitiendo una entrada masiva de iones $\mathrm{Na}^+$  al interior de la célula. Este flujo provoca un cambio brusco en el potencial de membrana (en su estado de reposo mantiene un potencial de membrana alrededor de -70 mV), que se vuelve menos negativo e incluso positivo, a este proceso se lo denomina \textbf{despolarización}. A medida que el potencial alcanza su punto máximo, los canales de sodio comienzan a cerrarse, y los canales de potasio ($\mathrm{K}^+$) se abren, permitiendo la salida de iones $\mathrm{K}^+$. Este flujo de salida de $\mathrm{K}^+$ restaura gradualmente el potencial de membrana a su valor negativo inicial, a este proceso se lo denomina \textbf{repolarización}.
+
+Sin embargo, la salida de $\mathrm{K}^+$ a veces es tan intensa que el potencial de membrana se vuelve más negativo que su nivel de reposo, fenómeno llamado \textbf{hiperpolarización}. Durante este proceso, los canales de sodio permanecen inactivos temporalmente, y los de potasio se cierran lentamente. Este periodo, en el que la neurona no puede ser excitada nuevamente, se denomina \textbf{periodo refractario}, y es esencial para que la neurona recupere su estado original antes de un nuevo estímulo.
 
 La conductividad asociada a estos canales, depende de la fracción de compuertas abiertas en cada tipo de canal. Según el modelo, la conductancia total asociada a los canales de Na se aproxima por
 $$g_{\mathrm{Na}} = \bar{g}_{\mathrm{Na}}p_{\mathrm{Na}}$$
@@ -197,7 +186,6 @@ Estas aproximaciones asumen que las compuertas abren o cierran de manera indepen
 \end{eqnarray*}
 
 Donde $\alpha(v)$ representa la tasa a la cual las compuertas cerradas de cada tipo abren y $\beta(v)$ representa la tasa a la cual las compuertas abiertas de cada tipo cierran.\\
-
 Se obtiene así un sistema de cuatro ODEs acopladas  que determinan al modelo de Hodgkin y Huxley.\\
 
 Finalmente, para estudiar el comportamiento de una neurona bajo distintas corrientes iónicas, utilizamos este sistema de ecuaciones diferenciales, que se resuelve mediante los métodos de integración de Runge-Kutta de cuarto orden 
@@ -210,7 +198,9 @@ Se realizaron 5 experimentos en los cuales se intenta ver que pasa en la membran
 
 
 
-Experimento 1: \textbf{Valores de equilibrio}. Para integrar numéricamente las ecuaciones se utilizó como condiciones iniciales una corriente constante $i=0$, un potencial de membrana $v=0$, probabilidad de activación de potasio $nt=0$, probabilidad de activación de sodio $mt=0$ y probabilidad de inactivación de sodio $ht =0$. Podemos observar que en los primeros [ms] del sistema los estímulos no alcanzan a abrir los canales $\mathrm{Na}^+$ para que se genere una diferencia de potencial significativa. Tiempo después cuando un estímulo alcanza el umbral necesario, se alcanzan estados de equilibrio para ${t \to \infty}$. fig.~\ref{fig1}.\\
+Experimento 1: \textbf{Valores de equilibrio}. Para integrar numéricamente las ecuaciones se utilizó como condiciones iniciales una corriente constante $i=0$, un potencial de membrana $v=0$, probabilidad de activación de potasio $nt=0$, probabilidad de activación de sodio $mt=0$ y probabilidad de inactivación de sodio $ht =0$. Podemos observar que debido a los valores iniciales establecidos, y en particular para $nt$ y $ht$ en los primeros [ms] el sistema actúa como si esos canales estuviesen cerrados, por lo que el modelo actúa abriendo esto canales generando una diferencia de potencial significativa.
+Esto ocurre independientemente de que no ingresen iones.
+Tiempo después se produce el proceso de repolarización llevando $v$ a 0 para  ${t \to \infty}$. fig.~\ref{fig1}.\\
 
 \begin{figure}[h!]
 \centering
@@ -221,6 +211,7 @@ Experimento 1: \textbf{Valores de equilibrio}. Para integrar numéricamente las 
 
 
 Como resultado de la razón de cambio del potencial anterior en los primeros [ms] las fracciones de canales activos de sodio $m(t)$ se estabilizan en aproximadamente por encima de 0. La fracción de canales de Potasio $n(t)$ se estabilizan en aproximadamente 0.3 y la fracción de canales inactivos de sodio $h(t)$ se estabilizan en aproximadamente 0.6. Esto se da para ${t \to \infty}$. fig.~\ref{fig2}. Estos son valores de equilibrio que serán utilizados como valores iniciales en los siguientes experimentos.\\
+Se pudo probar que si el experimento se inicia ingresando $0uA$ y los valores de equilibrio, el potencial no se activa. Lo que confirma que en ese caso el sistema ya esta en estado de equilibrio. 
 
 
 \begin{figure}[h!]
