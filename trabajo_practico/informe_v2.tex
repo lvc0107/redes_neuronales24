@@ -153,27 +153,26 @@ El objetivo de este trabajo es estudiar el comportamiento del modelo de Hodgkin-
 
 \section{Introducción}
 
-El modelo de Hodgkin y Huxley, basado en experimentos con neuronas del calamar gigante, describe el comportamiento eléctrico de una neurona como un circuito equivalente a un capacitor con resistencias asociadas al flujo de iones. Mediante un conjunto de cuatro ecuaciones diferenciales ordinarias acopladas, el modelo predice el proceso de excitación y conducción neuronal.~\cite{HodgkinyHuxleyWikipedia}
+El modelo de Hodgkin y Huxley, basado en experimentos con neuronas del calamar gigante, describe el comportamiento eléctrico de una neurona como un circuito equivalente a un capacitor con resistencias asociadas al flujo de iones. Los canales iónicos de la membrana permiten la entrada y salida de sodio (Na) y potasio (K), lo que genera cambios en el potencial de membrana. Mediante ecuaciones diferenciales, el modelo predice el proceso de excitación y conducción neuronal. (\textcolor{blue}{agregue esto})
+Consiste en un conjunto de cuatro ecuaciones diferenciales ordinarias acopladas .~\cite{HodgkinyHuxleyWikipedia}.
 \section{Teoría}
 
-El modelo de Hodgkin y Huxley considera que la membrana de la neurona funciona como un circuito eléctrico, compuesto por tres elementos:\\
+ El modelo de Hodgkin y Huxley considera que la membrana de la neurona funciona como un circuito eléctrico, compuesto por tres elementos:
 
-\textbf{Capacitor}: representa la membrana celular, ya que existe una diferencia de potencial entre el interior y el exterior de la neurona debido a las concentraciones de iones.\\
+\textbf{Capacitor}: representa la membrana celular, ya que existe una diferencia de potencial entre el interior y el exterior de la célula debido a las concentraciones de iones.\\
 
 \textbf{Resistencias}: son los canales iónicos que permiten el paso de iones de sodio (Na) y potasio (K). Estos canales pueden abrirse o cerrarse según el estado de la neurona, y son selectivos, es decir, algunos solo permiten el paso de iones específicos, como $\mathrm{K}^+$. La conductancia de los canales depende del número de compuertas abiertas.\\
 
-\textbf{Baterías}: representan el potencial de equilibrio de cada ion, conocido como el potencial de Nernst, que varía para cada tipo de ion.\\
+\textbf{Baterías}: representan el potencial de equilibrio de cada ion, conocido como el potencial de Nernst, que varía para cada tipo de ion.
 
-El modelo de Hodgkin y Huxley describe cómo, cuando un estímulo eléctrico alcanza el umbral necesario, los canales de sodio ($\mathrm{Na}^+$) en la membrana neuronal se abren rápidamente, permitiendo una entrada masiva de iones $\mathrm{Na}^+$  al interior de la célula. Este flujo provoca un cambio brusco en el potencial de membrana (en su estado de reposo mantiene un potencial de membrana alrededor de -70 mV), que se vuelve menos negativo e incluso positivo, a este proceso se lo denomina \textbf{despolarización}. A medida que el potencial alcanza su punto máximo, los canales de sodio comienzan a cerrarse, y los canales de potasio ($\mathrm{K}^+$) se abren, permitiendo la salida de iones $\mathrm{K}^+$. Este flujo de salida de $\mathrm{K}^+$ restaura gradualmente el potencial de membrana a su valor negativo inicial, a este proceso se lo denomina \textbf{repolarización}.
-
-Sin embargo, la salida de $\mathrm{K}^+$ a veces es tan intensa que el potencial de membrana se vuelve más negativo que su nivel de reposo, fenómeno llamado \textbf{hiperpolarización}. Durante este proceso, los canales de sodio permanecen inactivos temporalmente, y los de potasio se cierran lentamente. Este periodo, en el que la neurona no puede ser excitada nuevamente, se denomina \textbf{periodo refractario}, y es esencial para que la neurona recupere su estado original antes de un nuevo estímulo.
+El modelo describe cómo, ante un estímulo eléctrico, los canales de sodio (Na) se abren, (\textcolor{red}{que pasa con las de sodio que no se abren ..las que estan modeladas con ht})permitiendo la entrada de $\mathrm{Na}^+$ y despolarizando (\textcolor{red}{no tengo claro que significa despolarizar})la membrana, es decir, el potencial de membrana se vuelve menos negativo e incluso positivo. Posteriormente, los canales de sodio se cierran y los de potasio (K) se abren, permitiendo la salida de $\mathrm{K}^+$. Esto repolariza la célula( \textcolor{red}{no tengo claro que significa repolarizar}), restaurando el potencial de membrana a valores negativos y devolviéndolo a su estado de reposo.
 
 La conductividad asociada a estos canales, depende de la fracción de compuertas abiertas en cada tipo de canal. Según el modelo, la conductancia total asociada a los canales de Na se aproxima por
 $$g_{\mathrm{Na}} = \bar{g}_{\mathrm{Na}}p_{\mathrm{Na}}$$
-donde $\bar{g}_{\mathrm{Na}}$ es la conductancia de $\mathrm{Na}$ máxima posible y $p_{\mathrm{Na}} = m^3h$  es la fracción de canales de Na abiertos. Aquí m y h son la fracciones de compuertas abiertas de activación e inactivación, respectivamente. Los canales de Na poseen 3 compuertas de activación y 1 de inactivación.
+donde $\bar{g}_{\mathrm{Na}}$ es la conductancia de $\mathrm{Na}$ máxima posible y $p_{\mathrm{Na}} = m^3h$  es la fracción de canales de Na abiertos. Aquí m y h son la fracciones de compuertas abiertas de activación e inactivación, respectivamente. Los canales de Na poseen 3 compuertas de activación y 1 de inactivación, por lo que m tiene un exponente 3 y h un exponente 1.( \textcolor{red}{me suena redudante explicar esto..que se ve en la formula})
 
-De manera similar, la conductancia asociada a los canales de K se aproxima por 
-$$g_{\mathrm{K}} = \bar{g}_{\mathrm{K}}p_{\mathrm{K}}$$ 
+De manera similar, la conductancia asociada a los canales de K se aproxima por
+$$g_{\mathrm{K}} = \bar{g}_{\mathrm{K}}p_{\mathrm{K}}$$
 
 donde $\bar{g}_{\mathrm{K}}$  es la conductancia de K máxima posible, $p_{\mathrm{K}} = n^4$ es la fracción de canales de K abiertos y n es la fracción de compuertas abiertas en este tipo de canales. Cada canal de K posee 4 compuertas de tipo n, de ahí el exponente 4.
 
@@ -185,11 +184,14 @@ Estas aproximaciones asumen que las compuertas abren o cierran de manera indepen
 \dot{v}&=&c^{-1}(i-\bar{g}_{\mathrm{Na}}m^3h(v-v_{\mathrm{Na}})-\bar{g}_{\mathrm{K}}n^4(v-v_{\mathrm{K}})-g_{l}(v-v_{l}))
 \end{eqnarray*}
 
-Donde $\alpha(v)$ representa la tasa a la cual las compuertas cerradas de cada tipo abren y $\beta(v)$ representa la tasa a la cual las compuertas abiertas de cada tipo cierran.\\
-Se obtiene así un sistema de cuatro ODEs acopladas  que determinan al modelo de Hodgkin y Huxley.\\
+Donde $\alpha(v)$ representa la tasa a la cual las compuertas cerradas de cada tipo abren y $\beta(v)$ representa la tasa a la cual las compuertas abiertas de cada tipo cierran.
 
-Finalmente, para estudiar el comportamiento de una neurona bajo distintas corrientes iónicas, utilizamos este sistema de ecuaciones diferenciales, que se resuelve mediante los métodos de integración de Runge-Kutta de cuarto orden 
-y de Euler, el cual es usado para experimentos con variables estocásticas.  Estos métodos nos permite aproximar, a través de gráficos, el comportamiento de la neurona en cada caso particular.
+La corriente $i$ inyectada al interior de la neurona se divide en dos partes. Por un lado, en la corriente  $im=iNa+iK+il$  que fluye a travéz de los canales en la membrana, y por otro lado, en la corriente  ic  que carga el capacitor( \textcolor{red}{siento como que con el poco espacio que hay para explicar teoria..sacaria esto y explicaria en su lugar que representan las 4 variables $\dot{n}$, $\dot{m}$, $\dot{h}$ y $\dot{v}$ }).
+Remplazando con sus equivalencias, obtenemos una ODE para el potencial de membrana.
+Estas cuatro ODEs determinan el sistema de ODEs acopladas del modelo de Hodgkin y Huxley.
+
+Finalmente, para estudiar el comportamiento de una neurona bajo distintas corrientes iónicas, utilizamos este sistema de ecuaciones diferenciales, que se resuelve mediante los métodos de integración de Runge-Kutta de cuarto orden (\textcolor{blue}{agregue esto})
+y del metodo de Euler, usado para experimentos con variables estocasticas.  Estos métodos nos permite aproximar, a través de gráficos, el comportamiento de la neurona en cada caso particular.
 
 
 
@@ -198,9 +200,7 @@ Se realizaron 5 experimentos en los cuales se intenta ver que pasa en la membran
 
 
 
-Experimento 1: \textbf{Valores de equilibrio}. Para integrar numéricamente las ecuaciones se utilizó como condiciones iniciales una corriente constante $i=0$, un potencial de membrana $v=0$, probabilidad de activación de potasio $nt=0$, probabilidad de activación de sodio $mt=0$ y probabilidad de inactivación de sodio $ht =0$. Podemos observar que debido a los valores iniciales establecidos, y en particular para $nt$ y $ht$ en los primeros [ms] el sistema actúa como si esos canales estuviesen cerrados, por lo que el modelo actúa abriendo esto canales generando una diferencia de potencial significativa.
-Esto ocurre independientemente de que no ingresen iones.
-Tiempo después se produce el proceso de repolarización llevando $v$ a 0 para  ${t \to \infty}$. fig.~\ref{fig1}.\\
+Experimento 1: \textbf{Valores de equilibrio}. Para integrar numéricamente las ecuaciones se utilizó como condiciones iniciales una corriente constante $i=0$, un potencial de membrana $v=0$, probabilidad de activación de potasio $nt=0$, probabilidad de activación de sodio $mt=0$ y probabilidad de inactivación de sodio $ht =0$. Podemos observar que en los primeros [ms] del sistema los estímulos no alcanzan a abrir los canales $\mathrm{Na}^+$ (\textcolor{red}{ aca pienso que en realidad el potencial no es suficiente para incrementar $nt$, $mt$ y  reducir $ht$})para que se genere una diferencia de potencial significativa. Tiempo después cuando un estímulo alcanza el umbral necesario, los canales de sodio se abren rápidamente, permitiendo la entrada masiva de $\mathrm{Na}^+$ al interior de la célula(\textcolor{red}{neurona}). Esto provoca un cambio rápido en el potencial de membrana, haciéndolo más positivo(Despolarización), generando así un pico en gráfico. Inmediatamente después los canales de sodio comienzan a cerrarse y los canales de potasio se abren, lo que permite la salida de K⁺ de la célula. Esto causa que el potencial de membrana vuelva a valor de reposo (Repolarización).  A veces, la salida de K⁺ es tan grande que el potencial de membrana se vuelve más negativo que el estado de reposo(Hiperpolarización). Tiempo después regresan a sus estados de equilibrio. fig.~\ref{fig1}\\
 
 \begin{figure}[h!]
 \centering
@@ -209,9 +209,8 @@ Tiempo después se produce el proceso de repolarización llevando $v$ a 0 para  
 \caption{Potencial de membrana con función de corriente constante 0. \label{fig1}}
 \end{figure}
 
-
-Como resultado de la razón de cambio del potencial anterior en los primeros [ms] las fracciones de canales activos de sodio $m(t)$ se estabilizan en aproximadamente por encima de 0. La fracción de canales de Potasio $n(t)$ se estabilizan en aproximadamente 0.3 y la fracción de canales inactivos de sodio $h(t)$ se estabilizan en aproximadamente 0.6. Esto se da para ${t \to \infty}$. fig.~\ref{fig2}. Estos son valores de equilibrio que serán utilizados como valores iniciales en los siguientes experimentos.\\
-Se pudo probar que si el experimento se inicia ingresando $0uA$ y los valores de equilibrio, el potencial no se activa. Lo que confirma que en ese caso el sistema ya esta en estado de equilibrio. 
+(\textcolor{blue}{Dejaria esto para que en los proximos experimentos solamente lso referenciemos como los valores de equilibrio})
+Como resultado de la razon de cambio del potencial anterior en los primeros [ms] las fracciones de canales activos de sodio $n(t)$ se estabilizan en aproximadamente 0.6. La fracción de canales de Potasio $m(t)$ se estabilizan en aproximadamente 0.3 y la fracción de canales inactivos de sodio $h(t)$ se estabilizan aproximadamente por encima de 0. Esto se da para ${t \to \infty}$. fig.~\ref{fig2}. Estos son valores de equilibrio que seran utilizados como valores iniciales en los siguientes experimentos.\\
 
 
 \begin{figure}[h!]
@@ -226,14 +225,14 @@ Experimento 2: \textbf{Estímulo débil y estímulo fuerte}. Se utilizo la sigui
 $$
 i2(t) = \left\{
 \begin{array}{ll}
-10 \mu A/cm^2, & t\in [2ms, 2.5ms] \\
-30 \mu A/cm^2, & t\in [10ms, 10.5ms] \\
+10 \mu A/cm^2, & t\in [2ms,2.5ms] \\
+30 \mu A/cm^2, & t\in [10ms,10.5ms] \\
 0 \mu A/cm^2, & c.c. \\
 \end{array}
 \right.
 $$
- 
-En fig.~\ref{fig3} se observa que ante el primer estímulo en el intervalo de tiempo [2ms, 2.5ms] la cantidad de corriente inyectada no es suficiente para activar y abrir los canales de sodio por lo cual no se produce un cambio significativo de potencial en la membrana. En cambio para intervalo de tiempo [10ms, 12.5ms], la corriente alcanza el umbral de activación del canal de sodio logrando abrirse dejando pasar los iones de sodio rápidamente lo cual provoca un disparo del potencial. Luego se produce el proceso de repolarización e hiperpolarización  restaurando el sistema a los valores de equilibrio.\\
+
+En fig.~\ref{fig3}. se observa que ante el primer estímulo en el intervalo de tiempo [2ms,2.5ms] la cantidad de corriente inyectada no es suficiente para activar y abrir los canales de sodio por lo cual no se produce un cambio significativo de potencial en la membrana. En cambio para intervalo de tiempo [10ms,12.5ms], la corriente alcanza el umbral de activación del canal de sodio logrando abrirse dejando pasar los iones de sodio rápidamente lo cual provoca un disparo del potencial. Luego se produce el proceso de repolarización y hiperpolarización  restaurando el sistema a los valores de equilibrio.\\
 
 
 \begin{figure}[h!]
@@ -243,8 +242,9 @@ En fig.~\ref{fig3} se observa que ante el primer estímulo en el intervalo de ti
 \caption{Potencial de membrana función i2. \label{fig3}}
 \end{figure}
 
-En concreto se observa que la Fracción de $nt$ y $mt$ sube a valores altos entre [0.8, 1] y baja a cerca de  0 para $h(t)$ en el periodo de tiempo [10ms, 12.5ms], 
-fig.~\ref{fig4}, lo cual indica que en ese periodo de tiempo el flujo de iones puede pasar por la membrana.
+
+En concreto se observa que la Fracción de $nt$ y $mt$ sube a valores altos entre [0.8, 1] y baja a cerca de  0 para $h(t)$ en el periodo de tiempo [10ms,12.5ms],
+fig.~\ref{fig4}. lo cual indica que en ese periodo de tiempo lel flujo de iones puede pasar por la membrana.
 Luego del disparo, las fracciones vuelven a valores de equilibrio.
 Observar que este modelo inicia en los valores de equilibrio obtenidos en el experimento 1).\\
 
@@ -267,7 +267,10 @@ i3(t) = \left\{
 \right.
 $$
 
-Podemos observar en fig.~\ref{fig5} que después de los  5[ms] se envía constantemente una corriente de 10$uA$. Inmediatamente el potencial de la membrana se dispara por el proceso de despolarización, luego el proceso de despolarización e hiperpolarización llevan  a la membrana a sus nuevos valores de equilibrio. En este tiempo una neurona no puede ser activada nuevamente. Este ciclo se repite desde los nuevos valores de equilibrio y se observa el mismo comportamiento en cada disparo del potencial.\\
+Luego de 5[ms] se envía constantemente 10$uA$
+El potencial se activa siempre a partir de ese tiempo y hasta el infinito.
+Luego de unos [ms] vuelve a estado refractario y luego vuelve a disparar en un ciclo infinito. fig.~\ref{fig5}.
+
 
 
 \begin{figure}[h!]
@@ -277,9 +280,12 @@ Podemos observar en fig.~\ref{fig5} que después de los  5[ms] se envía constan
 \caption{Potencial de membrana función i3. \label{fig5}}
 \end{figure}
 
+Al igual que en el experimento 2 se observa que las fracciones de canales activos e inactivos inician a partir de los valores de equilibrio.fig.~\ref{fig6}.
+Ahora en un ciclo infinito $n(t)$ y $m(t)$ suben a valores altos entre
+[0.8, 1] y luego vuelven a bajar a sus respectivos (aprox. 0.3), (aprox. 0.0), valores de equilibrio,
+y $h(t)$ baja a cerca de 0   luego vuelve a subir a su valor de equilibrio. (aprox. 0.6).
 
-Al igual que en el experimento 2 se observa que las fracciones de canales activos e inactivos inician a partir de los valores de equilibrio.fig.~\ref{fig6}.\\
-Aunque en este caso las fracciones son actualizadas en un ciclo infinito donde las fracciones de $nt$ y $mt$ suben y luego vuelven a su valor de equilibrio y $ht$ baja y luego vuelve a su valor de equilibrio. \\
+
 
 \begin{figure}[h!]
 \centering
@@ -299,7 +305,19 @@ i4(t) = \left\{
 \right.
 $$
 
-En este experimento la corriente sigue siendo constantemente 10$uA$, pero no durante todo el tiempo, sino que se envía ese flujo durante intervalos de tiempo espaciados de tal manera que durante los periodos de tiempo que comienzan en [10ms - 12ms], [30ms - 32ms] ...etc, la cantidad de iones recibidos es capaz de activar el potencial. mientras que en los periodos de tiempo [20ms - 22ms], [40ms - 42ms]... etc, la carga de iones no es capaz de activar el potencial. fig.~\ref{fig7}.
+En fig.~\ref{fig7}. se observa  que
+XXXXXXXXXXXX.
+
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
 
 
 \begin{figure}[h!]
@@ -308,13 +326,19 @@ En este experimento la corriente sigue siendo constantemente 10$uA$, pero no dur
 %\vspace{-0.25cm}
 \caption{Potencial de membrana función i4.\label{fig7}}
 \end{figure}
-
-
-
-Al igual que en el experimento anterior se observa que las fracciones de canales activos e inactivos inician a partir de los valores de equilibrio.fig.~\ref{fig8}, y luego las fracciones son actualizadas en un ciclo infinito, aunque en este caso la frecuencia es mas baja debido a los periodos refractarios.\\
-
-
 \begin{figure}[h!]
+
+fig.~\ref{fig8}.
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+
+
 \centering
 \includegraphics[scale=.4]{figs/fraccion_de_canales_activos_e_inactivos_para_i_4.png}
 %\vspace{-0.25cm}
@@ -323,18 +347,30 @@ Al igual que en el experimento anterior se observa que las fracciones de canales
 
 
 
-Experimento 5: \textbf{Excitaciones espontáneas en respuesta al ruido}. Se utilizo la siguiente función de corriente:
+Experimento 5: \textbf{Exitaciones espontáneas en respuesta al ruido}. Se utilizo la siguiente función de corriente:
 $$
 i5(t) = \left\{
- 50 * i_0 \sim  N(0,1)$ 
+ 50 * \sim i_0 N(0,1)$
 \right.
 $$
 
-Donde $i_0$ es un valor aleatorio obtenido de una distribución normal de media 0 y varianza 1). La constante 50 es un valor arbitrario para lograr cantidades de $uA$ en un rango de valores bastante espaciados.
-Por ser un proceso estocástico se integro numéricamente usando el método de Euler.\\
+Donde $i_0$  un valor aleatorio obtenido de una distribución normal de media 0 y varianza 1) Por ser un proceso estotastico se integro numericamente usando el metodo de Euler.
 
-La corriente en este experimento se modela como un flujo de impulsos aleatorios. En fig.~\ref{fig9} se puede ver que la frecuencia de activaciones del potencial no son del todo uniformes. Esto se debe al componente aleatorio que introduce la función del ruido.\\
+La corriente en este experimento se modela como un flujo de impulsos aleatorios.
 
+En fig.~\ref{fig9}.
+
+
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+
+XXXXXXXX  fig.~\ref{fig10}.
+Observar que este modelo inicia en los valores de equilibrio obtenidos en el experimento 1).
 
 
 
@@ -347,7 +383,16 @@ La corriente en este experimento se modela como un flujo de impulsos aleatorios.
 \end{figure}
 
 
-En fig.~\ref{fig10}, se visualiza la correspondiente falta de uniformidad en las fracciones de los canales debido al ruido. Sin embargo una ráfaga constante de ruido se asemeja a una ráfaga de iones con periodo refractarios.\\
+
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+
 
 
 \begin{figure}[h!]
@@ -358,11 +403,29 @@ En fig.~\ref{fig10}, se visualiza la correspondiente falta de uniformidad en las
 \end{figure}
 
 
+
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+XXXXXXXXXXXX
+
+
+
+\section{Discusión}
+
+La comparación de ................................................................
+...............................................................
+.. bla bla bla ................................................................
+...............................................................
+.. bla bla bla
+
 \section{Conclusiones}
 
-Consideramos que estudiar el modelo de Hodgkin y Huxley es muy propicio para poner en practica los conocimientos adquiridos en cuanto a resolución de sistema de ecuaciones diferenciales. Utilizar herramientas de integración numérica como RK4 implementado en python es también un buen inicio para profundizar el conocimiento en redes neuronales.
-
- \\
+Consideramos que estudiar el modelo de Hodgkin y Huxley es muy propicio para poner en practica los conocimientos adqueridos en cuanto a resolucion de sistema de ecuaciones diferenciales. Utilizar herramientas de integracion numerica como RK4 implementado en python es tambien un buen inicio para profundizar el conocimiento en redes neuronales.
 
 
 % If in two-column mode, this environment will change to single-column
@@ -410,7 +473,7 @@ Consideramos que estudiar el modelo de Hodgkin y Huxley es muy propicio para pon
 % Use the table* environment to get a full-width table in two-column
 % Add \usepackage{longtable} and the longtable (or longtable*}
 % environment for nicely formatted long tables. Or use the the [H]
-% placement option to break a long table (with less control than 
+% placement option to break a long table (with less control than
 % in longtable).
 % \begin{table}%[H] add [H] placement to break table across pages
 % \caption{\label{}}
@@ -453,5 +516,3 @@ a FaMAF, siempre FaMAF y a la educación publica.
 \end{document}
 %
 % ****** End of file apstemplate.tex ******
-
-

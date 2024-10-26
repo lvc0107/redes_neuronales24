@@ -8,7 +8,7 @@ Created on Sun Aug 25 20:41:09 2024
 import matplotlib.pyplot as plt
 import numpy as np
 
-from ode import integrador_ode, rk4
+from ode import euler, integrador_ode, rk4
 
 
 def alpha_n(v):
@@ -244,9 +244,9 @@ parametros para las probabilidades de activacion o inactivacion de las
 compuertas
 """
 v = 0.0  # potencial de la membrana
-nt = 0.0  # probabilidad de activacion de K (potasio)
+nt = 0.3  # probabilidad de activacion de K (potasio)
 mt = 0.0  # probabilidad de activacion de Na (sodio)
-ht = 0.0  # probabilidad de inactivacion Na (sodio)
+ht = 0.6  # probabilidad de inactivacion Na (sodio)
 x = [v, nt, mt, ht]
 
 # parametros para formulas
@@ -263,7 +263,7 @@ def i(t):
     """
     ∼ 10𝜇𝐴/𝑐𝑚2  : corriente de entrada al tiempo 𝑡
     """
-    return 0  # por ahora
+    return 10  # por ahora
 
 
 p = [c, gna, gk, gl, vna, vk, vl, i]
@@ -373,14 +373,12 @@ Grafíque la corriente  𝑖(𝑡)  vs  𝑡  en el rango  𝑡∈[0𝑚𝑠,20�
 """
 
 
-
 def i2(t):
-    if 2.0 <= t <=2.5:
+    if 2.0 <= t <= 2.5:
         return 10.0
-    if 10.0 <= t <=10.5:
+    if 10.0 <= t <= 10.5:
         return 30.0
     return 0.0
-
 
 
 plt.title("Corriente i_2")
@@ -403,8 +401,6 @@ plt.show()
     ejercicio anterior. Integre hasta el tiempo final  𝑡𝑓=500𝑚𝑠
     usando un paso temporal  𝑑𝑡=0.01𝑚𝑠 .
 """
-
-
 
 
 a = 0  # tiempo inicial
@@ -478,11 +474,9 @@ Esta corriente representa un estímulo constante.
 
 
 def i3(t):
-    if t >=5.0:
+    if t >= 5.0:
         return 10.0
     return 0.0
-
-
 
 
 plt.title("Corriente i_3")
@@ -513,7 +507,6 @@ p = [c, gna, gk, gl, vna, vk, vl, i3]
 t, w = integrador_ode(rk4, f, valores_equilibrio, a, b, k, p)
 
 
-
 """
 5.3) Grafique nuevamente el potencial de membrana en el rango de tiempos
      calculado.
@@ -523,7 +516,7 @@ plt.title("Potencial de Membrana para funcion de corriente i_3")
 
 plt.xlabel("$t$ [ms]")
 plt.ylabel("$ v(t) [mV] ")
-plt.xlim(0, 100)
+plt.xlim(0, 20)
 plt.ylim(-20, 120)
 
 
@@ -541,7 +534,7 @@ plt.show()
 plt.title("Fraccion de canales activos e inactivos para i_3")
 
 plt.xlabel("$t$ [ms]")
-plt.xlim(0, 100)
+plt.xlim(0, 40)
 plt.ylim(-0.1, 1.1)
 
 
@@ -566,19 +559,16 @@ Ejercicio 6) período refractario
 6.1) Implemente la corriente de membrana
 
       𝑖(𝑡) = {
-          10𝜇𝐴/𝑐𝑚2, 𝑡 ∈[10𝑚𝑠𝑘,10𝑚𝑠𝑘+2𝑚𝑠]m 𝑘 ∈ {1,2,3,4,5,...} 
+          10𝜇𝐴/𝑐𝑚2, 𝑡 ∈[10𝑚𝑠𝑘,10𝑚𝑠𝑘+2𝑚𝑠]m 𝑘 ∈ {1,2,3,4,5,...}
           0𝜇𝐴/𝑐𝑚2,𝑐.𝑐.
 """
 
 
-
-
 def i4(t):
     for i in range(1, 10):
-        if 10 * i  <= t <= 10 * i+2:
+        if 10 * i <= t <= 10 * i + 2:
             return 10.0
     return 0.0
-
 
 
 plt.title("Corriente i_4")
@@ -609,8 +599,6 @@ p = [c, gna, gk, gl, vna, vk, vl, i4]
 t, w = integrador_ode(rk4, f, valores_equilibrio, a, b, k, p)
 
 
-
-
 """
 6.3) Grafique nuevamente el potencial de membrana en el rango de tiempos
     calculado.
@@ -621,7 +609,7 @@ plt.title("Potencial de Membrana para funcion de corriente i_4")
 
 plt.xlabel("$t$ [ms]")
 plt.ylabel("$ v(t) [mV] ")
-plt.xlim(0, 100)
+plt.xlim(0, 60)
 plt.ylim(-20, 120)
 
 
@@ -639,7 +627,7 @@ plt.show()
 plt.title("Fraccion de canales activos e inactivos para i_4")
 
 plt.xlabel("$t$ [ms]")
-plt.xlim(0, 100)
+plt.xlim(0, 40)
 plt.ylim(-0.1, 1.1)
 
 
@@ -662,7 +650,7 @@ plt.show()
 Ejercicio 7) exitaciones espontáneas en respuesta al ruido
 
 7.1) Implemente una corriente estocástica que retorne un valor
-      
+
               𝑖(𝑡) ∼ 𝑖 0 𝑁(0,1)
 
      (i.e. 𝑖0 por un valor aleatorio obtenido de una
@@ -670,7 +658,8 @@ Ejercicio 7) exitaciones espontáneas en respuesta al ruido
      para cada valor de 𝑡 en el que sea evaluada.
 """
 
-i0 =50
+i0 = 50
+
 
 def i5(t):
     return i0 * np.random.normal()
@@ -688,11 +677,16 @@ plt.legend()
 plt.show()
 
 
-
 """
 7.2) Integre nuevamente las ODEs para 𝑡∈[0𝑚𝑠,500𝑚𝑠], usando la corriente
      del inciso 22) para 𝑖0=50𝜇𝐴, la condición incial los valores de
      equilibrio derivados en el inciso 6) y un paso de integración 𝑑𝑡=0.01.
+
+     Integre nuevamente las ODEs para  𝑡∈[0𝑚𝑠,500𝑚𝑠], usando la corriente d
+     el inciso 22) para  𝑖0=50𝜇𝐴 , la condición incial los valores de
+     equilibrio derivados en el inciso 6) y un paso de integración  𝑑𝑡=0.01 .
+     IMPORTANTE: para integrar, utilice en este caso el método de Euler,
+     ya que estaríamos integrando un proceso estocástico.
 """
 
 
@@ -702,7 +696,7 @@ h = 0.01  # paso
 k = int((b - a) / h)  # cantidad de pasos en el tiempo dado
 p = [c, gna, gk, gl, vna, vk, vl, i5]
 
-t, w = integrador_ode(rk4, f, valores_equilibrio, a, b, k, p)
+t, w = integrador_ode(euler, f, valores_equilibrio, a, b, k, p)
 
 
 """
@@ -715,7 +709,7 @@ plt.title("Potencial de Membrana para funcion de corriente i_5")
 
 plt.xlabel("$t$ [ms]")
 plt.ylabel("$ v(t) [mV] ")
-plt.xlim(0, 500)
+plt.xlim(0, 100)
 plt.ylim(-20, 120)
 
 
@@ -734,7 +728,7 @@ plt.show()
 plt.title("Fraccion de canales activos e inactivos para i_5")
 
 plt.xlabel("$t$ [ms]")
-plt.xlim(0, 500)
+plt.xlim(0, 100)
 plt.ylim(-0.1, 1.1)
 
 
@@ -753,4 +747,3 @@ plt.show()
       Estime con que frecuencia observa los picos.
 
 """
-

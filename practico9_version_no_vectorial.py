@@ -17,13 +17,13 @@ def generate_cloud(num_points_per_class, sigma=0.1):
 
 num_points_per_class = 10
 cloud_1 = generate_cloud(num_points_per_class)
-plt.scatter(*zip(*cloud_1), color="b")
+plt.scatter(*zip(*cloud_1), color="b", s=200)
 
 cloud_2 = generate_cloud(num_points_per_class)
-plt.scatter(*zip(*cloud_2), color="g")
+plt.scatter(*zip(*cloud_2), color="g", s=200)
 
 cloud_3 = generate_cloud(num_points_per_class)
-plt.scatter(*zip(*cloud_3), color="r")
+plt.scatter(*zip(*cloud_3), color="r", s=200)
 plt.title("Dots before run Perceptron")
 plt.xlabel("Feature 1")
 plt.ylabel("Feature 2")
@@ -31,10 +31,12 @@ plt.show()
 
 
 x = np.array(cloud_1 + cloud_2 + cloud_3)
-
+colors = (
+    ["blue" for _ in cloud_1] + ["green" for _ in cloud_2] + ["red" for _ in cloud_3]
+)
 
 # expected results
-y_classes = np.array(
+s = np.array(
     [(1, 0, 0) for _ in cloud_1]
     + [(0, 1, 0) for _ in cloud_2]
     + [(0, 0, 1) for _ in cloud_3]
@@ -42,75 +44,84 @@ y_classes = np.array(
 
 
 def relu(h):
-    return h if h > 0  else 0
+    return h if h > 0 else 0
 
 
 def relu_derivative(h):
     return 1 if h > 0 else 0
 
 
-def gradient_descent(x, y_classes, learning_rate=0.02, num_iterations=1000):
-    num_samples, num_features = x.shape
-    num_classes = y_classes.shape[1]
+def gradient_descent(e, s, eta=0.02, num_epochs=1000):
+    M, n_e = e.shape
+    n_s = s.shape[1]
 
     # Set weights
-    weights = np.random.randn(num_classes, num_features) * 0.01
+    w = np.random.randn(n_s, n_e) * 0.1
 
-    h = np.zeros((num_classes, num_samples))
+    h = np.zeros((n_s, M))
+
     # Gradient descent iterations
-    for _ in range(num_iterations):
-        for m in range(num_samples):
-            for j in range(num_classes):
+    for _ in range(num_epochs):
+        for m in range(M):
+            for j in range(n_s):
                 h[j, m] = 0.0
-                for i in range(num_features):
-                    h[j, m] += weights[j, i] * x[m, i]
-                
+                for i in range(n_e):
+                    h[j, m] += w[j, i] * e[m, i]
+
         E = 0.0
-        for m in range(num_samples):
-            for p in range(num_classes):
-                A = relu(h[p, m]) - y_classes[m, p]
-                B = A * relu_derivative(h[p,m])
-                E += A*A
-                for q in range(num_features):
-                    
-                    weights[p, q] -= learning_rate *B * x[m, q]
-
-
-    return weights
+        for m in range(M):
+            for p in range(n_s):
+                A = relu(h[p, m]) - s[m, p]
+                B = A * relu_derivative(h[p, m])
+                E += A * A
+                for q in range(n_e):
+                    w[p, q] -= eta * B * e[m, q]
+    return w
 
 
 eta = 0.02
-epoch = 1000
+epochs = 1000
 
 # Train model
-weights = gradient_descent(x, y_classes, learning_rate=eta, num_iterations=epoch)
-print(f"weights version escalar: {weights}")
-print("weights")
-# # Visualize dots and classes
+w = gradient_descent(x, s, eta=eta, num_epochs=epochs)
 
-# num_samples, num_features = weights.shape
-# num_classes = y_classes.shape[1]
-
-# def pred(weights, relu, x):
-        
-#     y = np.zeros(num_classes)
-#     for j in range(num_classes):
-#         h = 0.0
-#         for i in range(num_features):
-#             h += weights[j, i] * x[i]
-        
-#         y[j] = relu(h)
-#     return y
+# Visualize dots and classes
 
 
-# c = np.zeros(num_samples)
-# for m in range(num_samples):
-#     y = pred(weights, relu, x[m,:])
-#     b = np.argmax(y)
-#     c[m] = np.argmax(y_classes[m, :])
-     
-# plt.scatter(x[:, 0], x[:, 1], c=c, cmap="winter", alpha=0.5)
-# plt.title("Dots clasificated with ReLU model")
-# plt.xlabel("Feature 1")
-# plt.ylabel("Feature 2")
-# plt.show()
+def pred(w, g, x):
+    n_s = w.shape[0]
+    n_e = len(x)
+
+    y = np.zeros(n_s)
+    for j in range(n_s):
+        h = 0.0
+        for i in range(n_e):
+            h += w[j, i] * x[i]
+
+        y[j] = g(h)
+    return y
+
+
+M, n_e = x.shape
+n_s = s.shape[1]
+c = np.zeros(M)
+b = np.zeros(M)
+
+for m in range(M):
+    y = pred(w, relu, x[m, :])
+    b[m] = np.argmax(y)
+
+plt.scatter(
+    x[:, 0],
+    x[:, 1],
+    c=b,
+    cmap="winter",
+    alpha=0.5,
+    linewidth=3,
+    edgecolors=colors,
+    s=200,
+)
+plt.title("Dots clasificated with ReLU model")
+plt.xlabel("Feature 1")
+plt.ylabel("Feature 2")
+plt.show()

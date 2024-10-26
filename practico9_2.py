@@ -75,7 +75,6 @@ def gradient_descent(x, y_classes, learning_rate=0.02, num_iterations=1000):
         weights -= learning_rate * dW
         biases -= learning_rate * db
 
-
     return weights, biases
 
 
