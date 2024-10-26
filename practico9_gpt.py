@@ -79,10 +79,10 @@ def gradient_descent(X, y, learning_rate=0.02, num_iterations=1000):
     return weights, biases
 
 
-# Entrenar el modelo
+# train the model
 weights, biases = gradient_descent(X, y)
 
-# Visualizar puntos y clases
+# Visualize dots and classes
 logits = np.dot(X, weights) + biases
 activated = relu(logits)
 exp_logits = np.exp(activated - np.max(activated, axis=1, keepdims=True))
