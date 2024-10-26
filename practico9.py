@@ -3,7 +3,7 @@ import numpy as np
 
 
 def generate_cloud(num_points_per_class, sigma=0.1):
-    range_cloud = 2
+    range_cloud = 5
     center = (np.random.randint(range_cloud), np.random.randint(range_cloud))
     cloud = []
     for _ in range(num_points_per_class):
@@ -15,14 +15,14 @@ def generate_cloud(num_points_per_class, sigma=0.1):
     return cloud
 
 
-
-cloud_1 = generate_cloud(num_points_per_class=10)
+num_points_per_class= 10
+cloud_1 = generate_cloud(num_points_per_class)
 plt.scatter(*zip(*cloud_1), color="b")
 
-cloud_2 = generate_cloud(num_points_per_class=10)
+cloud_2 = generate_cloud(num_points_per_class)
 plt.scatter(*zip(*cloud_2), color="g")
 
-cloud_3 = generate_cloud(num_points_per_class=10)
+cloud_3 = generate_cloud(num_points_per_class)
 plt.scatter(*zip(*cloud_3), color="r")
 plt.title("Dots before run Perceptron")
 plt.xlabel("Feature 1")
@@ -70,7 +70,6 @@ def gradient_descent(x, y_classes, learning_rate=0.02, num_iterations=1000):
         # Calculate gradients
         d_h = probabilities - y_classes
         dW = (np.dot(x.T, d_h) / num_samples)
-        #here im missint the derivative relu
 
         # Updates weight
         weights -= learning_rate * dW
@@ -84,7 +83,9 @@ epoch = 1000
 
 # Train model
 weights = gradient_descent(x, y_classes, learning_rate=eta, num_iterations=epoch)
-
+print(f"weights version vectorial: {weights}")
+print("weights")
+ 
 # Visualize dots and classes
 h = np.dot(x, weights)
 activated = relu(h)
