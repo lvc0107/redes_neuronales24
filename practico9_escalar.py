@@ -106,7 +106,7 @@ for m in range(M):
 plt.scatter(
     x[:, 0],
     x[:, 1],
-    c=new_class,
+    c=new_classes,
     cmap="viridis",
     alpha=0.5,
     linewidth=3,

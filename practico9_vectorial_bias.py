@@ -36,8 +36,6 @@ s = np.array(
     + [(0, 1, 0) for _ in cloud_2]
     + [(0, 0, 1) for _ in cloud_3]
 )
-num_classes = 3
-s2 = np.eye(num_classes)
 
 
 def relu(h):
