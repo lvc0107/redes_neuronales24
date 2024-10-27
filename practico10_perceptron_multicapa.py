@@ -14,15 +14,18 @@ def generate_cloud(num_points_per_class, sigma=0.1):
 
     return cloud
 
-num_points_per_class = 10
+num_points_per_class = 3
 cloud_1 = generate_cloud(num_points_per_class)
+
+num_points_per_class = 2
 cloud_2 = generate_cloud(num_points_per_class)
+
+num_points_per_class = 3
 cloud_3 = generate_cloud(num_points_per_class)
 
 
 x = np.array(cloud_1 + cloud_2 + cloud_3)
 colors = ["b"] * len(cloud_1) + ["g"] * len(cloud_2) + ["r"] * len(cloud_3)
-
 
 plt.scatter(x[:, 0], x[:, 1], c=colors, s=200)
 plt.title("Dots before run Perceptron")
@@ -32,86 +35,75 @@ plt.show()
 
 
 # expected results
+#one hot representation:
 s = np.array(
     [(1, 0, 0) for _ in cloud_1]
     + [(0, 1, 0) for _ in cloud_2]
     + [(0, 0, 1) for _ in cloud_3]
 )
 
-
 def relu(h):
-    return h if h > 0 else 0
+    return np.maximum(0, h)
 
 
 def relu_derivative(h):
-    return 1 if h > 0 else 0
+    return np.where(h > 0, 1, 0)
 
 
-def gradient_descent(e, s, g, g_d, eta=0.02, num_epochs=1000):
-    M, n_e = e.shape
-    n_s = s.shape[1]
+def gradient_descent(x, s, learning_rate=0.02, num_iterations=1000):
+    num_samples, num_features = x.shape
+    num_classes = s.shape[1]
 
     # Set weights
-    w = np.random.randn(n_s, n_e) * 0.1
-
-    h = np.zeros((n_s, M))
+    weights = np.random.randn(num_features, num_classes) * 0.01
+    biases = np.zeros((1, num_classes))
 
     # Gradient descent iterations
-    for _ in range(num_epochs):
-        for m in range(M):
-            for j in range(n_s):
-                h[j, m] = 0.0
-                for i in range(n_e):
-                    h[j, m] += w[j, i] * e[m, i]
+    for _ in range(num_iterations):
+        # Calculate h
+        h = np.dot(x, weights) + biases
+        # Apply ReLU activaton function
+        activated = relu(h)
 
-        E = 0.0
-        for m in range(M):
-            for p in range(n_s):
-                A = g(h[p, m]) - s[m, p]
-                B = A * relu_derivative(h[p, m])
-                E += A * A
-                for q in range(n_e):
-                    w[p, q] -= eta * B * e[m, q]
-    return w
+        # Calculate probabilities using softmax
+        exp_h = np.exp(activated - np.max(activated, axis=1, keepdims=True))
+        probabilities = exp_h / exp_h.sum(axis=1, keepdims=True)
+
+        # Calculate gradients
+        d_h = probabilities - s
+        dW = np.dot(x.T, d_h) / num_samples
+        db = np.sum(d_h, axis=0, keepdims=True) / num_samples
+
+        # Updates weight
+        weights -= learning_rate * dW
+        biases -= learning_rate * db
+
+
+    return weights, biases
 
 
 eta = 0.02
-epochs = 1000
+epoch = 1000
 
 # Train model
-w = gradient_descent(x, s, relu, relu_derivative, eta=eta, num_epochs=epochs)
+weights, biases = gradient_descent(x, s, learning_rate=eta, num_iterations=epoch)
+
 
 # Visualize dots and classes
-def pred(w, g, x):
-    n_s = w.shape[0]
-    n_e = len(x)
-
-    y = np.zeros(n_s)
-    for j in range(n_s):
-        h = 0.0
-        for i in range(n_e):
-            h += w[j, i] * x[i]
-        y[j] = g(h)
-    return y
-
-
-M, n_e = x.shape
-n_s = s.shape[1]
-new_classes = np.zeros(M)
-
-for m in range(M):
-    y = pred(w, relu, x[m, :])
-    new_classes[m] = np.argmax(y)
+h = np.dot(x, weights) + biases
+activated = relu(h)
+exp_h = np.exp(activated - np.max(activated, axis=1, keepdims=True))
+preds = np.argmax(exp_h / exp_h.sum(axis=1, keepdims=True), axis=1)
 
 plt.scatter(
     x[:, 0],
     x[:, 1],
-    c=new_classes,
+    c=preds,
     cmap="viridis",
     alpha=0.5,
+    s=200,
     linewidth=3,
     edgecolors=colors,
-    s=200,
 )
 plt.title("Clasificated dots with ReLU model")
 plt.xlabel("Feature 1")
