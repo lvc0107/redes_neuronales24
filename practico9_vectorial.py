@@ -14,6 +14,7 @@ def generate_cloud(num_points_per_class, sigma=0.1):
 
     return cloud
 
+
 num_points_per_class = 10
 cloud_1 = generate_cloud(num_points_per_class)
 cloud_2 = generate_cloud(num_points_per_class)

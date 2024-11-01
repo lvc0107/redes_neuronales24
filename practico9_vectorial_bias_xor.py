@@ -1,8 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-
-
 e1 = (0, 0)
 e2 = (0, 1)
 e3 = (1, 0)
@@ -59,7 +57,6 @@ def gradient_descent(x, s, learning_rate=0.02, num_iterations=1000):
         weights -= learning_rate * dW
         biases -= learning_rate * db
 
-
     return weights, biases
 
 
@@ -96,5 +93,3 @@ plt.show()
 Explicar por que no funciona xor
 
 """
-
-

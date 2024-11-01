@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Generar un dataset de ejemplo
-np.random.seed(0)
+# np.random.seed(0)
 num_points_per_class = 10
 
 # Clase 0
@@ -20,6 +20,14 @@ y2 = np.ones(num_points_per_class) * 2
 # Combinar el dataset
 X = np.vstack([x0, x1, x2])
 y = np.hstack([y0, y1, y2])
+
+colors = ["b"] * len(x0) + ["g"] * len(x1) + ["r"] * len(x2)
+
+plt.scatter(X[:, 0], X[:, 1], c=colors, cmap="viridis", alpha=0.5, s=200, linewidth=3)
+plt.title("Data set")
+plt.xlabel("Feature 1")
+plt.ylabel("Feature 2")
+plt.show()
 
 
 # Función ReLU
@@ -88,7 +96,16 @@ activated = relu(logits)
 exp_logits = np.exp(activated - np.max(activated, axis=1, keepdims=True))
 preds = np.argmax(exp_logits / exp_logits.sum(axis=1, keepdims=True), axis=1)
 
-plt.scatter(X[:, 0], X[:, 1], c=preds, cmap="viridis", alpha=0.5)
+plt.scatter(
+    X[:, 0],
+    X[:, 1],
+    c=preds,
+    cmap="plasma",
+    alpha=0.5,
+    s=200,
+    linewidth=3,
+    edgecolors=colors,
+)
 plt.title("Puntos clasificados por modelo con ReLU")
 plt.xlabel("Feature 1")
 plt.ylabel("Feature 2")

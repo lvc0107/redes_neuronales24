@@ -14,6 +14,7 @@ def generate_cloud(num_points_per_class, sigma=0.1):
 
     return cloud
 
+
 num_points_per_class = 10
 cloud_1 = generate_cloud(num_points_per_class)
 cloud_2 = generate_cloud(num_points_per_class)
@@ -73,7 +74,6 @@ def gradient_descent(x, s, learning_rate=0.02, num_iterations=1000):
         # Updates weight
         weights -= learning_rate * dW
         biases -= learning_rate * db
-
 
     return weights, biases
 

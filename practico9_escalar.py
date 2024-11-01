@@ -3,18 +3,22 @@ import numpy as np
 
 
 def generate_cloud(num_points_per_class, sigma=0.1):
-    range_cloud = 2
-    center = (np.random.randint(range_cloud), np.random.randint(range_cloud))
+    range_cloud = 5
+    center = (
+        int(np.random.normal() * range_cloud),
+        int(np.random.normal() * range_cloud),
+    )
     cloud = []
     for _ in range(num_points_per_class):
         x = center[0] + np.random.normal(scale=sigma)
         y = center[1] + np.random.normal(scale=sigma)
-        new_point = (x, y)
+        new_point = (x, y, -1)
         cloud.append(new_point)
 
     return cloud
 
-num_points_per_class = 10
+
+num_points_per_class = 2
 cloud_1 = generate_cloud(num_points_per_class)
 cloud_2 = generate_cloud(num_points_per_class)
 cloud_3 = generate_cloud(num_points_per_class)
@@ -47,7 +51,7 @@ def relu_derivative(h):
     return 1 if h > 0 else 0
 
 
-def gradient_descent(e, s, g, g_d, eta=0.02, num_epochs=1000):
+def gradient_descent(e, s, g, dg, eta=0.02, num_epochs=1000):
     M, n_e = e.shape
     n_s = s.shape[1]
 
@@ -57,7 +61,7 @@ def gradient_descent(e, s, g, g_d, eta=0.02, num_epochs=1000):
     h = np.zeros((n_s, M))
 
     # Gradient descent iterations
-    for _ in range(num_epochs):
+    for epoch in range(num_epochs):
         for m in range(M):
             for j in range(n_s):
                 h[j, m] = 0.0
@@ -66,20 +70,28 @@ def gradient_descent(e, s, g, g_d, eta=0.02, num_epochs=1000):
 
         E = 0.0
         for m in range(M):
-            for p in range(n_s):
-                A = g(h[p, m]) - s[m, p]
-                B = A * relu_derivative(h[p, m])
-                E += A * A
-                for q in range(n_e):
-                    w[p, q] -= eta * B * e[m, q]
+            for j in range(n_s):
+                y_jm = g(h[j, m])
+                # error of the j-th output on the m-th example
+                error_jm = y_jm - s[m, j]
+                E += error_jm**2  # compute squared error
+                gradient_component = error_jm * dg(h[j, m])
+                for i in range(n_e):
+                    x_im = e[m, i]
+                    w[j, i] -= eta * gradient_component * x_im
+
+        if epoch % 1000 == 0:
+            print(f"Iteration {epoch}, Error: {E:.4f}")
     return w
 
 
 eta = 0.02
-epochs = 1000
+epochs = 100000
+
 
 # Train model
 w = gradient_descent(x, s, relu, relu_derivative, eta=eta, num_epochs=epochs)
+
 
 # Visualize dots and classes
 def pred(w, g, x):

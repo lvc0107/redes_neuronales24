@@ -14,6 +14,7 @@ def generate_cloud(num_points_per_class, sigma=0.1):
 
     return cloud
 
+
 num_points_per_class = 3
 cloud_1 = generate_cloud(num_points_per_class)
 
@@ -35,12 +36,13 @@ plt.show()
 
 
 # expected results
-#one hot representation:
+# one hot representation:
 s = np.array(
     [(1, 0, 0) for _ in cloud_1]
     + [(0, 1, 0) for _ in cloud_2]
     + [(0, 0, 1) for _ in cloud_3]
 )
+
 
 def relu(h):
     return np.maximum(0, h)
@@ -77,7 +79,6 @@ def gradient_descent(x, s, learning_rate=0.02, num_iterations=1000):
         # Updates weight
         weights -= learning_rate * dW
         biases -= learning_rate * db
-
 
     return weights, biases
 
