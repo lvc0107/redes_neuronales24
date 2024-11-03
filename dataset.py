@@ -31,13 +31,12 @@ dataset_colors = ["b"] * len(x0) + ["g"] * len(x1) + ["r"] * len(x2)
 
 
 def plot(preds=None):
-    if preds is not None:
+    if preds is None:
         title = "Dots before run Perceptron"
-        colors = preds
-        
+        colors = dataset_colors
     else:
         title = "Clasificated dots with ReLU model"
-        colors = dataset_colors
+        colors = preds
 
     plt.scatter(
         x[:, 0],

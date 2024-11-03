@@ -40,7 +40,7 @@ def gradient_descent(x, y_one_hot, g, dg, eta=0.02, num_epochs=10000):
                 # error of the i-th output on the u-th example
                 error_iu = y_iu - y_one_hot[u, i]
                 loss += error_iu**2  # compute squared error
-                gradient_component = error_iu * dg(h[i, u])
+                gradient_component = error_iu  # * dg(h[i, u])
                 for k in range(num_features):
                     w[i, k] -= eta * gradient_component * x[u, k]
         loss *= 0.5
@@ -50,11 +50,11 @@ def gradient_descent(x, y_one_hot, g, dg, eta=0.02, num_epochs=10000):
 
 
 eta = 0.02
-epochs = 10000
+num_epochs = 100000
 
 
 # Train model
-w = gradient_descent(x, y_one_hot, relu, relu_derivative, eta=eta, num_epochs=epochs)
+w = gradient_descent(x, y_one_hot, relu, relu_derivative, eta, num_epochs)
 print(f"Final weights: {w}")
 
 

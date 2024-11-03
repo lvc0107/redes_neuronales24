@@ -58,8 +58,11 @@ def gradient_descent(x, y_one_hot, learning_rate=0.02, num_epochs=10000):
     return weights, biases
 
 
+learning_rate = 0.02
+num_epochs = 100000
+
 # train the model
-weights, biases = gradient_descent(x, y_one_hot)
+weights, biases = gradient_descent(x, y_one_hot, learning_rate, num_epochs)
 print(f"Final weights: {weights}")
 
 
