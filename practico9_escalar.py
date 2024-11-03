@@ -36,7 +36,6 @@ def gradient_descent(x, y_one_hot, g, dg=None, learning_rate=0.02, num_epochs=10
             for i in range(num_classes):
                 h[i, u] = f_h(i, u, w)
 
-    for epoch in range(num_epochs):
         loss = 0.0
         for u in range(num_samples):
             for i in range(num_classes):
@@ -44,12 +43,13 @@ def gradient_descent(x, y_one_hot, g, dg=None, learning_rate=0.02, num_epochs=10
                 # error of the i-th output on the u-th example
                 error_iu = y_iu - y_one_hot[u, i]
                 loss += error_iu**2  # compute square error
-                gradient_component = error_iu  # * dg(h[i, u])
+                gradient_component = error_iu  # * dg(f_h(i, u, w))
                 for k in range(num_features):
                     w[i, k] -= learning_rate * gradient_component * x[u, k]
+
         loss *= 0.5
         if epoch % (num_epochs / 10) == 0:
-            print(f"Iteration epoch: {epoch}, Loss: {loss:.4f}")
+            print(f"Iteration epoch: {epoch}, Loss: {loss:.16f}")
     return w
 
 
