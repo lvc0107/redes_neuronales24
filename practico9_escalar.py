@@ -52,33 +52,33 @@ def relu_derivative(h):
 
 
 def gradient_descent(e, s, g, dg, eta=0.02, num_epochs=1000):
-    M, n_e = e.shape
+    P, n_e = e.shape
     n_s = s.shape[1]
 
     # Set weights
     w = np.random.randn(n_s, n_e) * 0.1
 
-    h = np.zeros((n_s, M))
+    h = np.zeros((n_s, P))
 
     # Gradient descent iterations
     for epoch in range(num_epochs):
-        for m in range(M):
-            for j in range(n_s):
-                h[j, m] = 0.0
-                for i in range(n_e):
-                    h[j, m] += w[j, i] * e[m, i]
+        # compute g(h) = h for each dot (P) and for each expected output (n_s)
+        for u in range(P):
+            for i in range(n_s):
+                h[i, u] = 0.0
+                for k in range(n_e):
+                    h[i, u] += w[i, k] * e[u, k]
 
         E = 0.0
-        for m in range(M):
-            for j in range(n_s):
-                y_jm = g(h[j, m])
-                # error of the j-th output on the m-th example
-                error_jm = y_jm - s[m, j]
-                E += error_jm**2  # compute squared error
-                gradient_component = error_jm * dg(h[j, m])
-                for i in range(n_e):
-                    x_im = e[m, i]
-                    w[j, i] -= eta * gradient_component * x_im
+        for u in range(P):
+            for i in range(n_s):
+                y_iu = g(h[i, u])
+                # error of the i-th output on the u-th example
+                error_iu = y_iu - s[u, i]
+                E += error_iu**2  # compute squared error
+                gradient_component = error_iu * dg(h[i, u])
+                for k in range(n_e):
+                    w[i, k] -= eta * gradient_component * e[u, k]
 
         if epoch % 1000 == 0:
             print(f"Iteration {epoch}, Error: {E:.4f}")
