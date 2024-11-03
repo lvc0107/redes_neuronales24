@@ -14,6 +14,14 @@ def relu_derivative(h):
     return 1 if h > 0 else 0
 
 
+def sigmoide(h):
+    return 1 / (np.exp(-h))
+
+
+def sigmoide_derivative(h):
+    return sigmoide(h) * (1 - sigmoide(h))
+
+
 def gradient_descent(x, y_one_hot, g, dg=None, learning_rate=0.02, num_epochs=10000):
     num_samples, num_features = x.shape
     num_classes = y_one_hot.shape[1]
@@ -39,11 +47,17 @@ def gradient_descent(x, y_one_hot, g, dg=None, learning_rate=0.02, num_epochs=10
         loss = 0.0
         for u in range(num_samples):
             for i in range(num_classes):
-                y_iu = g(f_h(i, u, w))
+                h_iu = f_h(i, u, w)
+                y_iu = g(h_iu)
                 # error of the i-th output on the u-th example
                 error_iu = y_iu - y_one_hot[u, i]
                 loss += error_iu**2  # compute square error
-                gradient_component = error_iu  # * dg(f_h(i, u, w))
+                gradient_component = error_iu * dg(h_iu) if dg else error_iu
+                """
+                Dado que dg devuelve 0 para valores menores negativos
+                el producto se vuevle 0 y finalmente no se actualiza el valor
+                de w[i,k]
+                """
                 for k in range(num_features):
                     w[i, k] -= learning_rate * gradient_component * x[u, k]
 
@@ -82,18 +96,27 @@ learning_rate = 0.02
 num_epochs = 10000
 
 # =========================================
-weights2, biases = gd2(x, y_one_hot, relu_vectorial, learning_rate, num_epochs)
-print(f"Final weights: {weights2}")
+weights1, biases = gd2(x, y_one_hot, relu_vectorial, learning_rate, num_epochs)
+print(f"Final weights: {weights1}")
 title = f"Dots classificated with {relu_vectorial.__name__} model (chatGPT)"
-plot_preds_chat_gpt(title, relu_vectorial, x, weights2, biases)
+plot_preds_chat_gpt(title, relu_vectorial, x, weights1, biases)
 
 
 # ===========================================
 
 # Train model
-weights = gradient_descent(
-    x, y_one_hot, relu, relu_derivative, learning_rate, num_epochs
-)
-print(f"Final weights: {weights}")
+weights1 = gradient_descent(x, y_one_hot, relu, None, learning_rate, num_epochs)
+print(f"Final weights: {weights1}")
 title = f"Clasificated dots with {relu.__name__} model. Scalar version"
-plot_preds_scalar(title, relu, x, weights)
+plot_preds_scalar(title, relu, x, weights1)
+
+
+# ===========================================
+
+# Train model
+weights2 = gradient_descent(
+    x, y_one_hot, sigmoide, sigmoide_derivative, learning_rate, num_epochs
+)
+print(f"Final weights: {weights2}")
+title = f"Clasificated dots with {sigmoide.__name__} model. Scalar version"
+plot_preds_scalar(title, sigmoide, x, weights2)
