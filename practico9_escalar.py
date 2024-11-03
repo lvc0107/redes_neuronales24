@@ -10,16 +10,24 @@ def relu(h):
     return h if h > 0 else 0
 
 
-def relu_derivative(h):
+def derivative_relu(h):
     return 1 if h > 0 else 0
 
 
-def sigmoide(h):
+def sigmoid(h):
     return 1 / (1 + np.exp(-h))
 
 
-def sigmoide_derivative(h):
-    return sigmoide(h) * (1 - sigmoide(h))
+def derivative_sigmoid(h):
+    return sigmoid(h) * (1 - sigmoid(h))
+
+
+def hyperbolic_tangent(h):
+    return np.sinh(h) / np.cosh(h)
+
+
+def derivative_hyperbolic_tangent(h):
+    return 1 - hyperbolic_tangent(h) ** 2
 
 
 def gradient_descent(x, y_one_hot, g, dg=None, learning_rate=0.02, num_epochs=10000):
@@ -97,7 +105,7 @@ num_epochs = 10000
 # =========================================
 weights1, biases = gd2(x, y_one_hot, relu_vectorial, learning_rate, num_epochs)
 print(f"Final weights: {weights1}")
-title = f"Dots classificated with {relu_vectorial.__name__} model (chatGPT)"
+title = f"Clasificated dots with {relu_vectorial.__name__} model (chatGPT)"
 plot_preds_chat_gpt(title, relu_vectorial, x, weights1, biases)
 
 
@@ -114,8 +122,24 @@ plot_preds_scalar(title, relu, x, weights1)
 
 # Train model
 weights2 = gradient_descent(
-    x, y_one_hot, sigmoide, sigmoide_derivative, learning_rate, num_epochs
+    x, y_one_hot, sigmoid, derivative_sigmoid, learning_rate, num_epochs
 )
 print(f"Final weights: {weights2}")
-title = f"Clasificated dots with {sigmoide.__name__} model. Scalar version"
-plot_preds_scalar(title, sigmoide, x, weights2)
+title = f"Clasificated dots with {sigmoid.__name__} model. Scalar version"
+plot_preds_scalar(title, sigmoid, x, weights2)
+
+
+# ===========================================
+
+# Train model
+weights3 = gradient_descent(
+    x,
+    y_one_hot,
+    hyperbolic_tangent,
+    derivative_hyperbolic_tangent,
+    learning_rate,
+    num_epochs,
+)
+print(f"Final weights: {weights3}")
+title = f"Clasificated dots with {hyperbolic_tangent.__name__} model. Scalar version"
+plot_preds_scalar(title, hyperbolic_tangent, x, weights3)
