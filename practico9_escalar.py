@@ -40,22 +40,22 @@ def gradient_descent(x, y_one_hot, g, dg, eta=0.02, num_epochs=10000):
                 # error of the i-th output on the u-th example
                 error_iu = y_iu - y_one_hot[u, i]
                 loss += error_iu**2  # compute squared error
-                gradient_component = error_iu  # * dg(h[i, u])
+                # gradient_component = error_iu  # * dg(h[i, u])
                 for k in range(num_features):
-                    w[i, k] -= eta * gradient_component * x[u, k]
+                    w[i, k] -= eta * error_iu * x[u, k]
         loss *= 0.5
-        if epoch % 1000 == 0:
+        if epoch % (num_epochs / 10) == 0:
             print(f"Iteration epoch: {epoch}, Loss: {loss:.4f}")
     return w
 
 
 eta = 0.02
-num_epochs = 100000
+num_epochs = 10000
 
 
 # Train model
-w = gradient_descent(x, y_one_hot, relu, relu_derivative, eta, num_epochs)
-print(f"Final weights: {w}")
+weights = gradient_descent(x, y_one_hot, relu, relu_derivative, eta, num_epochs)
+print(f"Final weights: {weights}")
 
 
 # Visualize dots and classes
@@ -72,12 +72,12 @@ def pred(w, g, x):
     return y
 
 
-M, n_e = x.shape
-n_s = y_one_hot.shape[1]
-preds = np.zeros(M)
+num_samples, num_features = x.shape
+num_classes = y_one_hot.shape[1]
+preds = np.zeros(num_samples)
 
-for m in range(M):
-    y = pred(w, relu, x[m, :])
+for m in range(num_samples):
+    y = pred(weights, relu, x[m, :])
     preds[m] = np.argmax(y)
 
 plot(preds)

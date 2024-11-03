@@ -1,28 +1,32 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Generar un dataset de ejemplo
-# np.random.seed(0)
 num_points_per_class = 10
 
-# Clase 0
-x0 = np.random.randn(num_points_per_class, 2) + np.array([0, 0])
+# Class 0
+x0 = np.random.randn(num_points_per_class, 3) + np.array([0, 0, 0])
+for i in range(num_points_per_class):
+    x0[i][2] = -1
 y0 = np.zeros(num_points_per_class)
 
-# Clase 1
-x1 = np.random.randn(num_points_per_class, 2) + np.array([4, 4])
+# Class 1
+x1 = np.random.randn(num_points_per_class, 3) + np.array([4, 4, 0])
+for i in range(num_points_per_class):
+    x1[i][2] = -1
 y1 = np.ones(num_points_per_class)
 
-# Clase 2
-x2 = np.random.randn(num_points_per_class, 2) + np.array([0, 4])
+# Class 2
+x2 = np.random.randn(num_points_per_class, 3) + np.array([0, 4, 0])
+for i in range(num_points_per_class):
+    x2[i][2] = -1
 y2 = np.ones(num_points_per_class) * 2
 
-# Combinar el dataset
+# Combine dataset
 x = np.vstack([x0, x1, x2])
 
 
 y = np.hstack([y0, y1, y2])
-# One-hot encoding de las etiquetas
+# One-hot encoding
 num_classes = len(np.unique(y))
 y_one_hot = np.eye(num_classes)[y.astype(int)]
 
