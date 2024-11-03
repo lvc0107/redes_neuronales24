@@ -15,7 +15,7 @@ def relu_derivative(h):
 
 
 def sigmoide(h):
-    return 1 / (np.exp(-h))
+    return 1 / (1 + np.exp(-h))
 
 
 def sigmoide_derivative(h):
@@ -54,9 +54,8 @@ def gradient_descent(x, y_one_hot, g, dg=None, learning_rate=0.02, num_epochs=10
                 loss += error_iu**2  # compute square error
                 gradient_component = error_iu * dg(h_iu) if dg else error_iu
                 """
-                Dado que dg devuelve 0 para valores menores negativos
-                el producto se vuevle 0 y finalmente no se actualiza el valor
-                de w[i,k]
+                for relu, its derivative returns 0 when h < 0 so the product operation
+                becomes 0 and the w[i,k] is not updated
                 """
                 for k in range(num_features):
                     w[i, k] -= learning_rate * gradient_component * x[u, k]
