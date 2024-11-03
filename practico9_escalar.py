@@ -21,25 +21,29 @@ def gradient_descent(x, y_one_hot, g, dg=None, learning_rate=0.02, num_epochs=10
     # Set weights
     w = np.random.randn(num_classes, num_features) * 0.01
     print(f"Initial weights: {w}")
-
     h = np.zeros((num_classes, num_samples))
+
+    def f_h(i, u, w):
+        h[i, u] = 0.0
+        for k in range(num_features):
+            h[i, u] += w[i, k] * x[u, k]
+        return h[i, u]
 
     # Gradient descent iterations
     for epoch in range(num_epochs):
         # compute g(h) = h for each dot (P) and for each expected output (n_s)
         for u in range(num_samples):
             for i in range(num_classes):
-                h[i, u] = 0.0
-                for k in range(num_features):
-                    h[i, u] += w[i, k] * x[u, k]
+                h[i, u] = f_h(i, u, w)
 
+    for epoch in range(num_epochs):
         loss = 0.0
         for u in range(num_samples):
             for i in range(num_classes):
-                y_iu = g(h[i, u])
+                y_iu = g(f_h(i, u, w))
                 # error of the i-th output on the u-th example
                 error_iu = y_iu - y_one_hot[u, i]
-                loss += error_iu**2  # compute squared error
+                loss += error_iu**2  # compute square error
                 # gradient_component = error_iu  # * dg(h[i, u])
                 for k in range(num_features):
                     w[i, k] -= learning_rate * error_iu * x[u, k]

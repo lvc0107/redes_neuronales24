@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-num_points_per_class = 10
+num_points_per_class = 30
 
 # Class 0
 x0 = np.random.randn(num_points_per_class, 3) + np.array([0, 0, 0])
