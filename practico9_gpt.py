@@ -1,41 +1,14 @@
-import matplotlib.pyplot as plt
 import numpy as np
 
-# Generar un dataset de ejemplo
-# np.random.seed(0)
-num_points_per_class = 10
+from dataset import plot, x, y_one_hot
 
-# Clase 0
-x0 = np.random.randn(num_points_per_class, 2) + np.array([0, 0])
-y0 = np.zeros(num_points_per_class)
-
-# Clase 1
-x1 = np.random.randn(num_points_per_class, 2) + np.array([4, 4])
-y1 = np.ones(num_points_per_class)
-
-# Clase 2
-x2 = np.random.randn(num_points_per_class, 2) + np.array([0, 4])
-y2 = np.ones(num_points_per_class) * 2
-
-# Combinar el dataset
-X = np.vstack([x0, x1, x2])
-y = np.hstack([y0, y1, y2])
-
-colors = ["b"] * len(x0) + ["g"] * len(x1) + ["r"] * len(x2)
-
-plt.scatter(X[:, 0], X[:, 1], c=colors, cmap="viridis", alpha=0.5, s=200, linewidth=3)
-plt.title("Data set")
-plt.xlabel("Feature 1")
-plt.ylabel("Feature 2")
-plt.show()
+plot()
 
 
-# Función ReLU
 def relu(z):
     return np.maximum(0, z)
 
 
-# Derivada de la función ReLU
 def relu_derivative(z):
     return np.where(z > 0, 1, 0)
 
@@ -46,21 +19,19 @@ def cross_entropy_loss(y_true, y_pred):
 
 
 # Implementación del descenso por el gradiente
-def gradient_descent(X, y, learning_rate=0.02, num_iterations=1000):
-    num_samples, num_features = X.shape
-    num_classes = len(np.unique(y))
-
-    # One-hot encoding de las etiquetas
-    y_one_hot = np.eye(num_classes)[y.astype(int)]
+def gradient_descent(x, y_one_hot, learning_rate=0.02, num_epochs=10000):
+    num_samples, num_features = x.shape
+    num_classes = y_one_hot.shape[1]
 
     # Inicializar pesos y sesgos
     weights = np.random.randn(num_features, num_classes) * 0.01
+    print(f"Initial weights: {weights}")
     biases = np.zeros((1, num_classes))
 
     # Iteraciones del descenso por el gradiente
-    for i in range(num_iterations):
+    for epoch in range(num_epochs):
         # Calcular logits
-        logits = np.dot(X, weights) + biases
+        logits = np.dot(x, weights) + biases
         # Aplicar ReLU
         activated = relu(logits)
 
@@ -73,7 +44,7 @@ def gradient_descent(X, y, learning_rate=0.02, num_iterations=1000):
 
         # Calcular los gradientes
         d_logits = probabilities - y_one_hot
-        dW = np.dot(X.T, d_logits) / num_samples
+        dW = np.dot(x.T, d_logits) / num_samples
         db = np.sum(d_logits, axis=0, keepdims=True) / num_samples
 
         # Actualizar pesos y sesgos
@@ -81,32 +52,22 @@ def gradient_descent(X, y, learning_rate=0.02, num_iterations=1000):
         biases -= learning_rate * db
 
         # Imprimir la pérdida cada 100 iteraciones
-        if i % 100 == 0:
-            print(f"Iteración {i}, Pérdida: {loss:.4f}")
+        if epoch % 1000 == 0:
+            print(f"Iteration epoch: {epoch}, Loss: {loss:.4f}")
 
     return weights, biases
 
 
 # train the model
-weights, biases = gradient_descent(X, y)
+weights, biases = gradient_descent(x, y_one_hot)
+print(f"Final weights: {weights}")
+
 
 # Visualize dots and classes
-logits = np.dot(X, weights) + biases
+logits = np.dot(x, weights) + biases
 activated = relu(logits)
 exp_logits = np.exp(activated - np.max(activated, axis=1, keepdims=True))
 preds = np.argmax(exp_logits / exp_logits.sum(axis=1, keepdims=True), axis=1)
 
-plt.scatter(
-    X[:, 0],
-    X[:, 1],
-    c=preds,
-    cmap="plasma",
-    alpha=0.5,
-    s=200,
-    linewidth=3,
-    edgecolors=colors,
-)
-plt.title("Puntos clasificados por modelo con ReLU")
-plt.xlabel("Feature 1")
-plt.ylabel("Feature 2")
-plt.show()
+
+plot(preds)
