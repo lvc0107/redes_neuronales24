@@ -34,13 +34,17 @@ size_dot = 200
 dataset_colors = ["b"] * len(x0) + ["g"] * len(x1) + ["r"] * len(x2)
 
 
-def plot(preds=None):
+mapping = {0: "b", 1: "g", 2: "r"}
+
+
+def plot(preds=None, title="XXX"):
     if preds is None:
-        title = "Dots before run Perceptron"
         colors = dataset_colors
     else:
-        title = "Clasificated dots with ReLU model"
-        colors = preds
+        new_colors = []
+        for p in preds:
+            new_colors.append(mapping.get(p))
+        colors = new_colors
 
     plt.scatter(
         x[:, 0],

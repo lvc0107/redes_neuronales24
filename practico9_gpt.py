@@ -2,10 +2,8 @@ import numpy as np
 
 from dataset import plot, x, y_one_hot
 
-plot()
 
-
-def relu(z):
+def relu_vectorial(z):
     return np.maximum(0, z)
 
 
@@ -18,7 +16,7 @@ def cross_entropy_loss(y_true, y_pred):
     return -np.mean(np.sum(y_true * np.log(y_pred + 1e-8), axis=1))
 
 
-def gradient_descent(x, y_one_hot, learning_rate=0.02, num_epochs=10000):
+def gradient_descent(x, y_one_hot, g, dg=None, learning_rate=0.02, num_epochs=10000):
     num_samples, num_features = x.shape
     num_classes = y_one_hot.shape[1]
 
@@ -31,7 +29,7 @@ def gradient_descent(x, y_one_hot, learning_rate=0.02, num_epochs=10000):
         # Compute logits
         logits = np.dot(x, weights) + biases
         # Apply ReLU
-        activated = relu(logits)
+        activated = g(logits)
 
         # biases probabilities using softmax
         exp_logits = np.exp(activated - np.max(activated, axis=1, keepdims=True))
@@ -55,19 +53,27 @@ def gradient_descent(x, y_one_hot, learning_rate=0.02, num_epochs=10000):
     return weights, biases
 
 
+def plot_preds_chat_gpt(title, relu_vectorial, x, weights, biases=None):
+    if biases is not None:
+        logits = np.dot(x, weights) + biases
+    else:
+        logits = np.dot(x, weights)
+    activated = relu_vectorial(logits)
+    exp_logits = np.exp(activated - np.max(activated, axis=1, keepdims=True))
+    preds = np.argmax(exp_logits / exp_logits.sum(axis=1, keepdims=True), axis=1)
+    # Visualize dots and classes
+    plot(preds, title)
+
+
 learning_rate = 0.02
 num_epochs = 100000
-
 # train the model
-weights, biases = gradient_descent(x, y_one_hot, learning_rate, num_epochs)
+weights, biases = gradient_descent(
+    x, y_one_hot, relu_vectorial, learning_rate, num_epochs
+)
 print(f"Final weights: {weights}")
+title = f"Dots classificated with {relu_vectorial.__name__} model"
+# plot_preds_chat_gpt(title, relu_vectorial, x, weights, biases)
 
 
-# Visualize dots and classes
-logits = np.dot(x, weights) + biases
-activated = relu(logits)
-exp_logits = np.exp(activated - np.max(activated, axis=1, keepdims=True))
-preds = np.argmax(exp_logits / exp_logits.sum(axis=1, keepdims=True), axis=1)
-
-
-plot(preds)
+__all__ = ["relu_vectorial", "plot_preds_chat_gpt", "gradient_descent"]

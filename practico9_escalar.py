@@ -1,8 +1,9 @@
 import numpy as np
 
 from dataset import plot, x, y_one_hot
+from practico9_gpt import gradient_descent as gd2, plot_preds_chat_gpt, relu_vectorial
 
-plot()
+plot(title="Data set")
 
 
 def relu(h):
@@ -13,9 +14,8 @@ def relu_derivative(h):
     return 1 if h > 0 else 0
 
 
-def gradient_descent(x, y_one_hot, g, dg, eta=0.02, num_epochs=10000):
+def gradient_descent(x, y_one_hot, g, dg=None, learning_rate=0.02, num_epochs=10000):
     num_samples, num_features = x.shape
-
     num_classes = y_one_hot.shape[1]
 
     # Set weights
@@ -42,20 +42,11 @@ def gradient_descent(x, y_one_hot, g, dg, eta=0.02, num_epochs=10000):
                 loss += error_iu**2  # compute squared error
                 # gradient_component = error_iu  # * dg(h[i, u])
                 for k in range(num_features):
-                    w[i, k] -= eta * error_iu * x[u, k]
+                    w[i, k] -= learning_rate * error_iu * x[u, k]
         loss *= 0.5
         if epoch % (num_epochs / 10) == 0:
             print(f"Iteration epoch: {epoch}, Loss: {loss:.4f}")
     return w
-
-
-eta = 0.02
-num_epochs = 10000
-
-
-# Train model
-weights = gradient_descent(x, y_one_hot, relu, relu_derivative, eta, num_epochs)
-print(f"Final weights: {weights}")
 
 
 # Visualize dots and classes
@@ -72,12 +63,33 @@ def pred(w, g, x):
     return y
 
 
-num_samples, num_features = x.shape
-num_classes = y_one_hot.shape[1]
-preds = np.zeros(num_samples)
+def plot_preds_scalar(title, relu, x, weights):
+    num_samples, num_features = x.shape
+    preds = np.zeros(num_samples)
 
-for m in range(num_samples):
-    y = pred(weights, relu, x[m, :])
-    preds[m] = np.argmax(y)
+    for m in range(num_samples):
+        y = pred(weights, relu, x[m, :])
+        preds[m] = np.argmax(y)
 
-plot(preds)
+    plot(preds, title)
+
+
+learning_rate = 0.02
+num_epochs = 10000
+
+# =========================================
+weights2, biases = gd2(x, y_one_hot, relu_vectorial, learning_rate, num_epochs)
+print(f"Final weights: {weights2}")
+title = f"Dots classificated with {relu_vectorial.__name__} model (chatGPT)"
+plot_preds_chat_gpt(title, relu_vectorial, x, weights2, biases)
+
+
+# ===========================================
+
+# Train model
+weights = gradient_descent(
+    x, y_one_hot, relu, relu_derivative, learning_rate, num_epochs
+)
+print(f"Final weights: {weights}")
+title = f"Clasificated dots with {relu.__name__} model. Scalar version"
+plot_preds_scalar(title, relu, x, weights)
