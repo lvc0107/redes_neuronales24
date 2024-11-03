@@ -62,7 +62,12 @@ def plot_preds_chat_gpt(title, relu_vectorial, x, weights, biases=None):
     exp_logits = np.exp(activated - np.max(activated, axis=1, keepdims=True))
     preds = np.argmax(exp_logits / exp_logits.sum(axis=1, keepdims=True), axis=1)
     # Visualize dots and classes
-    plot(preds, title)
+    mapping = {0: "b", 1: "g", 2: "r"}
+    colors = []
+    for p in preds:
+        colors.append(mapping.get(p))
+
+    plot(colors, title)
 
 
 learning_rate = 0.02

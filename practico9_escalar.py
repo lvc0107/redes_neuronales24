@@ -1,9 +1,7 @@
 import numpy as np
 
-from dataset import plot, x, y_one_hot
+from dataset import dataset_colors, plot, x, y_one_hot
 from practico9_gpt import gradient_descent as gd2, plot_preds_chat_gpt, relu_vectorial
-
-plot(title="Data set")
 
 
 def relu(h):
@@ -96,11 +94,18 @@ def plot_preds_scalar(title, relu, x, weights):
         y = pred(weights, relu, x[m, :])
         preds[m] = np.argmax(y)
 
-    plot(preds, title)
+    mapping = {0: "b", 1: "g", 2: "r"}
+    colors = []
+    for p in preds:
+        colors.append(mapping.get(p))
+
+    plot(colors, title)
 
 
 learning_rate = 0.02
 num_epochs = 10000
+
+plot(colors=dataset_colors, title="Data set")
 
 # =========================================
 weights1, biases = gd2(x, y_one_hot, relu_vectorial, learning_rate, num_epochs)

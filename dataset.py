@@ -30,22 +30,12 @@ y = np.hstack([y0, y1, y2])
 num_classes = len(np.unique(y))
 y_one_hot = np.eye(num_classes)[y.astype(int)]
 
-size_dot = 200
+
 dataset_colors = ["b"] * len(x0) + ["g"] * len(x1) + ["r"] * len(x2)
 
 
-mapping = {0: "b", 1: "g", 2: "r"}
-
-
-def plot(preds=None, title="XXX"):
-    if preds is None:
-        colors = dataset_colors
-    else:
-        new_colors = []
-        for p in preds:
-            new_colors.append(mapping.get(p))
-        colors = new_colors
-
+def plot(colors, title):
+    size_dot = 200
     plt.scatter(
         x[:, 0],
         x[:, 1],
@@ -53,7 +43,7 @@ def plot(preds=None, title="XXX"):
         alpha=0.5,
         s=size_dot,
         linewidth=3,
-        edgecolors=dataset_colors,
+        edgecolors=colors,
     )
     plt.title(title)
     plt.xlabel("Feature 1")
