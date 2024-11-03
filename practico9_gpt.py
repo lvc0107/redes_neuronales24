@@ -1,6 +1,6 @@
 import numpy as np
 
-from dataset import plot, x, y_one_hot
+from dataset import cloud, plot
 
 
 def relu_vectorial(z):
@@ -53,7 +53,7 @@ def gradient_descent(x, y_one_hot, g, dg=None, learning_rate=0.02, num_epochs=10
     return weights, biases
 
 
-def plot_preds_chat_gpt(title, relu_vectorial, x, weights, biases=None):
+def plot_preds_chat_gpt(x, weights, relu_vectorial, title, biases=None):
     if biases is not None:
         logits = np.dot(x, weights) + biases
     else:
@@ -62,23 +62,17 @@ def plot_preds_chat_gpt(title, relu_vectorial, x, weights, biases=None):
     exp_logits = np.exp(activated - np.max(activated, axis=1, keepdims=True))
     preds = np.argmax(exp_logits / exp_logits.sum(axis=1, keepdims=True), axis=1)
     # Visualize dots and classes
-    mapping = {0: "b", 1: "g", 2: "r"}
-    colors = []
-    for p in preds:
-        colors.append(mapping.get(p))
-
-    plot(colors, title)
+    colors = [{0: "b", 1: "g", 2: "r"}.get(p) for p in preds]
+    plot(x, colors, title)
 
 
 learning_rate = 0.02
 num_epochs = 100000
+x, y_one_hot, c = cloud(num_points_per_class=10)
+
 # train the model
 weights, biases = gradient_descent(
     x, y_one_hot, relu_vectorial, learning_rate, num_epochs
 )
 print(f"Final weights: {weights}")
 title = f"Dots classificated with {relu_vectorial.__name__} model"
-# plot_preds_chat_gpt(title, relu_vectorial, x, weights, biases)
-
-
-__all__ = ["relu_vectorial", "plot_preds_chat_gpt", "gradient_descent"]

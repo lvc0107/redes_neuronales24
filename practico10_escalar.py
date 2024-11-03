@@ -1,11 +1,9 @@
 import numpy as np
 
-from dataset import cloud, plot
-from practico9_gpt import (
-    gradient_descent as gd_chatgpt,
-    plot_preds_chat_gpt,
-    relu_vectorial,
-)
+from dataset import plot, x, y_one_hot
+from practico9_gpt import gradient_descent as gd2, plot_preds_chat_gpt, relu_vectorial
+
+plot(title="Data set")
 
 
 def relu(h):
@@ -76,6 +74,7 @@ def gradient_descent(x, y_one_hot, g, dg=None, learning_rate=0.02, num_epochs=10
     return w
 
 
+# Visualize dots and classes
 def pred(w, g, x):
     n_s = w.shape[0]
     n_e = len(x)
@@ -89,58 +88,51 @@ def pred(w, g, x):
     return y
 
 
-def plot_preds_scalar(x, weights, g, title):
+def plot_preds_scalar(title, relu, x, weights):
     num_samples, num_features = x.shape
     preds = np.zeros(num_samples)
 
     for m in range(num_samples):
-        y = pred(weights, g, x[m, :])
+        y = pred(weights, relu, x[m, :])
         preds[m] = np.argmax(y)
 
-    colors = [{0: "b", 1: "g", 2: "r"}.get(p) for p in preds]
-    # Visualize dots and classes
-    plot(x, colors, title)
+    plot(preds, title)
 
 
 learning_rate = 0.02
 num_epochs = 10000
-x, y_one_hot, c = cloud(num_points_per_class=10)
-plot(x, colors=c, title="Data set")
-
 
 # =========================================
-weights1, biases = gd_chatgpt(x, y_one_hot, relu_vectorial, learning_rate, num_epochs)
+weights1, biases = gd2(x, y_one_hot, relu_vectorial, learning_rate, num_epochs)
 print(f"Final weights: {weights1}")
-title = (
-    f"Clasificated dots with {relu_vectorial.__name__} activation function (chatGPT)"
-)
-plot_preds_chat_gpt(x, weights1, relu_vectorial, title)
+title = f"Clasificated dots with {relu_vectorial.__name__} model (chatGPT)"
+plot_preds_chat_gpt(title, relu_vectorial, x, weights1, biases)
 
 
 # ===========================================
 
 # Train model
-weights2 = gradient_descent(x, y_one_hot, relu, None, learning_rate, num_epochs)
+weights1 = gradient_descent(x, y_one_hot, relu, None, learning_rate, num_epochs)
+print(f"Final weights: {weights1}")
+title = f"Clasificated dots with {relu.__name__} model. Scalar version"
+plot_preds_scalar(title, relu, x, weights1)
+
+
+# ===========================================
+
+# Train model
+weights2 = gradient_descent(
+    x, y_one_hot, sigmoid, derivative_sigmoid, learning_rate, num_epochs
+)
 print(f"Final weights: {weights2}")
-title = f"Clasificated dots with {relu.__name__} activation function. Scalar version"
-plot_preds_scalar(x, weights2, relu, title)
+title = f"Clasificated dots with {sigmoid.__name__} model. Scalar version"
+plot_preds_scalar(title, sigmoid, x, weights2)
 
 
 # ===========================================
 
 # Train model
 weights3 = gradient_descent(
-    x, y_one_hot, sigmoid, derivative_sigmoid, learning_rate, num_epochs
-)
-print(f"Final weights: {weights3}")
-title = f"Clasificated dots with {sigmoid.__name__} activation function. Scalar version"
-plot_preds_scalar(x, weights3, sigmoid, title)
-
-
-# ===========================================
-
-# Train model
-weights4 = gradient_descent(
     x,
     y_one_hot,
     hyperbolic_tangent,
@@ -148,6 +140,6 @@ weights4 = gradient_descent(
     learning_rate,
     num_epochs,
 )
-print(f"Final weights: {weights4}")
-title = f"Clasificated dots with {hyperbolic_tangent.__name__} activation function. Scalar version"
-plot_preds_scalar(x, weights4, hyperbolic_tangent, title)
+print(f"Final weights: {weights3}")
+title = f"Clasificated dots with {hyperbolic_tangent.__name__} model. Scalar version"
+plot_preds_scalar(title, hyperbolic_tangent, x, weights3)
