@@ -49,11 +49,6 @@ def gradient_descent(x, y_one_hot, g, dg=None, learning_rate=0.02, num_epochs=10
 
     # Gradient descent iterations
     for epoch in range(num_epochs):
-        # compute g(h) = h for each dot (P) and for each expected output (n_s)
-        for u in range(num_samples):
-            for i in range(num_classes):
-                h[i, u] = f_h(i, u, w)
-
         loss = 0.0
         for u in range(num_samples):
             for i in range(num_classes):
