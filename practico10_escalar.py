@@ -30,16 +30,15 @@ def derivative_hyperbolic_tangent(h):
 def gradient_descent(
     x, y_one_hot, g1, dg1=None, g2=None, dg2=None, learning_rate=0.02, num_epochs=10000
 ):
-    # for this example num_features and num_classes_layers are the same for both layers
-    num_samples, num_features1 = x.shape
-    num_samples, num_features2 = x.shape
+    # for this example num_classes_layers are the same for both layers
+    num_samples, num_features = x.shape
     num_classes_layer_1 = y_one_hot.shape[1]
     num_classes_layer_2 = y_one_hot.shape[1]
 
     # Set weights
-    w1 = np.random.randn(num_classes_layer_1, num_features1) * 0.01
+    w1 = np.random.randn(num_classes_layer_1, num_features) * 0.01
     print(f"Initial weights first layer: {w1}")
-    w2 = np.random.randn(num_classes_layer_2, num_features2) * 0.01
+    w2 = np.random.randn(num_classes_layer_2, num_classes_layer_1) * 0.01
     print(f"Initial weights hidden layer: {w2}")
     h1 = np.zeros((num_samples, num_classes_layer_1))
     h2 = np.zeros((num_samples, num_classes_layer_2))
@@ -50,14 +49,14 @@ def gradient_descent(
 
     def f_h1(u, j, w1):
         h1[u, j] = 0.0
-        for k in range(num_features1):
+        for k in range(num_features):
             h1[u, j] += w1[j, k] * x[u, k]
         return h1[u, j]
 
     def f_h2(u, i, w2):
         h2[u, i] = 0.0
-        for k in range(num_features2):
-            h2[u, i] += w2[i, k] * v[u, k]
+        for j in range(num_classes_layer_1):
+            h2[u, i] += w2[i, j] * v[u, j]
         return h2[u, i]
 
     # Gradient descent iterations
@@ -77,16 +76,12 @@ def gradient_descent(
                 # error of the i-th output on the u-th example
                 error_ui_layer2 = y2_ui - y_one_hot[u, i]
                 loss += error_ui_layer2**2  # compute square error
-                gradient_component_layer2 = (
-                    error_ui_layer2 * dg2(h2_ui) if dg2 else error_ui_layer2
-                )
+                grad_layer_2[u, i] = dg2(h2_ui) * error_ui_layer2
                 # Udpate weights output layer:
-                for j in range(num_features2):
-                    w2[i, j] -= learning_rate * gradient_component_layer2 * v[u, j]
+                for j in range(num_classes_layer_1):
+                    w2[i, j] -= learning_rate * grad_layer_2[u, i] * v[u, j]
 
-                grad_layer_2[u, i] = gradient_component_layer2
-
-            # Backward step
+            # Backward step. Updating  weights on first layer
             for j in range(num_classes_layer_1):
                 h1_uj = f_h1(u, j, w2)
                 sum_w2_ij = sum(
@@ -95,7 +90,7 @@ def gradient_descent(
                 gradient_component_layer1 = (
                     dg1(h1_uj) * sum_w2_ij if dg1 else h1_uj * sum_w2_ij
                 )
-                for k in range(num_features1):
+                for k in range(num_features):
                     w1[j, k] -= learning_rate * gradient_component_layer1 * x[u, k]
 
         loss *= 0.5
@@ -153,7 +148,7 @@ plot(x, c, c, title="Data set")
 
 # Train model
 w1, w2 = gradient_descent(
-    x, y_one_hot, relu, None, sigmoid, derivative_sigmoid, learning_rate, num_epochs
+    x, y_one_hot, relu, derivative_relu, sigmoid, derivative_sigmoid, learning_rate, num_epochs
 )
 print(f"weights layer 1: {w1}")
 print(f"weights layer 2: {w2}")
