@@ -40,27 +40,28 @@ def gradient_descent(
     w1 = np.random.randn(num_classes_layer_1, num_features1) * 0.01
     print(f"Initial weights first layer: {w1}")
     w2 = np.random.randn(num_classes_layer_2, num_features2) * 0.01
-    print(f"Initial weights hiden layer: {w2}")
-    h1 = np.zeros((num_classes_layer_1, num_samples))
-    h2 = np.zeros((num_classes_layer_2, num_samples))
+    print(f"Initial weights hidden layer: {w2}")
+    h1 = np.zeros((num_samples, num_classes_layer_1))
+    h2 = np.zeros((num_samples, num_classes_layer_2))
     # for hidden layer
-    v = np.zeros((num_classes_layer_2, num_samples))
-
+    v = np.zeros((num_samples, num_classes_layer_1))
     # gradient of output layer
-    grad_layer_2 = np.zeros((num_classes_layer_2, num_samples))
-    v = np.zeros((num_classes_layer_2, num_samples))
+    grad_layer_2 = np.zeros((num_samples, num_classes_layer_2))
 
-    def f_h1(j, u, w):
-        h1[j, u] = 0.0
+    def f_h1(u, j, w1):
+        h1[u, j] = 0.0
         for k in range(num_features1):
-            h1[j, u] += w1[j, k] * x[u, k]
-        return h1[j, u]
+            h1[u, j] += w1[j, k] * x[u, k]
+        return h1[u, j]
 
-    def f_h2(i, u, w):
-        h2[i, u] = 0.0
+    def f_h2(u, i, w2):
+        h2[u, i] = 0.0
         for k in range(num_features2):
-            h2[i, u] += w2[i, k] * v[u, k]
-        return h2[i, u]
+            try:
+                h2[u, i] += w2[i, k] * v[u, k]
+            except IndexError:
+                pass
+        return h2[u, i]
 
     # Gradient descent iterations
     for epoch in range(num_epochs):
@@ -70,33 +71,34 @@ def gradient_descent(
 
             # Compute hidden layer
             for j in range(num_classes_layer_1):
-                h1_iu = f_h1(j, u, w1)
-                v[j, u] = g1(h1_iu)
+                h1_uj = f_h1(u, j, w1)
+                v[u, j] = g1(h1_uj)
             # Compute output layer
-
             for i in range(num_classes_layer_2):
-                h2_iu = f_h2(i, u, w2)
-                y2_iu = g2(h2_iu)
+                h2_ui = f_h2(u, i, w2)
+                y2_ui = g2(h2_ui)
                 # error of the i-th output on the u-th example
-                error_iu_layer2 = y2_iu - y_one_hot[u, i]
-                loss += error_iu_layer2**2  # compute square error
+                error_ui_layer2 = y2_ui - y_one_hot[u, i]
+                loss += error_ui_layer2**2  # compute square error
                 gradient_component_layer2 = (
-                    error_iu_layer2 * dg2(h2_iu) if dg2 else error_iu_layer2
+                    error_ui_layer2 * dg2(h2_ui) if dg2 else error_ui_layer2
                 )
                 # Udpate weights output layer:
                 for j in range(num_features2):
                     w2[i, j] -= learning_rate * gradient_component_layer2 * v[u, j]
                     w2[i, j] += w2[i, j]
 
-                grad_layer_2[i, u] = gradient_component_layer2
+                grad_layer_2[u, i] = gradient_component_layer2
 
             # Backward step
             for j in range(num_classes_layer_1):
-                h1_ju = f_h1(j, u, w2)
+                h1_uj = f_h1(u, j, w2)
                 sum_w2_ij = sum(
-                    w2[i, j] * grad_layer_2[i, u] for i in range(num_classes_layer_2)
+                    w2[i, j] * grad_layer_2[u, i] for i in range(num_classes_layer_2)
                 )
-                gradient_component_layer1 = dg1(h1_ju) * sum_w2_ij if dg1 else sum_w2_ij
+                gradient_component_layer1 = (
+                    dg1(h1_uj) * sum_w2_ij if dg1 else h1_uj * sum_w2_ij
+                )
                 for k in range(num_features1):
                     w1[j, k] -= learning_rate * gradient_component_layer1 * x[u, k]
 
@@ -134,7 +136,7 @@ def plot_preds_scalar(x, w1, w2, g1, g2, title):
 
 learning_rate = 0.02
 num_epochs = 10000
-x, y_one_hot, c = cloud(num_points_per_class=10)
+x, y_one_hot, c = cloud(num_points_per_class=2)
 plot(x, colors=c, title="Data set")
 
 
@@ -146,5 +148,5 @@ w1, w2 = gradient_descent(
 )
 print(f"weights layer 1: {w1}")
 print(f"weights layer 2: {w2}")
-title = f"Clasificated dots with {sigmoid.__name__} activation function. Scalar version"
+title = "Clasificated dots with 2 layers. Scalar version"
 plot_preds_scalar(x, w1, w2, relu, sigmoid, title)
