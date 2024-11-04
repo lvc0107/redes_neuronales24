@@ -84,7 +84,7 @@ def pred(w, g, x):
     return y
 
 
-def plot_preds_scalar(x, weights, g, title):
+def plot_preds_scalar(x, original_classification, weights, g, title):
     num_samples, num_features = x.shape
     preds = np.zeros(num_samples)
 
@@ -92,15 +92,15 @@ def plot_preds_scalar(x, weights, g, title):
         y = pred(weights, g, x[m, :])
         preds[m] = np.argmax(y)
 
-    colors = [{0: "b", 1: "g", 2: "r"}.get(p) for p in preds]
+    new_clasification = [{0: "b", 1: "g", 2: "r"}.get(p) for p in preds]
     # Visualize dots and classes
-    plot(x, colors, title)
+    plot(x, original_classification, new_clasification, title)
 
 
 learning_rate = 0.02
 num_epochs = 10000
 x, y_one_hot, c = cloud(num_points_per_class=10)
-plot(x, colors=c, title="Data set")
+plot(x, c, c, title="Data set")
 
 
 # =========================================
@@ -109,7 +109,7 @@ print(f"Final weights: {weights1}")
 title = (
     f"Clasificated dots with {relu_vectorial.__name__} activation function (chatGPT)"
 )
-plot_preds_chat_gpt(x, weights1, relu_vectorial, title)
+plot_preds_chat_gpt(x, c, weights1, relu_vectorial, title)
 
 
 # ===========================================
@@ -118,7 +118,7 @@ plot_preds_chat_gpt(x, weights1, relu_vectorial, title)
 weights2 = gradient_descent(x, y_one_hot, relu, None, learning_rate, num_epochs)
 print(f"Final weights: {weights2}")
 title = f"Clasificated dots with {relu.__name__} activation function. Scalar version"
-plot_preds_scalar(x, weights2, relu, title)
+plot_preds_scalar(x, c, weights2, relu, title)
 
 
 # ===========================================
@@ -129,7 +129,7 @@ weights3 = gradient_descent(
 )
 print(f"Final weights: {weights3}")
 title = f"Clasificated dots with {sigmoid.__name__} activation function. Scalar version"
-plot_preds_scalar(x, weights3, sigmoid, title)
+plot_preds_scalar(x, c, weights3, sigmoid, title)
 
 
 # ===========================================
@@ -145,4 +145,4 @@ weights4 = gradient_descent(
 )
 print(f"Final weights: {weights4}")
 title = f"Clasificated dots with {hyperbolic_tangent.__name__} activation function. Scalar version"
-plot_preds_scalar(x, weights4, hyperbolic_tangent, title)
+plot_preds_scalar(x, c, weights4, hyperbolic_tangent, title)

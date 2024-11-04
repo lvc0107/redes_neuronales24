@@ -53,7 +53,9 @@ def gradient_descent(x, y_one_hot, g, dg=None, learning_rate=0.02, num_epochs=10
     return weights, biases
 
 
-def plot_preds_chat_gpt(x, weights, relu_vectorial, title, biases=None):
+def plot_preds_chat_gpt(
+    x, original_classification, weights, relu_vectorial, title, biases=None
+):
     if biases is not None:
         logits = np.dot(x, weights) + biases
     else:
@@ -62,8 +64,8 @@ def plot_preds_chat_gpt(x, weights, relu_vectorial, title, biases=None):
     exp_logits = np.exp(activated - np.max(activated, axis=1, keepdims=True))
     preds = np.argmax(exp_logits / exp_logits.sum(axis=1, keepdims=True), axis=1)
     # Visualize dots and classes
-    colors = [{0: "b", 1: "g", 2: "r"}.get(p) for p in preds]
-    plot(x, colors, title)
+    new_clasification = [{0: "b", 1: "g", 2: "r"}.get(p) for p in preds]
+    plot(x, original_classification, new_clasification, title)
 
 
 learning_rate = 0.02

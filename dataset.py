@@ -32,16 +32,16 @@ def cloud(num_points_per_class):
     return x, y_one_hot, classification
 
 
-def plot(x, colors, title):
+def plot(x, original_classification, new_classification, title):
     size_dot = 200
     plt.scatter(
         x[:, 0],
         x[:, 1],
-        c=colors,
+        c=new_classification,
         alpha=0.5,
         s=size_dot,
         linewidth=3,
-        edgecolors=colors,
+        edgecolors=original_classification,
     )
     plt.title(title)
     plt.xlabel("Feature 1")

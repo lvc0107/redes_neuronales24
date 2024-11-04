@@ -57,10 +57,7 @@ def gradient_descent(
     def f_h2(u, i, w2):
         h2[u, i] = 0.0
         for k in range(num_features2):
-            try:
-                h2[u, i] += w2[i, k] * v[u, k]
-            except IndexError:
-                pass
+            h2[u, i] += w2[i, k] * v[u, k]
         return h2[u, i]
 
     # Gradient descent iterations
@@ -86,7 +83,6 @@ def gradient_descent(
                 # Udpate weights output layer:
                 for j in range(num_features2):
                     w2[i, j] -= learning_rate * gradient_component_layer2 * v[u, j]
-                    w2[i, j] += w2[i, j]
 
                 grad_layer_2[u, i] = gradient_component_layer2
 
@@ -109,6 +105,19 @@ def gradient_descent(
     return w1, w2
 
 
+def pred_version_original_(w, g, x):
+    n_s = w.shape[0]
+    n_e = len(x)
+
+    y = np.zeros(n_s)
+    for i in range(n_s):
+        h = 0.0
+        for k in range(n_e):
+            h += w[i, k] * x[k]
+        y[i] = g(h)
+    return y
+
+
 def pred(w1, w2, g1, g2, x):
     n_s = w1.shape[0]
     n_e = len(x)
@@ -121,7 +130,7 @@ def pred(w1, w2, g1, g2, x):
     return y
 
 
-def plot_preds_scalar(x, w1, w2, g1, g2, title):
+def plot_preds_scalar(x, c, w1, w2, g1, g2, title):
     num_samples, num_features = x.shape
     preds = np.zeros(num_samples)
 
@@ -129,15 +138,15 @@ def plot_preds_scalar(x, w1, w2, g1, g2, title):
         y = pred(w1, w2, g1, g2, x[m, :])
         preds[m] = np.argmax(y)
 
-    colors = [{0: "b", 1: "g", 2: "r"}.get(p) for p in preds]
+    new_clasification = [{0: "b", 1: "g", 2: "r"}.get(p) for p in preds]
     # Visualize dots and classes
-    plot(x, colors, title)
+    plot(x, c, new_clasification, title)
 
 
 learning_rate = 0.02
-num_epochs = 10000
-x, y_one_hot, c = cloud(num_points_per_class=2)
-plot(x, colors=c, title="Data set")
+num_epochs = 100
+x, y_one_hot, c = cloud(num_points_per_class=10)
+plot(x, c, c, title="Data set")
 
 
 # ===========================================
@@ -149,4 +158,4 @@ w1, w2 = gradient_descent(
 print(f"weights layer 1: {w1}")
 print(f"weights layer 2: {w2}")
 title = "Clasificated dots with 2 layers. Scalar version"
-plot_preds_scalar(x, w1, w2, relu, sigmoid, title)
+plot_preds_scalar(x, c, w1, w2, relu, sigmoid, title)
