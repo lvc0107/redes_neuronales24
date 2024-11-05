@@ -48,3 +48,27 @@ print(f"weights layer 2: {w2}")
 title = "Clasificated dots with 2 layers. Scalar version"
 plot_preds_scalar(x, y_one_hot, colors, w1, w2, relu, sigmoid, title)
 plot_loss(range(num_epochs), aggregated_loss)
+
+
+# Not bias
+e1 = (0, 0)
+e2 = (0, 1)
+e3 = (1, 0)
+e4 = (1, 1)
+
+# Train model
+w1, w2, aggregated_loss = gradient_descent(
+    x,
+    y_one_hot,
+    relu,
+    derivative_relu,
+    sigmoid,
+    derivative_sigmoid,
+    learning_rate,
+    num_epochs,
+)
+print(f"weights layer 1: {w1}")
+print(f"weights layer 2: {w2}")
+title = "Clasificated dots with 2 layers. Scalar version"
+plot_preds_scalar(x, y_one_hot, colors, w1, w2, relu, sigmoid, title)
+plot_loss(range(num_epochs), aggregated_loss)
