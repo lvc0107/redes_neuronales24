@@ -100,33 +100,21 @@ def gradient_descent(
     return w1, w2
 
 
-def pred_version_original_(w, g, x):
-    n_s = w.shape[0]
-    n_e = len(x)
-
-    y = np.zeros(n_s)
-    for i in range(n_s):
-        h = 0.0
-        for k in range(n_e):
-            h += w[i, k] * x[k]
-        y[i] = g(h)
-    return y
-
-
 def pred(w1, w2, g1, g2, x):
-    n_s = w1.shape[0]
+    n_s = w2.shape[0]
     n_e = len(x)
     y = np.zeros(n_s)
     for i in range(n_s):
         h = 0.0
         for k in range(n_e):
             h += w2[i, k] * g1(w1[i, k] * x[k])
+
         y[i] = g2(h)
     return y
 
 
 def plot_preds_scalar(x, c, w1, w2, g1, g2, title):
-    num_samples, num_features = x.shape
+    num_samples, _ = x.shape
     preds = np.zeros(num_samples)
 
     for m in range(num_samples):
@@ -148,7 +136,14 @@ plot(x, c, c, title="Data set")
 
 # Train model
 w1, w2 = gradient_descent(
-    x, y_one_hot, relu, derivative_relu, sigmoid, derivative_sigmoid, learning_rate, num_epochs
+    x,
+    y_one_hot,
+    relu,
+    derivative_relu,
+    sigmoid,
+    derivative_sigmoid,
+    learning_rate,
+    num_epochs,
 )
 print(f"weights layer 1: {w1}")
 print(f"weights layer 2: {w2}")

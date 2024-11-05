@@ -85,7 +85,7 @@ def pred(w, g, x):
 
 
 def plot_preds_scalar(x, original_classification, weights, g, title):
-    num_samples, num_features = x.shape
+    num_samples, _ = x.shape
     preds = np.zeros(num_samples)
 
     for m in range(num_samples):
