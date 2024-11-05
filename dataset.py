@@ -50,7 +50,7 @@ def plot(x, original_classification, new_classification, title):
 
 
 def plot_loss(x, y):
-    plt.plot(range(x), y, c="cyan")
+    plt.plot(x, y, c="cyan")
     plt.title("Errors")
     plt.xlabel("Epochs")
     plt.ylabel("Errors")
