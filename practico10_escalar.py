@@ -83,7 +83,7 @@ def gradient_descent(
 
             # Backward step. Updating  weights on first layer
             for j in range(num_classes_layer_1):
-                h1_uj = f_h1(u, j, w2)
+                h1_uj = f_h1(u, j, w1)
                 sum_w2_ij = sum(
                     w2[i, j] * grad_layer_2[u, i] for i in range(num_classes_layer_2)
                 )
@@ -100,25 +100,35 @@ def gradient_descent(
     return w1, w2
 
 
-def pred(w1, w2, g1, g2, x):
-    n_s = w2.shape[0]
-    n_e = len(x)
-    y = np.zeros(n_s)
-    for i in range(n_s):
-        h = 0.0
-        for k in range(n_e):
-            h += w2[i, k] * g1(w1[i, k] * x[k])
+def pred(w1, w2, g1, g2, x, y_one_hot):
+    num_features = len(x)
+    num_classes_layer_1 = y_one_hot.shape[1]
+    num_classes_layer_2 = y_one_hot.shape[1]
 
-        y[i] = g2(h)
+    y = np.zeros(num_classes_layer_2)
+    v = np.zeros(num_classes_layer_1)
+
+    for j in range(num_classes_layer_1):
+        h1 = 0.0
+        for k in range(num_features):
+            h1 += w1[j, k] * x[k]
+        v[j] = g1(h1)
+
+    for i in range(num_classes_layer_2):
+        h2 = 0.0
+        for j in range(num_classes_layer_1):
+            h2 += w2[i, j] * v[j]
+
+        y[i] = g2(h2)
     return y
 
 
-def plot_preds_scalar(x, c, w1, w2, g1, g2, title):
+def plot_preds_scalar(x, y_one_hot, c, w1, w2, g1, g2, title):
     num_samples, _ = x.shape
     preds = np.zeros(num_samples)
 
     for m in range(num_samples):
-        y = pred(w1, w2, g1, g2, x[m, :])
+        y = pred(w1, w2, g1, g2, x[m, :], y_one_hot)
         preds[m] = np.argmax(y)
 
     new_clasification = [{0: "b", 1: "g", 2: "r"}.get(p) for p in preds]
@@ -127,7 +137,7 @@ def plot_preds_scalar(x, c, w1, w2, g1, g2, title):
 
 
 learning_rate = 0.02
-num_epochs = 100
+num_epochs = 10000
 x, y_one_hot, c = cloud(num_points_per_class=10)
 plot(x, c, c, title="Data set")
 
@@ -148,4 +158,4 @@ w1, w2 = gradient_descent(
 print(f"weights layer 1: {w1}")
 print(f"weights layer 2: {w2}")
 title = "Clasificated dots with 2 layers. Scalar version"
-plot_preds_scalar(x, c, w1, w2, relu, sigmoid, title)
+plot_preds_scalar(x, y_one_hot, c, w1, w2, relu, sigmoid, title)
