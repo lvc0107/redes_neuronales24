@@ -1,6 +1,6 @@
 import numpy as np
 
-from dataset import cloud, plot
+from dataset import cloud, plot, plot_loss
 
 
 def relu(h):
@@ -60,6 +60,7 @@ def gradient_descent(
         return h2[u, i]
 
     # Gradient descent iterations
+    aggregated_loss = []
     for epoch in range(num_epochs):
         loss = 0.0
         for u in range(num_samples):
@@ -94,10 +95,11 @@ def gradient_descent(
                     w1[j, k] -= learning_rate * gradient_component_layer1 * x[u, k]
 
         loss *= 0.5
+        aggregated_loss.append(loss)
         if epoch % (num_epochs / 10) == 0:
             print(f"Iteration epoch: {epoch}, Loss: {loss:.16f}")
 
-    return w1, w2
+    return w1, w2, aggregated_loss
 
 
 def pred(w1, w2, g1, g2, x, y_one_hot):
@@ -145,7 +147,7 @@ plot(x, c, c, title="Data set")
 # ===========================================
 
 # Train model
-w1, w2 = gradient_descent(
+w1, w2, aggregated_loss = gradient_descent(
     x,
     y_one_hot,
     relu,
@@ -159,3 +161,4 @@ print(f"weights layer 1: {w1}")
 print(f"weights layer 2: {w2}")
 title = "Clasificated dots with 2 layers. Scalar version"
 plot_preds_scalar(x, y_one_hot, c, w1, w2, relu, sigmoid, title)
+plot_loss(num_epochs, aggregated_loss)
