@@ -93,15 +93,13 @@ def plot_preds_scalar(x, y_one_hot, weights, g, title):
         y = pred(weights, g, x[m, :])
         preds[m] = np.argmax(y)
     # Visualize dots and classes
-    original_classification = np.argmax(y_one_hot, axis=1)
-    plot(x, original_classification, preds, title)
+    plot(x, y_one_hot, preds, title)
 
 
 learning_rate = 0.02
 num_epochs = 10000
 X, y_one_hot = cloud(num_points_per_class=10)
-original_classification = np.argmax(y_one_hot, axis=1)
-plot(X, original_classification, title="Data set")
+plot(X, y_one_hot, title="Data set")
 
 
 # =========================================

@@ -37,9 +37,8 @@ def cloud(num_points_per_class, bias=False):
     return x, y_one_hot
 
 
-def plot(
-    X, original_classification, new_classification=None, title="Decision Boundary"
-):
+def plot(X, y, new_classification=None, title="Data Set"):
+    original_classification = np.argmax(y, axis=1)
     if new_classification is None:
         new_classification = original_classification
 

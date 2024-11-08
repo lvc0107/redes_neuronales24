@@ -62,8 +62,7 @@ def plot_preds_chat_gpt(x, y_one_hot, weights, relu_vectorial, title, biases=Non
     exp_logits = np.exp(activated - np.max(activated, axis=1, keepdims=True))
     preds = np.argmax(exp_logits / exp_logits.sum(axis=1, keepdims=True), axis=1)
     # Visualize dots and classes
-    original_classification = np.argmax(y_one_hot, axis=1)
-    plot(x, original_classification, preds, title)
+    plot(x, y_one_hot, preds, title)
 
 
 learning_rate = 0.02
@@ -75,7 +74,6 @@ weights, biases = gradient_descent(
     X, y_one_hot, relu_vectorial, learning_rate, num_epochs
 )
 print(f"Final weights: {weights}")
-original_classification = np.argmax(y_one_hot, axis=1)
-plot(X, original_classification, title="Data set")
+plot(X, y_one_hot, title="Data set")
 title = f"Dots classificated with {relu_vectorial.__name__} model"
 plot_preds_chat_gpt(X, y_one_hot, weights, relu_vectorial, title, biases)

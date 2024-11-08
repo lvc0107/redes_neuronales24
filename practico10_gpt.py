@@ -99,7 +99,7 @@ class Perceptron:
         return np.argmax(self.forward(X), axis=1)
 
 
-def plot_decision_boundary(model, X, y, c, title="Decision Boundary"):
+def plot_decision_boundary(model, X, y, preds, title="Decision Boundary"):
     def map_color(d):
         return [{0: "b", 1: "g", 2: "r"}.get(p) for p in d]
 
@@ -119,8 +119,8 @@ def plot_decision_boundary(model, X, y, c, title="Decision Boundary"):
     plt.scatter(
         X[:, 0],
         X[:, 1],
-        c=np.argmax(y, axis=1),
-        edgecolors=map_color(c),
+        c=map_color(preds),
+        edgecolors=map_color(np.argmax(y, axis=1)),
         s=200,
         alpha=0.5,
     )
@@ -132,16 +132,22 @@ def plot_decision_boundary(model, X, y, c, title="Decision Boundary"):
 
 # Ejemplo de uso
 if __name__ == "__main__":
-    X, y_one_hot = cloud(num_points_per_class=10)
+    # parametros:
+    num_points_per_class = 10
+    input_size = 2
+    hidden_size = 4
+    output_size = 3
+    learning_rate = 0.01
+    epochs = 10000
+
+    X, y_one_hot = cloud(num_points_per_class)
     # print original_classification
-    original_classification = np.argmax(y_one_hot, axis=1)
-    plot(X, original_classification, title="Data set")
+    plot(X, y_one_hot, title="Data set")
 
     # Crear el modelo de perceptrón
-    model = Perceptron(input_size=2, hidden_size=4, output_size=3, learning_rate=0.1)
-
+    model = Perceptron(input_size, hidden_size, output_size, learning_rate)
     # Entrenar el modelo
-    model.train(X, y_one_hot, epochs=10000)
+    model.train(X, y_one_hot, epochs)
 
     print("\nDatos antes del entrenamiento:")
     print(np.argmax(y_one_hot, axis=1))
@@ -150,11 +156,11 @@ if __name__ == "__main__":
     print("\nPredicciones después del entrenamiento:")
     print(predictions)
     # Evaluar el modelo con un gráfico
-    plot(X, original_classification, predictions, title="Predicted Classes")
+    plot(X, y_one_hot, predictions, title="Predicted Classes")
     plot_decision_boundary(
         model,
         X,
         y_one_hot,
-        original_classification,
+        predictions,
         title="Decision Boundary and Predicted Classes",
     )
