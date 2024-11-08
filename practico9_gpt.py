@@ -48,14 +48,12 @@ def gradient_descent(x, y_one_hot, g, dg=None, learning_rate=0.02, num_epochs=10
         biases -= learning_rate * db
 
         if epoch % (num_epochs / 10) == 0:
-            print(f"Iteration epoch: {epoch}, Loss: {loss:.4f}")
+            print(f"Epoch {epoch}/{num_epochs}, Loss: {loss:.4f}")
 
     return weights, biases
 
 
-def plot_preds_chat_gpt(
-    x, original_classification, weights, relu_vectorial, title, biases=None
-):
+def plot_preds_chat_gpt(x, y_one_hot, weights, relu_vectorial, title, biases=None):
     if biases is not None:
         logits = np.dot(x, weights) + biases
     else:
@@ -64,17 +62,20 @@ def plot_preds_chat_gpt(
     exp_logits = np.exp(activated - np.max(activated, axis=1, keepdims=True))
     preds = np.argmax(exp_logits / exp_logits.sum(axis=1, keepdims=True), axis=1)
     # Visualize dots and classes
-    new_clasification = [{0: "b", 1: "g", 2: "r"}.get(p) for p in preds]
-    plot(x, original_classification, new_clasification, title)
+    original_classification = np.argmax(y_one_hot, axis=1)
+    plot(x, original_classification, preds, title)
 
 
 learning_rate = 0.02
 num_epochs = 100000
-x, y_one_hot, c = cloud(num_points_per_class=10)
+X, y_one_hot = cloud(num_points_per_class=10)
 
 # train the model
 weights, biases = gradient_descent(
-    x, y_one_hot, relu_vectorial, learning_rate, num_epochs
+    X, y_one_hot, relu_vectorial, learning_rate, num_epochs
 )
 print(f"Final weights: {weights}")
+original_classification = np.argmax(y_one_hot, axis=1)
+plot(X, original_classification, title="Data set")
 title = f"Dots classificated with {relu_vectorial.__name__} model"
+plot_preds_chat_gpt(X, y_one_hot, weights, relu_vectorial, title, biases)

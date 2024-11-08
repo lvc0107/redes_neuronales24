@@ -70,17 +70,17 @@ def gradient_descent(
             for j in range(num_classes_layer_1):
                 h1_uj = f_h1(u, j, w1)
                 v[u, j] = g1(h1_uj)
-            # Compute output layer
-            for i in range(num_classes_layer_2):
-                h2_ui = f_h2(u, i, w2)
-                y2_ui = g2(h2_ui)
-                # error of the i-th output on the u-th example
-                error_ui_layer2 = y2_ui - y_one_hot[u, i]
-                loss += error_ui_layer2**2  # compute square error
-                grad_layer_2[u, i] = dg2(h2_ui) * error_ui_layer2
-                # Udpate weights output layer:
-                for j in range(num_classes_layer_1):
-                    w2[i, j] -= learning_rate * grad_layer_2[u, i] * v[u, j]
+                # Compute output layer
+                for i in range(num_classes_layer_2):
+                    h2_ui = f_h2(u, i, w2)
+                    y2_ui = g2(h2_ui)
+                    # error of the i-th output on the u-th example
+                    error_ui_layer2 = y2_ui - y_one_hot[u, i]
+                    loss += error_ui_layer2**2  # compute square error
+                    grad_layer_2[u, i] = dg2(h2_ui) * error_ui_layer2
+                    # Udpate weights output layer:
+                    for j in range(num_classes_layer_1):
+                        w2[i, j] -= learning_rate * grad_layer_2[u, i] * v[u, j]
 
             # Backward step. Updating  weights on first layer
             for j in range(num_classes_layer_1):
