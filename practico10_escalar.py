@@ -97,7 +97,7 @@ def gradient_descent(
         loss *= 0.5
         aggregated_loss.append(loss)
         if epoch % (num_epochs / 10) == 0:
-            print(f"Iteration epoch: {epoch}, Loss: {loss:.16f}")
+            print(f"Epoch {epoch}/{num_epochs}, Loss: {loss:.4f}")
 
     return w1, w2, aggregated_loss
 
@@ -125,7 +125,7 @@ def pred(w1, w2, g1, g2, x, y_one_hot):
     return y
 
 
-def plot_preds_scalar(x, y_one_hot, c, w1, w2, g1, g2, title):
+def plot_preds_scalar(x, y_one_hot, w1, w2, g1, g2, title):
     num_samples, _ = x.shape
     preds = np.zeros(num_samples)
 
@@ -133,20 +133,19 @@ def plot_preds_scalar(x, y_one_hot, c, w1, w2, g1, g2, title):
         y = pred(w1, w2, g1, g2, x[m, :], y_one_hot)
         preds[m] = np.argmax(y)
 
-    new_clasification = [{0: "b", 1: "g", 2: "r"}.get(p) for p in preds]
     # Visualize dots and classes
-    plot(x, c, new_clasification, title)
+    plot(x, y_one_hot, preds, title)
 
 
 # ===========================================
 def train():
     learning_rate = 0.02
     num_epochs = 10000
-    x, y_one_hot, c = cloud(num_points_per_class=10)
-    plot(x, c, c, title="Data set")
+    X, y_one_hot = cloud(num_points_per_class=10)
+    plot(X, y_one_hot, title="Data set")
 
     w1, w2, aggregated_loss = gradient_descent(
-        x,
+        X,
         y_one_hot,
         relu,
         derivative_relu,
@@ -158,7 +157,7 @@ def train():
     print(f"weights layer 1: {w1}")
     print(f"weights layer 2: {w2}")
     title = "Clasificated dots with 2 layers. Scalar version"
-    plot_preds_scalar(x, y_one_hot, c, w1, w2, relu, sigmoid, title)
+    plot_preds_scalar(X, y_one_hot, w1, w2, relu, sigmoid, title)
     plot_loss(range(num_epochs), aggregated_loss)
 
 

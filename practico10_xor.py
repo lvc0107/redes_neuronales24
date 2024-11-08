@@ -70,5 +70,5 @@ w1, w2, aggregated_loss = gradient_descent(
 print(f"weights layer 1: {w1}")
 print(f"weights layer 2: {w2}")
 title = "Clasificated dots with 2 layers. Scalar version without bias"
-plot_preds_scalar(x, y_one_hot, colors, w1, w2, relu, sigmoid, title)
+plot_preds_scalar(x, y_one_hot, w1, w2, relu, sigmoid, title)
 plot_loss(range(num_epochs), aggregated_loss)

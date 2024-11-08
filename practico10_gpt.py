@@ -130,7 +130,6 @@ def plot_decision_boundary(model, X, y, preds, title="Decision Boundary"):
     plt.show()
 
 
-# Ejemplo de uso
 if __name__ == "__main__":
     # parametros:
     num_points_per_class = 10
