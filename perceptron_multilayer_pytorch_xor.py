@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
-from dataset import plot, plot_network_topology
+from dataset import plot_network_topology
 from perceptron_multilayer_pytorch import Perceptron, plot_decision_boundary_pytorch
 
 
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     layer_sizes = [input_size] + hidden_sizes + [output_size]
     plot_network_topology(layer_sizes)
 
-    colors = ["b", "r", "r", "b"]
+    colors = ["b", "g", "g", "b"]
     X, Y_one_hot = generate_data()
     plt.scatter(X[:, 0], X[:, 1], c=colors, s=200)
     plt.title("Dots before run Perceptron")
@@ -54,5 +54,4 @@ if __name__ == "__main__":
     predictions = model.predict(X).tolist()
     print("\nPredicciones despues del entrenamiento:")
     print(predictions)
-    plot(X, Y, predictions, title="Predicted Classes")
     plot_decision_boundary_pytorch(model, X, Y, predictions)

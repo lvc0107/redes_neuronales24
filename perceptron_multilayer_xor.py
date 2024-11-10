@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from dataset import plot, plot_decision_boundary, plot_network_topology
+from dataset import plot_decision_boundary, plot_network_topology
 from perceptron_multilayer import Perceptron
 
 """
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     X = np.array([e1, e2, e3, e4])
     # expected results
     Y_one_hot = np.array([(1, 0), (0, 1), (0, 1), (1, 0)])
-    colors = ["b", "r", "r", "b"]
+    colors = ["b", "g", "g", "b"]
 
     plt.scatter(X[:, 0], X[:, 1], c=colors, s=200)
     plt.title("Dots before run Perceptron")
@@ -42,7 +42,6 @@ if __name__ == "__main__":
     predictions = model.predict(X, weights, biases)
     print("\nPredicciones despues del entrenamiento:")
     print(predictions)
-    plot(X, Y_one_hot, predictions, title="Predicted Classes")
     plot_decision_boundary(
         model,
         X,
@@ -50,5 +49,4 @@ if __name__ == "__main__":
         predictions,
         weights,
         biases,
-        title="Decision Boundary and Predicted Classes",
     )

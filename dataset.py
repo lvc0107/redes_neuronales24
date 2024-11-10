@@ -22,15 +22,14 @@ def plot(X, y, new_classification=None, title="Data Set"):
     if new_classification is None:
         new_classification = original_classification
 
-    size_dot = 200
     plt.scatter(
         X[:, 0],
         X[:, 1],
-        alpha=0.5,
-        linewidths=2,
         c=map_color(new_classification),
         edgecolors=map_color(original_classification),
-        s=size_dot,
+        linewidths=2,
+        s=200,
+        alpha=0.5,
     )
     plt.title(title)
     plt.xlabel("Feature 1")
@@ -89,27 +88,26 @@ def plot_decision_boundary(
 ):
     # Crear un grid de puntos para evaluar las predicciones
     # en todo el espacio de entrada
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+    x_min, x_max = X[:, 0].min() - 0.1, X[:, 0].max() + 0.1
+    y_min, y_max = X[:, 1].min() - 0.1, X[:, 1].max() + 0.1
     xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.01), np.arange(y_min, y_max, 0.01))
-    grid_points = np.c_[xx.ravel(), yy.ravel()]
+    grid = np.c_[xx.ravel(), yy.ravel()]
 
+    Y = np.argmax(y, axis=1)
     # Obtener las predicciones para cada punto del grid
     if weights and biases:
-        Z = model.predict(grid_points, weights, biases)
+        preds_for_boundary = model.predict(grid, weights, biases)
     else:
-        Z = model.predict(grid_points)
-    Z = Z.reshape(xx.shape)
+        preds_for_boundary = model.predict(grid)
+    Z = preds_for_boundary.reshape(xx.shape)
 
-    # Crear el gráfico
     plt.contourf(xx, yy, Z, alpha=0.3, cmap="viridis")
-    # plt.colorbar()
     plt.scatter(
         X[:, 0],
         X[:, 1],
         c=map_color(preds),
+        edgecolors=map_color(Y),
         linewidths=2,
-        edgecolors=map_color(np.argmax(y, axis=1)),
         s=200,
         alpha=0.5,
     )
@@ -124,16 +122,19 @@ def plot_decision_boundary_pytorch(model, X, Y, preds, title="Decision Boundary"
     x_min, x_max = X[:, 0].min() - 0.1, X[:, 0].max() + 0.1
     y_min, y_max = X[:, 1].min() - 0.1, X[:, 1].max() + 0.1
     xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.01), np.arange(y_min, y_max, 0.01))
+
     grid = torch.FloatTensor(np.c_[xx.ravel(), yy.ravel()])
+
     preds_for_boundary = model.predict(grid)
-    plt.contourf(
-        xx, yy, preds_for_boundary.reshape(xx.shape), alpha=0.3, cmap="viridis"
-    )
+    Z = preds_for_boundary.reshape(xx.shape)
+
+    plt.contourf(xx, yy, Z, alpha=0.3, cmap="viridis")
     plt.scatter(
         X[:, 0],
         X[:, 1],
         c=map_color(preds),
         edgecolors=map_color(Y),
+        linewidths=2,
         s=200,
         alpha=0.5,
     )
