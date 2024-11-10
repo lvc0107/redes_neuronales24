@@ -1,7 +1,15 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from dataset import cloud, plot
+from dataset import cloud, plot, plot_network_topology
+
+
+def relu(x):
+    return np.maximum(0, x)
+
+
+def relu_derivative(x):
+    return (x > 0).astype(float)
 
 
 # Función de activación Sigmoid
@@ -114,8 +122,8 @@ def plot_decision_boundary(model, X, y, preds, title="Decision Boundary"):
     Z = Z.reshape(xx.shape)
 
     # Crear el gráfico
-    plt.contourf(xx, yy, Z, alpha=0.8, cmap=plt.cm.viridis)
-    plt.colorbar()
+    plt.contourf(xx, yy, Z, alpha=0.8)
+    #plt.colorbar()
     plt.scatter(
         X[:, 0],
         X[:, 1],
@@ -138,11 +146,10 @@ if __name__ == "__main__":
     output_size = 3
     learning_rate = 0.01
     epochs = 10000
+    layer_sizes = [input_size] + [hidden_size] + [output_size]
+    plot_network_topology(layer_sizes)
 
     X, y_one_hot = cloud(num_points_per_class)
-    # print original_classification
-    plot(X, y_one_hot, title="Data set")
-
     # Crear el modelo de perceptrón
     model = Perceptron(input_size, hidden_size, output_size, learning_rate)
     # Entrenar el modelo
