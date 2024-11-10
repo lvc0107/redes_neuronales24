@@ -1,7 +1,7 @@
 """
 Implementar un perceptr贸n multicapa (varias capas ocultas) en Python con
-descenso por gradiente, utilizando la funci贸n ReLU para las capas ocultas y
-la funci贸n sigmoide para la capa de salida.
+descenso por gradiente, utilizando la funci梟 ReLU para las capas ocultas y
+la funci梟 sigmoide para la capa de salida.
 Las entradas son pares de puntos  agrupados en tres clases y
 la salida son 3 neuronas que representan una clasificacion one_hot de orden 3x3.
 Implementar una funcion de evaluacion que asigne un color a cada prediccion.
@@ -15,7 +15,6 @@ import numpy as np
 from dataset import cloud, plot, plot_decision_boundary, plot_network_topology
 
 
-# Funci贸n ReLU y su derivada
 def relu(x):
     return np.maximum(0, x)
 
@@ -24,7 +23,6 @@ def relu_derivative(x):
     return np.where(x > 0, 1, 0)
 
 
-# Funci贸n sigmoide y su derivada
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
@@ -40,22 +38,20 @@ def cross_entropy_loss(y_true, y_pred):
 
 
 class Perceptron:
-    def __init__(self, input_size, hidden_sizes, output_size, learning_rate=0.1):
-        self.input_size = input_size
-        self.hidden_sizes = hidden_sizes
-        self.output_size = output_size
+    def __init__(self, layer_sizes, learning_rate=0.1):
         self.learning_rate = learning_rate
+        self.layer_sizes = layer_sizes
 
-    # Funci贸n de inicializaci贸n de pesos
-    def initialize_weights(self, layer_sizes):
+    # Funci梟 de inicializaci梟 de pesos
+    def initialize_weights(self):
         weights = []
         biases = []
-        for i in range(1, len(layer_sizes)):
-            weights.append(np.random.randn(layer_sizes[i - 1], layer_sizes[i]) * 0.01)
-            biases.append(np.zeros((1, layer_sizes[i])))
+        for i in range(1, len(self.layer_sizes)):
+            weights.append(np.random.randn(self.layer_sizes[i - 1], self.layer_sizes[i]) * 0.01)
+            biases.append(np.zeros((1, self.layer_sizes[i])))
         return weights, biases
 
-    # Implementaci贸n del forward pass
+    # Implementaci梟 del forward pass
     def forward_propagation(self, X, weights, biases):
         activations = [X]
         inputs = []
@@ -65,19 +61,18 @@ class Perceptron:
             inputs.append(z)
             activations.append(relu(z))
 
-        # 脷ltima capa con funci贸n sigmoide
+        # 騦tima capa con funci梟 sigmoide
         z = np.dot(activations[-1], weights[-1]) + biases[-1]
         inputs.append(z)
         activations.append(sigmoid(z))
 
         return activations, inputs
 
-    # Implementaci贸n del backpropagation
     def backward_propagation(self, Y, activations, inputs, weights):
         grads_w = [None] * len(weights)
         grads_b = [None] * len(weights)
 
-        # C谩lculo del error en la capa de salida
+        # C噇culo del error en la capa de salida
         delta = activations[-1] - Y
         grads_w[-1] = np.dot(activations[-2].T, delta) / Y.shape[0]
         grads_b[-1] = np.sum(delta, axis=0, keepdims=True) / Y.shape[0]
@@ -90,32 +85,29 @@ class Perceptron:
 
         return grads_w, grads_b
 
-    # Funci贸n de actualizaci贸n de pesos
-    def update_weights(self, weights, biases, grads_w, grads_b, learning_rate):
+    def update_weights(self, weights, biases, grads_w, grads_b):
         for i in range(len(weights)):
-            weights[i] -= learning_rate * grads_w[i]
-            biases[i] -= learning_rate * grads_b[i]
+            weights[i] -= self.learning_rate * grads_w[i]
+            biases[i] -= self.learning_rate * grads_b[i]
         return weights, biases
 
-    # Funci贸n de entrenamiento
-    def train(self, X, Y, layer_sizes, epochs, learning_rate):
-        weights, biases = self.initialize_weights(layer_sizes)
+    def train(self, X, Y, epochs):
+        weights, biases = self.initialize_weights()
         for epoch in range(epochs):
             activations, inputs = self.forward_propagation(X, weights, biases)
             grads_w, grads_b = self.backward_propagation(
                 Y, activations, inputs, weights
             )
             weights, biases = self.update_weights(
-                weights, biases, grads_w, grads_b, learning_rate
+                weights, biases, grads_w, grads_b
             )
 
-            # C谩lculo de p茅rdida (opcional para monitoreo)
             if epoch % 1000 == 0:
                 loss = cross_entropy_loss(Y, activations[-1])
                 print(f"Epoch {epoch}/{epochs}, Loss: {loss:.4f}")
         return weights, biases
 
-    # Funci贸n de predicci贸n y evaluaci贸n
+    # Funci梟 de predicci梟 y evaluaci梟
     def predict(self, X, weights, biases):
         activations, _ = self.forward_propagation(X, weights, biases)
         return np.argmax(activations[-1], axis=1)
@@ -125,26 +117,20 @@ if __name__ == "__main__":
     learning_rate = 0.01
     epochs = 10000
     input_size = 2
-    hidden_sizes = [4, 4]
+    hidden_sizes = [4]
     output_size = 3
     layer_sizes = [input_size] + hidden_sizes + [output_size]
     plot_network_topology(layer_sizes)
-
-    model = Perceptron(input_size, hidden_sizes, output_size, learning_rate)
-
     X, Y_one_hot = cloud(n_samples=30)
 
-    weights, biases = model.train(
-        X, Y_one_hot, layer_sizes, epochs=epochs, learning_rate=learning_rate
-    )
+    model = Perceptron(layer_sizes, learning_rate)
+    weights, biases = model.train(X, Y_one_hot, epochs=epochs)
 
     print("\nDatos antes del entrenamiento:")
     print(np.argmax(Y_one_hot, axis=1))
-    # Predicciones del modelo despu茅s del entrenamiento
     predictions = model.predict(X, weights, biases)
-    print("\nPredicciones despu茅s del entrenamiento:")
+    print("\nPredicciones despues del entrenamiento:")
     print(predictions)
-    # Evaluar el modelo con un gr谩fico
     plot(X, Y_one_hot, predictions, title="Predicted Classes")
     plot_decision_boundary(
         model,
