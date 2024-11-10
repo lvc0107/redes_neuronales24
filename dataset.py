@@ -1,17 +1,15 @@
 import matplotlib.pyplot as plt
+import networkx as nx
 import numpy as np
 from sklearn.datasets import make_blobs
-import networkx as nx
 
 
 def cloud(n_samples):
-        
-    X, Y = make_blobs(n_samples=30, centers=3, random_state=42, cluster_std=4)
+    X, Y = make_blobs(n_samples=30, centers=3, cluster_std=1.5)
     Y_one_hot = np.zeros((Y.size, 3))
     Y_one_hot[np.arange(Y.size), Y] = 1
     plot(X, Y_one_hot, title="Data set")
     return X, Y_one_hot
-    
 
 
 def plot(X, y, new_classification=None, title="Data Set"):
@@ -43,7 +41,6 @@ def plot_loss(x, y):
     plt.xlabel("Epochs")
     plt.ylabel("Errors")
     plt.show()
-
 
 
 def plot_network_topology(layer_sizes):
@@ -83,3 +80,38 @@ def plot_network_topology(layer_sizes):
     plt.title("Topología de la red neuronal")
     plt.show()
 
+
+def plot_decision_boundary(
+    model, X, y, preds, weights=None, biases=None, title="Decision Boundary"
+):
+    def map_color(d):
+        return [{0: "b", 1: "g", 2: "r"}.get(p) for p in d]
+
+    # Crear un grid de puntos para evaluar las predicciones en todo el espacio de entrada
+    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+    xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.01), np.arange(y_min, y_max, 0.01))
+    grid_points = np.c_[xx.ravel(), yy.ravel()]
+
+    # Obtener las predicciones para cada punto del grid
+    if weights and biases:
+        Z = model.predict(grid_points, weights, biases)
+    else:
+        Z = model.predict(grid_points)
+    Z = Z.reshape(xx.shape)
+
+    # Crear el gráfico
+    plt.contourf(xx, yy, Z, alpha=0.8)
+    # plt.colorbar()
+    plt.scatter(
+        X[:, 0],
+        X[:, 1],
+        c=map_color(preds),
+        edgecolors=map_color(np.argmax(y, axis=1)),
+        s=200,
+        alpha=0.5,
+    )
+    plt.title(title)
+    plt.xlabel("Feature 1")
+    plt.ylabel("Feature 2")
+    plt.show()
