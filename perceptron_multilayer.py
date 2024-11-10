@@ -1,5 +1,5 @@
 """
-Implementar un perceptr√≥n multicapa (varias capas ocultas) en Python con
+Implementar un perceptron multicapa (varias capas ocultas) en Python con
 descenso por gradiente, utilizando la función ReLU para las capas ocultas y
 la función sigmoide para la capa de salida.
 Las entradas son pares de puntos  agrupados en tres clases y
