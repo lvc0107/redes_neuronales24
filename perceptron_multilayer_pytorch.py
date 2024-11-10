@@ -14,7 +14,7 @@ import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 
-from dataset import cloud, plot_decision_boundary_pytorch
+from dataset import cloud, plot_decision_boundary_pytorch, plot_network_topology
 
 
 # Generar datos de ejemplo
@@ -59,15 +59,26 @@ class MLP(nn.Module):
         return preds
 
 
-# Inicializar el modelo, datos y entrenamiento
-X, y = generate_data()
-model = MLP()
-model.train_model(X, y)
-x_min, x_max = X[:, 0].min() - 0.1, X[:, 0].max() + 0.1
-y_min, y_max = X[:, 1].min() - 0.1, X[:, 1].max() + 0.1
-xx, yy = np.meshgrid(np.linspace(x_min, x_max, 200), np.linspace(y_min, y_max, 200))
-grid = torch.FloatTensor(np.c_[xx.ravel(), yy.ravel()])
-preds = model(grid).detach().numpy()
-preds = np.argmax(preds, axis=1)
 
-plot_decision_boundary_pytorch(model, X, y)
+if __name__ == "__main__":
+    # Inicializar el modelo, datos y entrenamiento
+    learning_rate = 0.01
+    epochs = 10000
+    input_size = 2
+    hidden_sizes = [4]
+    output_size = 3
+    layer_sizes = [input_size] + hidden_sizes + [output_size]
+    plot_network_topology(layer_sizes)
+    X, y = generate_data(n_samples=30)
+
+
+    model = MLP(input_size=input_size, hidden_sizes=hidden_sizes, output_size=output_size)
+    model.train_model(X, y)
+    x_min, x_max = X[:, 0].min() - 0.1, X[:, 0].max() + 0.1
+    y_min, y_max = X[:, 1].min() - 0.1, X[:, 1].max() + 0.1
+    xx, yy = np.meshgrid(np.linspace(x_min, x_max, 200), np.linspace(y_min, y_max, 200))
+    grid = torch.FloatTensor(np.c_[xx.ravel(), yy.ravel()])
+    preds = model(grid).detach().numpy()
+    preds = np.argmax(preds, axis=1)
+
+    plot_decision_boundary_pytorch(model, X, y)
