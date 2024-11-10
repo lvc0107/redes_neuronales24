@@ -49,11 +49,10 @@ if __name__ == "__main__":
     )
     model.train(X, Y_one_hot, epochs=epochs)
 
-    print("\nDatos antes del entrenamiento")
-    print(Y_one_hot.tolist())
+    Y = Y_one_hot.tolist()
+    print(f"Datos antes del entrenamiento:\n{Y}")
     predictions = model.predict(X).tolist()
-    print("\nPredicciones despues del entrenamiento")
+    print("\nPredicciones despues del entrenamiento:")
     print(predictions)
-    # Evaluar el modelo con un gráfico
-    plot(X, Y_one_hot.tolist(), predictions, title="Predicted Classes")
-    plot_decision_boundary_pytorch(model, X, Y_one_hot, predictions)
+    plot(X, Y, predictions, title="Predicted Classes")
+    plot_decision_boundary_pytorch(model, X, Y, predictions)

@@ -1,8 +1,13 @@
+#!/usr/bin/env python3
+"""
+Created on Sun Nov 10 17:03:53 2024
+
+@author: luisvargas
+"""
+
 import numpy as np
 
 from dataset import cloud, plot, plot_decision_boundary, plot_network_topology
-
-
 
 
 def relu(x):
@@ -32,16 +37,18 @@ class Perceptron:
         self.learning_rate = learning_rate
         self.layer_sizes = layer_sizes
 
-    # Funci—n de inicializaci—n de pesos
+    # FunciÂ—n de inicializaciÂ—n de pesos
     def initialize_weights(self):
         weights = []
         biases = []
         for i in range(1, len(self.layer_sizes)):
-            weights.append(np.random.randn(self.layer_sizes[i - 1], self.layer_sizes[i]) * 0.01)
+            weights.append(
+                np.random.randn(self.layer_sizes[i - 1], self.layer_sizes[i]) * 0.01
+            )
             biases.append(np.zeros((1, self.layer_sizes[i])))
         return weights, biases
 
-    # Implementaci—n del forward pass
+    # ImplementaciÂ—n del forward pass
     def forward_propagation(self, X, weights, biases):
         activations = [X]
         inputs = []
@@ -51,7 +58,7 @@ class Perceptron:
             inputs.append(z)
             activations.append(relu(z))
 
-        # òltima capa con funci—n sigmoide
+        # Ã²ltima capa con funciÂ—n sigmoide
         z = np.dot(activations[-1], weights[-1]) + biases[-1]
         inputs.append(z)
         activations.append(sigmoid(z))
@@ -62,7 +69,7 @@ class Perceptron:
         grads_w = [None] * len(weights)
         grads_b = [None] * len(weights)
 
-        # C‡lculo del error en la capa de salida
+        # CÂ‡lculo del error en la capa de salida
         delta = activations[-1] - Y
         grads_w[-1] = np.dot(activations[-2].T, delta) / Y.shape[0]
         grads_b[-1] = np.sum(delta, axis=0, keepdims=True) / Y.shape[0]
@@ -88,16 +95,14 @@ class Perceptron:
             grads_w, grads_b = self.backward_propagation(
                 Y, activations, inputs, weights
             )
-            weights, biases = self.update_weights(
-                weights, biases, grads_w, grads_b
-            )
+            weights, biases = self.update_weights(weights, biases, grads_w, grads_b)
 
             if epoch % 1000 == 0:
                 loss = cross_entropy_loss(Y, activations[-1])
-                print(f"Epoch {epoch}/{epochs}, Loss: {loss:.4f}")
+                print(f"Epoch {epoch}/{epochs}, Loss: {loss:.16f}")
         return weights, biases
 
-    # Funci—n de predicci—n y evaluaci—n
+    # FunciÂ—n de predicciÂ—n y evaluaciÂ—n
     def predict(self, X, weights, biases):
         activations, _ = self.forward_propagation(X, weights, biases)
         return np.argmax(activations[-1], axis=1)

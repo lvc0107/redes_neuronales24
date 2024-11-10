@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+"""
+Created on Sun Nov 10 17:00:17 2024
+
+@author: luisvargas
+"""
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -42,7 +49,7 @@ class Perceptron(nn.Module):
             loss.backward()
             optimizer.step()
             if epoch % 1000 == 0:
-                print(f"Epoch {epoch}/{epochs}, Loss: {loss:.4f}")
+                print(f"Epoch {epoch}/{epochs}, Loss: {loss:.16f}")
 
     def predict(self, grid):
         preds = self.model(grid).detach().numpy()
@@ -53,7 +60,6 @@ class Perceptron(nn.Module):
 
 
 if __name__ == "__main__":
-    # Inicializar el modelo, datos y entrenamiento
     learning_rate = 0.01
     epochs = 10000
     input_size = 2
@@ -62,15 +68,14 @@ if __name__ == "__main__":
     layer_sizes = [input_size] + hidden_sizes + [output_size]
     plot_network_topology(layer_sizes)
     X, Y_one_hot = generate_data(n_samples=30)
+
     model = Perceptron(input_size=input_size, hidden_sizes=hidden_sizes, output_size=output_size, learning_rate=learning_rate)
     model.train(X, Y_one_hot, epochs=epochs)
 
-    print("\nDatos antes del entrenamiento")
-    print(Y_one_hot.tolist())
+    Y = Y_one_hot.tolist()
+    print(f"Datos antes del entrenamiento:\n{Y}")
     predictions = model.predict(X).tolist()
-    print("\nPredicciones despues del entrenamiento")
+    print("\nPredicciones despues del entrenamiento:")
     print(predictions)
-    #Evaluar el modelo con un gráfico
-    plot(X, Y_one_hot.tolist(), predictions, title="Predicted Classes")
-
-    plot_decision_boundary_pytorch(model, X, Y_one_hot, predictions)
+    plot(X, Y, predictions, title="Predicted Classes")
+    plot_decision_boundary_pytorch(model, X, Y, predictions)
