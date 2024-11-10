@@ -1,7 +1,24 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from practico10_gpt import Perceptron, plot, plot_decision_boundary
+from practico10_gpt import (
+    Perceptron,
+    plot,
+    plot_decision_boundary,
+    plot_network_topology,
+)
+
+"""
+Se espera que no funcione pues
+
+La función XOR no puede ser aprendida por un único perceptrón puesto
+que requiere al menos de dos líneas para separar las clases (0 y 1).
+Debe utilizarse al menos una capa adicional de perceptrones
+para permitir su aprendizaje.
+https://es.wikipedia.org/wiki/Perceptr%C3%B3n
+
+"""
+
 
 if __name__ == "__main__":
     # parametros:
@@ -11,7 +28,7 @@ if __name__ == "__main__":
     output_size = 2
     learning_rate = 0.01
     epochs = 10000
-
+    plot_network_topology(layer_sizes=[2, 2, 2])
     # Xor
     e1 = (0, 0)
     e2 = (0, 1)

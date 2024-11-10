@@ -6,17 +6,6 @@ import numpy as np
 from dataset import cloud, plot_decision_boundary_pytorch, plot_network_topology, plot
 
 
-"""
-Implementar un perceptrón multicapa (varias capas ocultas) usando PyTorch con
-descenso por gradiente, utilizando la función ReLU para las capas ocultas y
-la función sigmoide para la capa de salida.
-Las entradas son pares de puntos agrupados en tres clases y la salida son
-3 neuronas que representan una clasificación one-hot de orden 3x3.
-Implementar una función de evaluación que asigne un color a cada predicción.
-Graficar los puntos y la decisión boundary.
-Generar una imagen de la topología de la red.
-"""
-
 
 
 # Generar datos de ejemplo
@@ -25,9 +14,9 @@ def generate_data(n_samples=30):
     return torch.FloatTensor(X), torch.LongTensor(np.argmax(Y_one_hot, axis=1))
 
 # Multi Layer Perceptron
-class MLP(nn.Module):
-    def __init__(self, input_size=2, hidden_sizes=[64, 64], output_size=3):
-        super(MLP, self).__init__()
+class Perceptron(nn.Module):
+    def __init__(self, input_size=2, hidden_sizes=[64, 64], output_size=3, learning_rate=0.01):
+        super(Perceptron, self).__init__()
         layers = []
         prev_size = input_size
         for size in hidden_sizes:
@@ -37,14 +26,14 @@ class MLP(nn.Module):
         layers.append(nn.Linear(prev_size, output_size))
         layers.append(nn.Sigmoid())  # Función de salida
         self.model = nn.Sequential(*layers)
+        self.learning_rate = learning_rate
 
     def forward(self, x):
         return self.model(x)
 
-    # Función para entrenar el modelo
-    def train_model(self, X, y, epochs=10000, learning_rate=0.01):
+    def train(self, X, y, epochs=10000):
         criterion = nn.CrossEntropyLoss()
-        optimizer = optim.SGD(self.parameters(), lr=learning_rate)
+        optimizer = optim.SGD(self.parameters(), lr=self.learning_rate)
 
         for epoch in range(epochs):
             optimizer.zero_grad()
@@ -73,15 +62,15 @@ if __name__ == "__main__":
     layer_sizes = [input_size] + hidden_sizes + [output_size]
     plot_network_topology(layer_sizes)
     X, Y_one_hot = generate_data(n_samples=30)
-    model = MLP(input_size=input_size, hidden_sizes=hidden_sizes, output_size=output_size)
-    model.train_model(X, Y_one_hot, epochs=epochs)
+    model = Perceptron(input_size=input_size, hidden_sizes=hidden_sizes, output_size=output_size, learning_rate=learning_rate)
+    model.train(X, Y_one_hot, epochs=epochs)
 
-    print("\nDatos antes del entrenamiento:")
+    print("\nDatos antes del entrenamiento")
     print(Y_one_hot.tolist())
-    predictions = model.predict(X)
-    print("\nPredicciones después del entrenamiento:")
-    print(predictions.tolist())
+    predictions = model.predict(X).tolist()
+    print("\nPredicciones despues del entrenamiento")
+    print(predictions)
     #Evaluar el modelo con un gráfico
-    plot(X, Y_one_hot.tolist(), predictions.tolist(), title="Predicted Classes")
+    plot(X, Y_one_hot.tolist(), predictions, title="Predicted Classes")
 
-    plot_decision_boundary_pytorch(model, X, Y_one_hot)
+    plot_decision_boundary_pytorch(model, X, Y_one_hot, predictions)

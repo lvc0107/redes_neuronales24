@@ -119,17 +119,19 @@ def plot_decision_boundary(
 
 
 # Función para evaluar y graficar la frontera de decisión
-def plot_decision_boundary_pytorch(model, X, y, title="Decision Boundary"):
+def plot_decision_boundary_pytorch(model, X, y, preds, title="Decision Boundary"):
     x_min, x_max = X[:, 0].min() - 0.1, X[:, 0].max() + 0.1
     y_min, y_max = X[:, 1].min() - 0.1, X[:, 1].max() + 0.1
     xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.01), np.arange(y_min, y_max, 0.01))
     grid = torch.FloatTensor(np.c_[xx.ravel(), yy.ravel()])
-    preds = model.predict(grid)
-    plt.contourf(xx, yy, preds.reshape(xx.shape), alpha=0.3, cmap="viridis")
+    preds_for_boundary = model.predict(grid)
+    plt.contourf(
+        xx, yy, preds_for_boundary.reshape(xx.shape), alpha=0.3, cmap="viridis"
+    )
     plt.scatter(
         X[:, 0],
         X[:, 1],
-        c=y.numpy(),
+        c=map_color(preds),
         edgecolors=map_color(y.tolist()),
         s=200,
         alpha=0.5,
