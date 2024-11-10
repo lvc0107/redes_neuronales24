@@ -22,7 +22,7 @@ def generate_data(n_samples=30):
     X, Y_one_hot = cloud(n_samples)
     return torch.FloatTensor(X), torch.LongTensor(np.argmax(Y_one_hot, axis=1))
 
-# Definir el modelo MLP
+# Multi Layer Perceptron
 class MLP(nn.Module):
     def __init__(self, input_size=2, hidden_sizes=[64, 64], output_size=3):
         super(MLP, self).__init__()
