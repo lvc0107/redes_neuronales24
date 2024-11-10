@@ -40,7 +40,7 @@ class MLP(nn.Module):
         return self.model(x)
 
     # Función para entrenar el modelo
-    def train_model(self, X, y, epochs=1000, learning_rate=0.01):
+    def train_model(self, X, y, epochs=10000, learning_rate=0.01):
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(self.parameters(), lr=learning_rate)
 
@@ -50,8 +50,8 @@ class MLP(nn.Module):
             loss = criterion(outputs, y)
             loss.backward()
             optimizer.step()
-            if epoch % 100 == 0:
-                print(f'Epoch {epoch}, Loss: {loss.item()}')
+            if epoch % 1000 == 0:
+                print(f"Epoch {epoch}/{epochs}, Loss: {loss:.4f}")
 
     def predict(self, grid):
         preds = self.model(grid).detach().numpy()
@@ -69,16 +69,16 @@ if __name__ == "__main__":
     output_size = 3
     layer_sizes = [input_size] + hidden_sizes + [output_size]
     plot_network_topology(layer_sizes)
-    X, y = generate_data(n_samples=30)
-
-
+    X, Y_one_hot = generate_data(n_samples=30)
     model = MLP(input_size=input_size, hidden_sizes=hidden_sizes, output_size=output_size)
-    model.train_model(X, y)
-    x_min, x_max = X[:, 0].min() - 0.1, X[:, 0].max() + 0.1
-    y_min, y_max = X[:, 1].min() - 0.1, X[:, 1].max() + 0.1
-    xx, yy = np.meshgrid(np.linspace(x_min, x_max, 200), np.linspace(y_min, y_max, 200))
-    grid = torch.FloatTensor(np.c_[xx.ravel(), yy.ravel()])
-    preds = model(grid).detach().numpy()
-    preds = np.argmax(preds, axis=1)
+    model.train_model(X, Y_one_hot, epochs=epochs)
+    plot_decision_boundary_pytorch(model, X, Y_one_hot)
 
-    plot_decision_boundary_pytorch(model, X, y)
+    print("\nDatos antes del entrenamiento:")
+    #print(np.argmax(Y_one_hot.tolist(), axis=1))
+    # Predicciones del modelo después del entrenamiento
+    predictions = model.predict(X)
+    print("\nPredicciones después del entrenamiento:")
+    print(predictions)
+    # Evaluar el modelo con un gráfico
+    #plot(X, Y_one_hot, predictions, title="Predicted Classes")
