@@ -18,7 +18,7 @@ def cloud(n_samples):
 
 
 def plot(X, y, new_classification=None, title="Data Set"):
-    original_classification = np.argmax(y, axis=1)
+    original_classification = y if type(y) is list else np.argmax(y, axis=1)
     if new_classification is None:
         new_classification = original_classification
 
@@ -27,6 +27,7 @@ def plot(X, y, new_classification=None, title="Data Set"):
         X[:, 0],
         X[:, 1],
         alpha=0.5,
+        linewidths=2,
         c=map_color(new_classification),
         edgecolors=map_color(original_classification),
         s=size_dot,
@@ -106,6 +107,7 @@ def plot_decision_boundary(
         X[:, 0],
         X[:, 1],
         c=map_color(preds),
+        linewidths=2,
         edgecolors=map_color(np.argmax(y, axis=1)),
         s=200,
         alpha=0.5,

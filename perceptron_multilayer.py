@@ -1,18 +1,18 @@
-"""
-Implementar un perceptron multicapa (varias capas ocultas) en Python con
-descenso por gradiente, utilizando la funci—n ReLU para las capas ocultas y
-la funci—n sigmoide para la capa de salida.
-Las entradas son pares de puntos  agrupados en tres clases y
-la salida son 3 neuronas que representan una clasificacion one_hot de orden 3x3.
-Implementar una funcion de evaluacion que asigne un color a cada prediccion.
-Graficar los puntos y la dessicion boundary.
-Generar una imagen de la topologia de la red
-"""
-
-
 import numpy as np
 
 from dataset import cloud, plot, plot_decision_boundary, plot_network_topology
+
+"""
+mplementar un perceptrón multicapa (varias capas ocultas) en Python con descenso
+por gradiente, utilizando la función ReLU para las capas ocultas y
+la función sigmoide para la capa de salida.
+Las entradas son pares de puntos agrupados en tres clases y la salida
+son 3 neuronas que representan una clasificación one-hot de orden 3x3.
+Implementar una función de evaluación que asigne un color a cada predicción.
+Graficar los puntos y la decisión boundary.
+Generar una imagen de la topología de la red.
+"""
+
 
 
 def relu(x):

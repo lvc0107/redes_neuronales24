@@ -1,20 +1,22 @@
-"""
-Implementar un perceptron multicapa (varias capas ocultas)  usando pytorch con
-descenso por gradiente, utilizando la funci—n ReLU para las capas ocultas y
-la funci—n sigmoide para la capa de salida.
-Las entradas son pares de puntos  agrupados en tres clases y
-la salida son 3 neuronas que representan una clasificacion one_hot de orden 3x3.
-Implementar una funcion de evaluacion que asigne un color a cada prediccion.
-Graficar los puntos y la dessicion boundary.
-Generar una imagen de la topologia de la red
-"""
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 
-from dataset import cloud, plot_decision_boundary_pytorch, plot_network_topology
+from dataset import cloud, plot_decision_boundary_pytorch, plot_network_topology, plot
+
+
+"""
+Implementar un perceptrón multicapa (varias capas ocultas) usando PyTorch con
+descenso por gradiente, utilizando la función ReLU para las capas ocultas y
+la función sigmoide para la capa de salida.
+Las entradas son pares de puntos agrupados en tres clases y la salida son
+3 neuronas que representan una clasificación one-hot de orden 3x3.
+Implementar una función de evaluación que asigne un color a cada predicción.
+Graficar los puntos y la decisión boundary.
+Generar una imagen de la topología de la red.
+"""
+
 
 
 # Generar datos de ejemplo
@@ -60,6 +62,7 @@ class MLP(nn.Module):
 
 
 
+
 if __name__ == "__main__":
     # Inicializar el modelo, datos y entrenamiento
     learning_rate = 0.01
@@ -72,13 +75,13 @@ if __name__ == "__main__":
     X, Y_one_hot = generate_data(n_samples=30)
     model = MLP(input_size=input_size, hidden_sizes=hidden_sizes, output_size=output_size)
     model.train_model(X, Y_one_hot, epochs=epochs)
-    plot_decision_boundary_pytorch(model, X, Y_one_hot)
 
     print("\nDatos antes del entrenamiento:")
-    #print(np.argmax(Y_one_hot.tolist(), axis=1))
-    # Predicciones del modelo después del entrenamiento
+    print(Y_one_hot.tolist())
     predictions = model.predict(X)
     print("\nPredicciones después del entrenamiento:")
-    print(predictions)
-    # Evaluar el modelo con un gráfico
-    #plot(X, Y_one_hot, predictions, title="Predicted Classes")
+    print(predictions.tolist())
+    #Evaluar el modelo con un gráfico
+    plot(X, Y_one_hot.tolist(), predictions.tolist(), title="Predicted Classes")
+
+    plot_decision_boundary_pytorch(model, X, Y_one_hot)
