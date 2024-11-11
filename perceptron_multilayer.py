@@ -9,6 +9,11 @@ import numpy as np
 
 from dataset import cloud, plot, plot_decision_boundary, plot_network_topology
 
+"""
+Usamos ReLUs en las capas ocultas para evitar que se cancele el gradiente
+ya que las derivadas de la sigmoides son muy cercanas a 0
+"""
+
 
 def relu(x):
     return np.maximum(0, x)
@@ -26,10 +31,22 @@ def sigmoid_derivative(x):
     return sigmoid(x) * (1 - sigmoid(x))
 
 
+"""
+Probamos con esta, creo por que es menos rugosa que la ECM
+"""
+
+
 def cross_entropy_loss(y_true, y_pred):
     m = y_true.shape[0]
     log_likelihood = -np.log(y_pred[range(m), y_true.argmax(axis=1)])
     return np.sum(log_likelihood) / m
+
+
+"""
+El descenzo por gradiente es determinista ...hay que hacerlo estocastico con
+los minilotes ...Entiendo que ayuda a escpar de minimos locales
+cuando se estanca.
+"""
 
 
 class Perceptron:

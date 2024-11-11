@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+from dataset import plot_network_topology
+
 e1 = (0, 0)
 e2 = (0, 1)
 e3 = (1, 0)
@@ -72,6 +74,9 @@ h = np.dot(x, weights) + biases
 activated = relu(h)
 exp_h = np.exp(activated - np.max(activated, axis=1, keepdims=True))
 preds = np.argmax(exp_h / exp_h.sum(axis=1, keepdims=True), axis=1)
+
+
+plot_network_topology(layer_sizes=[3, 2])
 
 plt.scatter(
     x[:, 0],

@@ -11,9 +11,9 @@ Prueba para XOR. Anda maso menos
 
 if __name__ == "__main__":
     learning_rate = 0.01
-    epochs = 10000
+    epochs = 50000
     input_size = 2
-    hidden_sizes = [3]
+    hidden_sizes = [10]
     output_size = 2
     layer_sizes = [input_size] + hidden_sizes + [output_size]
     plot_network_topology(layer_sizes)
