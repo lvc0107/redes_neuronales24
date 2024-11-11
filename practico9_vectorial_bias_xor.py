@@ -114,7 +114,7 @@ if __name__ == "__main__":
     """
     la entrada del modelo es:
 
-      X   y_one_hot (lo que se espera)
+      X   Y_one_hot (lo que se espera)
      0 0    1 0
      0 1    0 1
      1 0    0 1

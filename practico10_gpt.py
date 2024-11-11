@@ -26,6 +26,14 @@ def cross_entropy_loss(y_true, y_pred):
     return np.sum(log_likelihood) / m
 
 
+# compute square error
+def square_error(y_true, y_pred):
+    m = y_true.shape[0]
+    error = y_true - y_pred
+    loss = error**2
+    return np.sum(loss) / m * 0.5
+
+
 # Implementación de un perceptrón con dos capas (red neuronal)
 class Perceptron:
     def __init__(self, input_size, hidden_size, output_size, learning_rate=0.1):
@@ -91,7 +99,7 @@ class Perceptron:
 
             # Calcular y mostrar el error cada 100 iteraciones
             if epoch % 1000 == 0:
-                loss = cross_entropy_loss(y, output)
+                loss = square_error(y, output)
                 print(f"Epoch {epoch}/{epochs}, Loss: {loss:.4f}")
 
     def predict(self, X):

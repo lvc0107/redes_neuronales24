@@ -95,7 +95,7 @@ def plot_decision_boundary(
 
     Y = np.argmax(y, axis=1)
     # Obtener las predicciones para cada punto del grid
-    if weights and biases:
+    if weights is not None:
         preds_for_boundary = model.predict(grid, weights, biases)
     else:
         preds_for_boundary = model.predict(grid)
