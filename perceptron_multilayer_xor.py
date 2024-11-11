@@ -5,7 +5,7 @@ from dataset import plot_decision_boundary, plot_network_topology
 from perceptron_multilayer import Perceptron
 
 """
-Prueba para XOR. Anda maso menos
+Prueba para XOR.
 """
 
 
@@ -16,7 +16,12 @@ if __name__ == "__main__":
     hidden_sizes = [10]
     output_size = 2
     layer_sizes = [input_size] + hidden_sizes + [output_size]
+
+    # Esta red tiene 2 entradas,
+    # 10 neuronas en la capa intermedia
+    # y 2 neuronas de salida
     plot_network_topology(layer_sizes)
+
     # Xor
     e1 = (0, 0)
     e2 = (0, 1)

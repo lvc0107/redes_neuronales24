@@ -3,8 +3,6 @@ import numpy as np
 
 from dataset import map_color, plot_network_topology
 
-plot_network_topology(layer_sizes=[3, 2])
-
 
 def plot_decision_boundary(
     X, y, preds, weights=None, biases=None, title="Decision Boundary"
@@ -88,6 +86,9 @@ if __name__ == "__main__":
     no alcanza para aprender la separacion lineal
     Ver Wikipedia: https://es.wikipedia.org/wiki/Perceptr%C3%B3n
     """
+
+    # Esta red tiene solo 2 entradas(no son neuronas) y 2 neuronas de salida
+    plot_network_topology(layer_sizes=[2, 2])
 
     e1 = (0, 0)
     e2 = (0, 1)
