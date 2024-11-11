@@ -67,7 +67,7 @@ def plot_preds_chat_gpt(x, y_one_hot, weights, relu_vectorial, title, biases=Non
 
 learning_rate = 0.02
 num_epochs = 100000
-X, y_one_hot = cloud(num_points_per_class=10)
+X, y_one_hot = cloud(n_samples=30)
 
 # train the model
 weights, biases = gradient_descent(

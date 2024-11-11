@@ -9,8 +9,8 @@ def map_color(d):
     return [{0: "b", 1: "g", 2: "r"}.get(p) for p in d]
 
 
-def cloud(n_samples):
-    X, Y = make_blobs(n_samples=30, centers=3, cluster_std=1.5)
+def cloud(n_samples=30):
+    X, Y = make_blobs(n_samples=n_samples, centers=3, cluster_std=1.5)
     Y_one_hot = np.zeros((Y.size, 3))
     Y_one_hot[np.arange(Y.size), Y] = 1
     plot(X, Y_one_hot, title="Data set")
