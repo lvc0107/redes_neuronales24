@@ -1,34 +1,45 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from dataset import plot_network_topology
+from dataset import map_color, plot_network_topology
 
-e1 = (0, 0)
-e2 = (0, 1)
-e3 = (1, 0)
-e4 = (1, 1)
-
-x = np.array([e1, e2, e3, e4])
-colors = ["b", "r", "r", "b"]
-
-plt.scatter(x[:, 0], x[:, 1], c=colors, s=200)
-plt.title("Dots before run Perceptron")
-plt.xlabel("Feature 1")
-plt.ylabel("Feature 2")
-plt.show()
+plot_network_topology(layer_sizes=[3, 2])
 
 
-# expected results
-s = np.array([(1, 0), (0, 1), (0, 1), (1, 0)])
-num_classes = 2
+def plot_decision_boundary(
+    X, y, preds, weights=None, biases=None, title="Decision Boundary"
+):
+    # Crear un grid de puntos para evaluar las predicciones
+    # en todo el espacio de entrada
+    x_min, x_max = X[:, 0].min() - 0.1, X[:, 0].max() + 0.1
+    y_min, y_max = X[:, 1].min() - 0.1, X[:, 1].max() + 0.1
+    xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.01), np.arange(y_min, y_max, 0.01))
+    grid = np.c_[xx.ravel(), yy.ravel()]
+
+    Y = np.argmax(y, axis=1)
+    # Obtener las predicciones para cada punto del grid
+    preds_for_boundary = predict(grid, weights, biases)
+
+    Z = preds_for_boundary.reshape(xx.shape)
+
+    plt.contourf(xx, yy, Z, alpha=0.3, cmap="viridis")
+    plt.scatter(
+        X[:, 0],
+        X[:, 1],
+        c=map_color(preds),
+        edgecolors=map_color(Y),
+        linewidths=2,
+        s=200,
+        alpha=0.5,
+    )
+    plt.title(title)
+    plt.xlabel("Feature 1")
+    plt.ylabel("Feature 2")
+    plt.show()
 
 
 def relu(h):
     return np.maximum(0, h)
-
-
-def relu_derivative(h):
-    return np.where(h > 0, 1, 0)
 
 
 def gradient_descent(x, s, learning_rate=0.02, num_iterations=1000):
@@ -62,39 +73,64 @@ def gradient_descent(x, s, learning_rate=0.02, num_iterations=1000):
     return weights, biases
 
 
-eta = 0.02
-epoch = 1000
-
-# Train model
-weights, biases = gradient_descent(x, s, learning_rate=eta, num_iterations=epoch)
-
-
-# Visualize dots and classes
-h = np.dot(x, weights) + biases
-activated = relu(h)
-exp_h = np.exp(activated - np.max(activated, axis=1, keepdims=True))
-preds = np.argmax(exp_h / exp_h.sum(axis=1, keepdims=True), axis=1)
+def predict(X, weights, biases):
+    h = np.dot(X, weights) + biases
+    activated = relu(h)
+    exp_h = np.exp(activated - np.max(activated, axis=1, keepdims=True))
+    preds = np.argmax(exp_h / exp_h.sum(axis=1, keepdims=True), axis=1)
+    return preds
 
 
-plot_network_topology(layer_sizes=[3, 2])
+if __name__ == "__main__":
+    """
+    Se intenta clasificar al XOR pero no se va a poder
+    por que con una red neuronal con una sola capa de salida
+    no alcanza para aprender la separacion lineal
+    Ver Wikipedia: https://es.wikipedia.org/wiki/Perceptr%C3%B3n
+    """
 
-plt.scatter(
-    x[:, 0],
-    x[:, 1],
-    c=preds,
-    cmap="viridis",
-    alpha=0.5,
-    s=200,
-    linewidth=3,
-    edgecolors=colors,
-)
-plt.title("Clasificated dots with ReLU model")
-plt.xlabel("Feature 1")
-plt.ylabel("Feature 2")
-plt.show()
+    e1 = (0, 0)
+    e2 = (0, 1)
+    e3 = (1, 0)
+    e4 = (1, 1)
 
+    X = np.array([e1, e2, e3, e4])
+    colors = ["b", "g", "g", "b"]
 
-"""
-Explicar por que no funciona xor
+    plt.scatter(X[:, 0], X[:, 1], c=colors, s=200)
+    plt.title("Dots before run Perceptron")
+    plt.xlabel("Feature 1")
+    plt.ylabel("Feature 2")
+    plt.show()
 
-"""
+    # expected results
+    Y_one_hot = np.array([(1, 0), (0, 1), (0, 1), (1, 0)])
+
+    eta = 0.02
+    epoch = 1000
+
+    # Train model
+    """
+    la entrada del modelo es:
+
+      X   y_one_hot (lo que se espera)
+     0 0    1 0
+     0 1    0 1
+     1 0    0 1
+     1 1    1 0
+    """
+
+    weights, biases = gradient_descent(
+        X, Y_one_hot, learning_rate=eta, num_iterations=epoch
+    )
+
+    # Obtener las predicciones
+    preds = predict(X, weights, biases)
+    print("\nDatos antes del entrenamiento:")
+    # Arg max devuelve el indice del maximo valor.
+    # En este caso el indice donde el valor es 1
+    print(np.argmax(Y_one_hot, axis=1))
+    print("\nPredicciones despues del entrenamiento:")
+    print(preds)
+
+    plot_decision_boundary(X, Y_one_hot, preds, weights, biases)
