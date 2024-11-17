@@ -9,8 +9,6 @@ import torch
 import torch.nn as nn
 from torchvision import datasets, transforms
 
-from dataset import plot_network_topology
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 print(f"Using {device} device")
@@ -82,11 +80,10 @@ def generate_data(batch_size):
 
 
 class NeuralNetwork(nn.Module):
-    def __init__(self, input_size=2, hidden_sizes=[64, 64], output_size=3, dropout=0.2):
+    def __init__(self, input_size, hidden_sizes, output_size, dropout):
         super().__init__()
-        layers = []
         prev_size = input_size
-        layers.append(nn.Flatten())
+        layers = [nn.Flatten()]
         for size in hidden_sizes:
             layers.append(nn.Linear(prev_size, size))
             layers.append(nn.ReLU())
@@ -160,18 +157,15 @@ def eval_loop(dataloader, model, loss_fn, verbose=False):
 
 
 if __name__ == "__main__":
-    # mas o menos la red tiene esta pinta
-    plot_network_topology([32, 16, 10, 6])
-
     ####################################
     # Hiperparametros a testear:
-
-    batch_size = 100  #  500, 1000,
-    dropout = 0.2  #  0.1, 0.5
-    lr = 1e-3  #  2e-3, 5e-3
-    epochs = 30  # 15, 100
-    hidden_sizes = [64, 32]  # [128], [256], [64, 32] [64, 32, 32]
-    optimizer_option = 1  # 1:SGD 2:Adam
+                             # Algunos parametros para probar
+    batch_size = 100         # 500, 1000,
+    dropout = 0.2            # 0.1, 0.5
+    lr = 1e-3                # 2e-3, 5e-3
+    epochs = 30              # 15, 100
+    hidden_sizes = [128, 64] # [128], [256], [64, 32] [64, 32, 32]
+    optimizer_option = 2     # 1:SGD 2:Adam
 
     ####################################
     input_size = 28 * 28

@@ -45,7 +45,7 @@ def plot_loss(x, y):
     plt.show()
 
 
-def plot_network_topology(layer_sizes):
+def plot_network_topology(layer_sizes, title):
     G = nx.DiGraph()
     pos = {}
     node_count = 0
@@ -70,16 +70,16 @@ def plot_network_topology(layer_sizes):
         node_counter += layer_sizes[i]
 
     # Dibujar la red
-    plt.figure(figsize=(12, 6))
+    plt.figure(figsize=(6, 4))
     nx.draw(
         G,
         pos,
         with_labels=False,
-        node_size=400,
+        node_size=100,
         node_color="lightblue",
         edge_color="gray",
     )
-    plt.title("Topología de la red neuronal")
+    plt.title(title)
     plt.show()
 
 
