@@ -327,11 +327,11 @@ def train_and_eval(model, train_dataloader, valid_dataloader, hyperparameters, v
 def main():
     ####################################
     # Hyperparameters to test:
-    batch_size = 500  # 100  500, 1000,
-    dropout = 0.2  # 0.1, 0.5
-    lr = 1e-3  # 2e-3, 5e-3
-    epochs = 2  # 15, 100
-    hidden_sizes = [128, 64]  # [128], [256], [64, 32] [64, 32, 32]
+    batch_size = 1000  # 100  500, 1000,
+    dropout = 0.2  # 0.1, 0.2, 0.5
+    lr = 1e-3  # 1e-3, 2e-3, 5e-3
+    epochs = 30  # 15, 30, 100
+    hidden_sizes = [128, 64]  # [128, 64],  [128], [256], [64, 32] [64, 32, 32]
     optimizer_option = 2  # 1:SGD 2:Adam
 
     ####################################
@@ -370,8 +370,8 @@ def main():
     train_and_eval(model, train_dataloader, valid_dataloader, hyperparameters, verbose)
 
     end_time = time.perf_counter()
-
     execution_time = end_time - start_time
+
     log(hyperparameters, execution_time)
 
 
