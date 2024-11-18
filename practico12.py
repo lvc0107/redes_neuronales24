@@ -74,15 +74,52 @@ def format_to_log(hyperparameters):
     return hyperparameters_to_log
 
 
-def log(hyperparameters, execution_time):
-    hyperparameters_to_log = format_to_log(hyperparameters)
-    print(f"{'Hyperparameter':<20} {'Value':<10}")
-    print("-" * 30)
-    for k, v in hyperparameters_to_log.items():
-        print(f"{k:<20} {str(v):<10}")
-    print("-" * 30)
-    key = "Execution time"
-    print(f"{key:<20} {execution_time:<10}")
+def log(
+    hyperparameters=None,
+    last_eval_avg_loss=None,
+    last_eval_precision=None,
+    last_train_avg_loss=None,
+    last_train_avg_loss_incorrect=None,
+    last_train_precision=None,
+    last_train_precision_incorrect=None,
+    execution_time=None,
+):
+    path = "trabajo_practico2"
+    extension = "p"
+    filename = "results"
+    full_path = f"{path}/{filename}.{extension}"
+
+    with open(full_path, "a") as f:
+        if execution_time:
+            key = "Execution time"
+            print("-" * 30, file=f)
+            print(f"{key:<20} {execution_time:<10}", file=f)
+            return
+
+        hyperparameters_to_log = format_to_log(hyperparameters)
+        print("-" * 30, file=f)
+        print("\n", file=f)
+
+        print(f"{'Hyperparameter':<20} {'Value':<10}", file=f)
+        print("-" * 30, file=f)
+        for k, v in hyperparameters_to_log.items():
+            print(f"{k:<20} {str(v):<10}", file=f)
+        print("-" * 30, file=f)
+
+        print(
+            f"{'Last train avg loss incorrect':<20} {last_train_avg_loss_incorrect:>7f}",
+            file=f,
+        )
+        print(
+            f"{'Last train precision incorrect':<20} {last_train_precision_incorrect:>7f}",
+            file=f,
+        )
+
+        print(f"{'Last train avg loss':<20} {last_train_avg_loss:>7f}", file=f)
+        print(f"{'Last train avg loss':<20} {last_train_precision:>7f}", file=f)
+
+        print(f"{'Last eval avg loss':<20} {last_eval_avg_loss:>7f}", file=f)
+        print(f"{'Last eval precision':<20} {last_eval_precision:>7f}", file=f)
 
 
 def plot_results(
@@ -323,6 +360,16 @@ def train_and_eval(model, train_dataloader, valid_dataloader, hyperparameters, v
         list_train_precision_incorrect,
     )
 
+    log(
+        hyperparameters,
+        list_eval_avg_loss[-1],
+        list_eval_precision[-1],
+        list_train_avg_loss[-1],
+        list_train_avg_loss_incorrect[-1],
+        list_train_precision[-1],
+        list_train_precision_incorrect[-1],
+    )
+
 
 def main():
     ####################################
@@ -330,7 +377,7 @@ def main():
     batch_size = 100  # 100  500, 1000,
     dropout = 0.1  # 0.1, 0.2, 0.5
     lr = 2e-3  # 1e-3, 2e-3, 5e-3
-    epochs = 30  # 15, 30, 100
+    epochs = 2  # 15, 30, 100
     hidden_sizes = [128, 64]  # [128, 64],  [128], [256], [64, 32] [64, 32, 32]
     optimizer_option = 2  # 1:SGD 2:Adam
 
@@ -372,7 +419,7 @@ def main():
     end_time = time.perf_counter()
     execution_time = end_time - start_time
 
-    log(hyperparameters, execution_time)
+    log(execution_time=execution_time)
 
 
 if __name__ == "__main__":
