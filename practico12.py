@@ -32,21 +32,22 @@ def get_device():
 
 
 def plot_some_data(training_data):
-    classes = [
-        "T-shirt/top",  # 0
-        "Trouser",  # 1
-        "Pullover",  # 2
-        "Dress",  # 3
-        "Coat",  # 4
-        "Sandal",  # 5
-        "Shirt",  # 6
-        "Sneaker",  # 7
-        "Bag",  # 8
-        "Ankle boot",  # 9
-    ]
+    label_names = {
+        0: "T-shirt/top",
+        1: "Trouser",
+        2: "Pullover",
+        3: "Dress",
+        4: "Coat",
+        5: "Sandal",
+        6: "Shirt",
+        7: "Sneaker",
+        8: "Bag",
+        9: "Ankle boot",
+    }
+    import json
 
-    label_names = {i: classes[i] for i in range(len(classes))}
-    print(f"label_names = {label_names}")
+    pretty_dict = json.dumps(label_names, indent=4, sort_keys=True)
+    print(f"label_names = {pretty_dict}")
 
     figure = plt.figure()
     cols, rows = 3, 3
@@ -56,7 +57,7 @@ def plot_some_data(training_data):
         figure.add_subplot(rows, cols, i)
         plt.title(label_names[label])
         plt.axis("off")
-        # remove channel. Not needed for classificacion
+        # remove channel. Not needed for classification
         image_to_plot = image.squeeze()
         plt.imshow(image_to_plot, cmap="Greys_r")
 
@@ -98,68 +99,65 @@ def plot_results(
     caption = ", ".join([f"{k}: {v}" for k, v in hyperparameters_to_log.items()])
     filename = "_".join([f"{k}-{v}".lower() for k, v in hyperparameters_to_log.items()])
 
-    ######### Loss
+    num_samples = len(list_train_avg_loss_incorrect)
+    x = range(num_samples)
+
+    plt.xlabel("Epochs")
+    plt.ylabel("Loss")
+    plt.grid(True)
+    plt.title("Average loss per epochs")
+    plt.figtext(
+        0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=10
+    )
+
+    y = list_train_avg_loss_incorrect
+    plt.plot(x, y, c="r", label="train incorrect", linestyle="-")
+    plt.plot(x[-1], y[-1], c="r", marker="o", markersize=5)
+    plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
+
+    y = list_train_avg_loss
+    plt.plot(x, y, c="g", label="train", linestyle="-.")
+    plt.plot(x[-1], y[-1], c="g", marker="o", markersize=5)
+    plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
+
+    y = list_eval_avg_loss
+    plt.plot(x, y, c="b", label="eval", linestyle="--")
+    plt.plot(x[-1], y[-1], c="b", marker="o", markersize=5)
+    plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
+
+    plt.legend()
+    plt.show()
+
     metric = "loss"
     path = "trabajo_practico2"
     extension = "png"
     full_path = f"{path}/{metric}_{filename}.{extension}"
-    plt.xlabel("Epocs")
-    plt.ylabel("Loss")
-    plt.figtext(
-        0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=10
-    )
-    plt.plot(
-        range(1, len(list_train_avg_loss_incorrect) + 1),
-        list_train_avg_loss_incorrect,
-        c="r",
-        label="train incorrect",
-        linestyle="-",
-    )
-    plt.plot(
-        range(1, len(list_train_avg_loss) + 1),
-        list_train_avg_loss,
-        c="g",
-        label="train",
-        linestyle="-.",
-    )
-    plt.plot(
-        range(1, len(list_eval_avg_loss) + 1),
-        list_eval_avg_loss,
-        c="b",
-        label="eval",
-        linestyle="--",
-    )
-    plt.legend()
     plt.savefig(full_path, bbox_inches="tight")
-    plt.show()
-    ######### Precision
+
     plt.xlabel("Epochs")
     plt.ylabel("Accuracy")
+    plt.title("Accuracy per epochs")
+    plt.grid(True)
     plt.figtext(
         0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=10
     )
     plt.axhline(y=0.9, c="red", linestyle="--")
-    plt.plot(
-        range(1, len(list_train_precision_incorrect) + 1),
-        list_train_precision_incorrect,
-        c="r",
-        label="train incorrect",
-        linestyle="-",
-    )
-    plt.plot(
-        range(1, len(list_train_precision) + 1),
-        list_train_precision,
-        c="g",
-        label="train",
-        linestyle="-.",
-    )
-    plt.plot(
-        range(1, len(list_eval_precision) + 1),
-        list_eval_precision,
-        c="b",
-        label="eval",
-        linestyle="--",
-    )
+
+    y = list_train_precision_incorrect
+    plt.plot(x, y, c="r", label="train incorrect", linestyle="-")
+    plt.plot(x[-1], y[-1], c="r", marker="o", markersize=5)
+    plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
+
+    y = list_train_precision
+    plt.plot(x, y, c="g", label="train", linestyle="-.")
+    plt.plot(x[-1], y[-1], c="g", marker="o", markersize=5)
+    plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
+
+    y = list_eval_precision
+    plt.plot(x, y, c="b", label="eval", linestyle="--")
+    plt.plot(x[-1], y[-1], c="b", marker="o", markersize=5)
+    plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
+
     metric = "precision"
     full_path = f"{path}/{metric}_{filename}.{extension}"
     plt.legend()
@@ -244,7 +242,9 @@ def train_loop(dataloader, model, hyperparameters, verbose=False):
         if verbose and batch % (num_batches / 10) == 0:
             processed_samples = 100 * num_processed_samples / num_samples
             print(
-                f"train loop: batch={batch:>5d} batch_avg_loss={batch_avg_loss:>7f} processed_samples={processed_samples:>5f}"
+                f"train loop: batch={batch:>5d}"
+                f" batch_avg_loss={batch_avg_loss:>7f}"
+                f" processed_samples={processed_samples:>5f}"
             )
 
     avg_loss = sum_batch_avg_loss / num_batches
@@ -292,8 +292,8 @@ def train_and_eval(model, train_dataloader, valid_dataloader, hyperparameters, v
     list_eval_precision = []
 
     epochs = hyperparameters["Epochs"]
-    for epoch in range(epochs):
-        print(f"\nEpoch: {epoch + 1}")
+    for epoch in range(1, epochs + 1):
+        print(f"\nEpoch: {epoch}")
         print("-" * 70)
         train_avg_loss_incorrect, train_precision_incorrect = train_loop(
             train_dataloader, model, hyperparameters, verbose
@@ -327,9 +327,9 @@ def train_and_eval(model, train_dataloader, valid_dataloader, hyperparameters, v
 def main():
     ####################################
     # Hyperparameters to test:
-    batch_size = 1000  # 100  500, 1000,
-    dropout = 0.2  # 0.1, 0.2, 0.5
-    lr = 1e-3  # 1e-3, 2e-3, 5e-3
+    batch_size = 100  # 100  500, 1000,
+    dropout = 0.1  # 0.1, 0.2, 0.5
+    lr = 2e-3  # 1e-3, 2e-3, 5e-3
     epochs = 30  # 15, 30, 100
     hidden_sizes = [128, 64]  # [128, 64],  [128], [256], [64, 32] [64, 32, 32]
     optimizer_option = 2  # 1:SGD 2:Adam

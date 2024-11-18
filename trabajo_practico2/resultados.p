@@ -7,7 +7,9 @@ Created on Sun Nov 17 04:35:45 2024
 """
 
 RESULTS
- #### BATCH SIZE
+
+
+#### BATCH SIZE
 ------------------------------
 Device               cpu
 Hidden Layers        [128, 64]
@@ -46,7 +48,7 @@ Dropout              0.2
 Execution time       188.50697920899256
 
 
- #### DROPOUT
+#### DROPOUT
 
 ------------------------------
 Device               cpu
@@ -58,3 +60,29 @@ Optimizer            Adam
 Dropout              0.2
 ------------------------------
 Execution time       192.01985579100437
+
+BAD
+------------------------------
+Device               cpu
+Hidden Layers        [128, 64]
+Batch Size           1000
+Epochs               30
+Learning Rate        0.001
+Optimizer            Adam
+Dropout              0.5
+------------------------------
+Execution time       190.28581895900425
+
+
+#### LR
+
+------------------------------
+Device               cpu
+Hidden Layers        [128, 64]
+Batch Size           1000
+Epochs               30
+Learning Rate        0.002
+Optimizer            Adam
+Dropout              0.2
+------------------------------
+Execution time       186.50196100000176
