@@ -1,15 +1,17 @@
-#!/usr/bin/env python3
-"""
-Created on Sun Nov 10 17:00:17 2024
 
-@author: luisvargas
-"""
+
+
+
+
 import time
-
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 from torchvision import datasets, transforms
+
+
+torch._dynamo.config.disable = True
+
 
 
 def get_device():
@@ -84,42 +86,35 @@ def log(
     last_train_precision_incorrect=None,
     execution_time=None,
 ):
-    path = "trabajo_practico2"
-    extension = "p"
-    filename = "results"
-    full_path = f"{path}/{filename}.{extension}"
 
-    with open(full_path, "a") as f:
-        if execution_time:
-            key = "Execution time"
-            print("-" * 30, file=f)
-            print(f"{key:<20} {execution_time:<10}", file=f)
-            return
+    if execution_time:
+        key = "Execution time"
+        print("-" * 30)
+        print(f"{key:<20} {execution_time:<10}")
+        return
 
-        hyperparameters_to_log = format_to_log(hyperparameters)
-        print("-" * 30, file=f)
-        print("\n", file=f)
+    hyperparameters_to_log = format_to_log(hyperparameters)
+    print("-" * 30)
+    print("\n")
 
-        print(f"{'Hyperparameter':<20} {'Value':<10}", file=f)
-        print("-" * 30, file=f)
-        for k, v in hyperparameters_to_log.items():
-            print(f"{k:<20} {str(v):<10}", file=f)
-        print("-" * 30, file=f)
+    print(f"{'Hyperparameter':<20} {'Value':<10}")
+    print("-" * 30)
+    for k, v in hyperparameters_to_log.items():
+        print(f"{k:<20} {str(v):<10}")
+    print("-" * 30)
 
-        print(
-            f"{'Last train avg loss incorrect':<20} {last_train_avg_loss_incorrect:>7f}",
-            file=f,
-        )
-        print(
-            f"{'Last train precision incorrect':<20} {last_train_precision_incorrect:>7f}",
-            file=f,
-        )
+    print(
+        f"{'Last train avg loss incorrect':<20} {last_train_avg_loss_incorrect:>7f}"
+    )
+    print(
+        f"{'Last train precision incorrect':<20} {last_train_precision_incorrect:>7f}",
+    )
 
-        print(f"{'Last train avg loss':<20} {last_train_avg_loss:>7f}", file=f)
-        print(f"{'Last train avg loss':<20} {last_train_precision:>7f}", file=f)
+    print(f"{'Last train avg loss':<20} {last_train_avg_loss:>7f}")
+    print(f"{'Last train avg loss':<20} {last_train_precision:>7f}")
 
-        print(f"{'Last eval avg loss':<20} {last_eval_avg_loss:>7f}", file=f)
-        print(f"{'Last eval precision':<20} {last_eval_precision:>7f}", file=f)
+    print(f"{'Last eval avg loss':<20} {last_eval_avg_loss:>7f}")
+    print(f"{'Last eval precision':<20} {last_eval_precision:>7f}")
 
 
 def plot_results(
@@ -371,73 +366,70 @@ def train_and_eval(model, train_dataloader, valid_dataloader, hyperparameters, v
     )
 
 
-def main():
-    ####################################
-    # Hyperparameters to test:
-    batch_size = 100  # 100  500, 1000,
-    dropout = 0.1  # 0.1, 0.2, 0.5
-    lr = 2e-3  # 1e-3, 2e-3, 5e-3
-    epochs = 30  # 15, 30, 100
-    hidden_sizes = [128, 64]  # [128, 64],  [128], [256], [64, 32] [64, 32, 32]
-    optimizer_option = 2  # 1:SGD 2:Adam
+####################################
+# Hyperparameters to test:
+batch_size = 100  # 100  500, 1000,
+dropout = 0.1  # 0.1, 0.2, 0.5
+lr = 2e-3  # 1e-3, 2e-3, 5e-3
+epochs = 30  # 15, 30, 100
+hidden_sizes = [128, 64]  # [128, 64],  [128], [256], [64, 32] [64, 32, 32]
+optimizer_option = 2  # 1:SGD 2:Adam
 
-    ####################################
-    device = get_device()
-    loss_fn = nn.CrossEntropyLoss()
-    input_size = 28 * 28
-    output_size = 10
-    verbose = False
+####################################
+device = get_device()
+loss_fn = nn.CrossEntropyLoss()
+input_size = 28 * 28
+output_size = 10
+verbose = True
 
-    model = NeuralNetwork(
-        input_size=input_size,
-        hidden_sizes=hidden_sizes,
-        output_size=output_size,
-        dropout=dropout,
-    )
+model = NeuralNetwork(
+    input_size=input_size,
+    hidden_sizes=hidden_sizes,
+    output_size=output_size,
+    dropout=dropout,
+)
 
-    for epochs in [30]:
-        for batch_size in [100, 500]:
-            for dropout in [0.1, 0.2]:
-                for lr in [1e-3]:
-                    for hidden_sizes in [[128, 64], [256], [64, 32], [64, 32, 32]]:
-                        for optimizer_option in [2]:
-                            # 3*3*3*3*5*2 = 810 tests
-                            # 2*2*2*1*4*1 = 32 tests
-                            if optimizer_option == 1:
-                                optimizer = torch.optim.SGD(model.parameters(), lr=lr)
-                            else:
-                                optimizer = torch.optim.Adam(
-                                    model.parameters(), lr=lr, eps=1e-08
-                                )
-
-                            hyperparameters = {
-                                "Device": device,
-                                "Hidden Layers": hidden_sizes,
-                                "Batch Size": batch_size,
-                                "Epochs": epochs,
-                                "Learning Rate": lr,
-                                "Loss Function": loss_fn,
-                                "Optimizer": optimizer,
-                                "Dropout": dropout,
-                            }
-                            start_time = time.perf_counter()
-
-                            train_dataloader, valid_dataloader = generate_data(
-                                batch_size
-                            )
-                            train_and_eval(
-                                model,
-                                train_dataloader,
-                                valid_dataloader,
-                                hyperparameters,
-                                verbose,
+for epochs in [30]:
+    for batch_size in [100, 500]:
+        for dropout in [0.1, 0.2]:
+            for lr in [1e-3]:
+                for hidden_sizes in [[128, 64], [256], [64, 32], [64, 32, 32]]:
+                    for optimizer_option in [2]:
+                        # 3*3*3*3*5*2 = 810 tests
+                        # 2*2*2*1*4*1 = 32 tests
+                        if optimizer_option == 1:
+                            optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+                        else:
+                            optimizer = torch.optim.Adam(
+                                model.parameters(), lr=lr, eps=1e-08
                             )
 
-                            end_time = time.perf_counter()
-                            execution_time = end_time - start_time
+                        hyperparameters = {
+                            "Device": device,
+                            "Hidden Layers": hidden_sizes,
+                            "Batch Size": batch_size,
+                            "Epochs": epochs,
+                            "Learning Rate": lr,
+                            "Loss Function": loss_fn,
+                            "Optimizer": optimizer,
+                            "Dropout": dropout,
+                        }
+                        start_time = time.perf_counter()
 
-                            log(execution_time=execution_time)
+                        train_dataloader, valid_dataloader = generate_data(
+                            batch_size
+                        )
+                        train_and_eval(
+                            model,
+                            train_dataloader,
+                            valid_dataloader,
+                            hyperparameters,
+                            verbose,
+                        )
+
+                        end_time = time.perf_counter()
+                        execution_time = end_time - start_time
+
+                        log(execution_time=execution_time)
 
 
-if __name__ == "__main__":
-    main()
