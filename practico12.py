@@ -4,34 +4,50 @@ Created on Sun Nov 10 17:00:17 2024
 
 @author: luisvargas
 """
+import time
+
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 from torchvision import datasets, transforms
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-print(f"Using {device} device")
+def get_device():
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+    # # Check that MPS is available
+    # if not torch.backends.mps.is_available():
+    #     if not torch.backends.mps.is_built():
+    #         print("MPS not available because the current PyTorch install was not "
+    #               "built with MPS enabled.")
+    #     else:
+    #         print("MPS not available because the current MacOS version is not 12.3+ "
+    #               "and/or you do not have an MPS-enabled device on this machine.")
 
-classes = [
-    "T-shirt/top",  # 0
-    "Trouser",  # 1
-    "Pullover",  # 2
-    "Dress",  # 3
-    "Coat",  # 4
-    "Sandal",  # 5
-    "Shirt",  # 6
-    "Sneaker",  # 7
-    "Bag",  # 8
-    "Ankle boot",  # 9
-]
+    # else:
+    #     device = torch.device("mps")
 
-label_names = {i: classes[i] for i in range(len(classes))}
-print(f"label_names = {label_names}")
+    print(f"Using {device} device")
+    return device
 
 
 def plot_some_data(training_data):
+    classes = [
+        "T-shirt/top",  # 0
+        "Trouser",  # 1
+        "Pullover",  # 2
+        "Dress",  # 3
+        "Coat",  # 4
+        "Sandal",  # 5
+        "Shirt",  # 6
+        "Sneaker",  # 7
+        "Bag",  # 8
+        "Ankle boot",  # 9
+    ]
+
+    label_names = {i: classes[i] for i in range(len(classes))}
+    print(f"label_names = {label_names}")
+
     figure = plt.figure()
     cols, rows = 3, 3
     for i in range(1, cols * rows + 1):
@@ -44,6 +60,110 @@ def plot_some_data(training_data):
         image_to_plot = image.squeeze()
         plt.imshow(image_to_plot, cmap="Greys_r")
 
+    plt.show()
+
+
+def format_to_log(hyperparameters):
+    hyperparameters_to_log = hyperparameters.copy()
+    hyperparameters_to_log["Device"] = hyperparameters["Device"].type
+    hyperparameters_to_log.pop("Loss Function", None)
+    hyperparameters_to_log["Optimizer"] = (
+        "SGD" if isinstance(hyperparameters["Optimizer"], torch.optim.SGD) else "Adam"
+    )
+    return hyperparameters_to_log
+
+
+def log(hyperparameters, execution_time):
+    hyperparameters_to_log = format_to_log(hyperparameters)
+    print(f"{'Hyperparameter':<20} {'Value':<10}")
+    print("-" * 30)
+    for k, v in hyperparameters_to_log.items():
+        print(f"{k:<20} {str(v):<10}")
+    print("-" * 30)
+    key = "Execution time"
+    print(f"{key:<20} {execution_time:<10}")
+
+
+def plot_results(
+    hyperparameters,
+    list_eval_avg_loss,
+    list_eval_precision,
+    list_train_avg_loss,
+    list_train_avg_loss_incorrect,
+    list_train_precision,
+    list_train_precision_incorrect,
+):
+    hyperparameters_to_log = format_to_log(hyperparameters)
+
+    caption = ", ".join([f"{k}: {v}" for k, v in hyperparameters_to_log.items()])
+    filename = "_".join([f"{k}-{v}".lower() for k, v in hyperparameters_to_log.items()])
+
+    ######### Loss
+    metric = "loss"
+    path = "trabajo_practico2"
+    extension = "png"
+    full_path = f"{path}/{metric}_{filename}.{extension}"
+    plt.xlabel("Epocs")
+    plt.ylabel("Loss")
+    plt.figtext(
+        0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=10
+    )
+    plt.plot(
+        range(1, len(list_train_avg_loss_incorrect) + 1),
+        list_train_avg_loss_incorrect,
+        c="r",
+        label="train incorrect",
+        linestyle="-",
+    )
+    plt.plot(
+        range(1, len(list_train_avg_loss) + 1),
+        list_train_avg_loss,
+        c="g",
+        label="train",
+        linestyle="-.",
+    )
+    plt.plot(
+        range(1, len(list_eval_avg_loss) + 1),
+        list_eval_avg_loss,
+        c="b",
+        label="eval",
+        linestyle="--",
+    )
+    plt.legend()
+    plt.savefig(full_path, bbox_inches="tight")
+    plt.show()
+    ######### Precision
+    plt.xlabel("Epochs")
+    plt.ylabel("Accuracy")
+    plt.figtext(
+        0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=10
+    )
+    plt.axhline(y=0.9, c="red", linestyle="--")
+    plt.plot(
+        range(1, len(list_train_precision_incorrect) + 1),
+        list_train_precision_incorrect,
+        c="r",
+        label="train incorrect",
+        linestyle="-",
+    )
+    plt.plot(
+        range(1, len(list_train_precision) + 1),
+        list_train_precision,
+        c="g",
+        label="train",
+        linestyle="-.",
+    )
+    plt.plot(
+        range(1, len(list_eval_precision) + 1),
+        list_eval_precision,
+        c="b",
+        label="eval",
+        linestyle="--",
+    )
+    metric = "precision"
+    full_path = f"{path}/{metric}_{filename}.{extension}"
+    plt.legend()
+    plt.savefig(full_path, bbox_inches="tight")
     plt.show()
 
 
@@ -96,7 +216,11 @@ class NeuralNetwork(nn.Module):
         return self.model(x)
 
 
-def train_loop(dataloader, model, loss_fn, optimizer, verbose=False):
+def train_loop(dataloader, model, hyperparameters, verbose=False):
+    device = hyperparameters["Device"]
+    loss_fn = hyperparameters["Loss Function"]
+    optimizer = hyperparameters["Optimizer"]
+
     model.train()
     num_samples = len(dataloader.dataset)
     num_batches = len(dataloader)
@@ -129,7 +253,10 @@ def train_loop(dataloader, model, loss_fn, optimizer, verbose=False):
     return avg_loss, precision
 
 
-def eval_loop(dataloader, model, loss_fn, verbose=False):
+def eval_loop(dataloader, model, hyperparameters, verbose=False):
+    device = hyperparameters["Device"]
+    loss_fn = hyperparameters["Loss Function"]
+
     model.eval()
     num_samples = len(dataloader.dataset)
     num_batches = len(dataloader)
@@ -156,25 +283,63 @@ def eval_loop(dataloader, model, loss_fn, verbose=False):
     return avg_loss, precision
 
 
-if __name__ == "__main__":
+def train_and_eval(model, train_dataloader, valid_dataloader, hyperparameters, verbose):
+    list_train_avg_loss_incorrect = []
+    list_train_precision_incorrect = []
+    list_train_avg_loss = []
+    list_train_precision = []
+    list_eval_avg_loss = []
+    list_eval_precision = []
+
+    epochs = hyperparameters["Epochs"]
+    for epoch in range(epochs):
+        print(f"\nEpoch: {epoch + 1}")
+        print("-" * 70)
+        train_avg_loss_incorrect, train_precision_incorrect = train_loop(
+            train_dataloader, model, hyperparameters, verbose
+        )
+        list_train_avg_loss_incorrect.append(train_avg_loss_incorrect)
+        list_train_precision_incorrect.append(train_precision_incorrect)
+
+        train_avg_loss, train_precision = eval_loop(
+            train_dataloader, model, hyperparameters, verbose
+        )
+        list_train_avg_loss.append(train_avg_loss)
+        list_train_precision.append(train_precision)
+
+        eval_avg_loss, eval_precision = eval_loop(
+            valid_dataloader, model, hyperparameters, verbose
+        )
+        list_eval_avg_loss.append(eval_avg_loss)
+        list_eval_precision.append(eval_precision)
+
+    plot_results(
+        hyperparameters,
+        list_eval_avg_loss,
+        list_eval_precision,
+        list_train_avg_loss,
+        list_train_avg_loss_incorrect,
+        list_train_precision,
+        list_train_precision_incorrect,
+    )
+
+
+def main():
     ####################################
-    # Hiperparametros a testear:
-                             # Algunos parametros para probar
-    batch_size = 100         # 500, 1000,
-    dropout = 0.2            # 0.1, 0.5
-    lr = 1e-3                # 2e-3, 5e-3
-    epochs = 30              # 15, 100
-    hidden_sizes = [128, 64] # [128], [256], [64, 32] [64, 32, 32]
-    optimizer_option = 2     # 1:SGD 2:Adam
+    # Hyperparameters to test:
+    batch_size = 500  # 100  500, 1000,
+    dropout = 0.2  # 0.1, 0.5
+    lr = 1e-3  # 2e-3, 5e-3
+    epochs = 2  # 15, 100
+    hidden_sizes = [128, 64]  # [128], [256], [64, 32] [64, 32, 32]
+    optimizer_option = 2  # 1:SGD 2:Adam
 
     ####################################
+    device = get_device()
+    loss_fn = nn.CrossEntropyLoss()
     input_size = 28 * 28
     output_size = 10
-    layer_sizes = [input_size] + hidden_sizes + [output_size]
     verbose = True
-    loss_fn = nn.CrossEntropyLoss()
-
-    train_dataloader, valid_dataloader = generate_data(batch_size)
 
     model = NeuralNetwork(
         input_size=input_size,
@@ -182,88 +347,33 @@ if __name__ == "__main__":
         output_size=output_size,
         dropout=dropout,
     )
-    optimizer = (
-        lambda x, lr: torch.optim.SGD(model.parameters(), lr=lr)
-        if x == 1
-        else torch.optim.Adam(model.parameters(), lr=lr, eps=1e-08)
-    )(optimizer_option, lr)
 
-    list_train_avg_loss_incorrect = []
-    list_train_presicion_incorrect = []
-    list_train_avg_loss = []
-    list_train_presicion = []
-    list_eval_avg_loss = []
-    list_eval_presicion = []
-    for epoch in range(epochs):
-        print(f"\nEpoch: {epoch+1}")
-        print("-" * 70)
-        train_avg_loss_incorrect, train_presicion_incorrect = train_loop(
-            train_dataloader, model, loss_fn, optimizer, verbose
-        )
-        list_train_avg_loss_incorrect.append(train_avg_loss_incorrect)
-        list_train_presicion_incorrect.append(train_presicion_incorrect)
+    if optimizer_option == 1:
+        optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+    else:
+        optimizer = torch.optim.Adam(model.parameters(), lr=lr, eps=1e-08)
 
-        train_avg_loss, train_presicion = eval_loop(
-            train_dataloader, model, loss_fn, verbose
-        )
-        list_train_avg_loss.append(train_avg_loss)
-        list_train_presicion.append(train_presicion)
+    hyperparameters = {
+        "Device": device,
+        "Hidden Layers": hidden_sizes,
+        "Batch Size": batch_size,
+        "Epochs": epochs,
+        "Learning Rate": lr,
+        "Loss Function": loss_fn,
+        "Optimizer": optimizer,
+        "Dropout": dropout,
+    }
 
-        eval_avg_loss, eval_presicion = eval_loop(
-            valid_dataloader, model, loss_fn, verbose
-        )
-        list_eval_avg_loss.append(eval_avg_loss)
-        list_eval_presicion.append(eval_presicion)
+    start_time = time.perf_counter()
 
-    plt.xlabel("Epochs")
-    plt.ylabel("Loss")
-    plt.plot(
-        range(1, len(list_train_avg_loss_incorrect) + 1),
-        list_train_avg_loss_incorrect,
-        c="r",
-        label="train incorrect",
-        linestyle="-",
-    )
-    plt.plot(
-        range(1, len(list_train_avg_loss) + 1),
-        list_train_avg_loss,
-        c="g",
-        label="train",
-        linestyle="-.",
-    )
-    plt.plot(
-        range(1, len(list_eval_avg_loss) + 1),
-        list_eval_avg_loss,
-        c="b",
-        label="eval",
-        linestyle="--",
-    )
-    plt.legend()
-    plt.show()
+    train_dataloader, valid_dataloader = generate_data(batch_size)
+    train_and_eval(model, train_dataloader, valid_dataloader, hyperparameters, verbose)
 
-    plt.xlabel("Epochs")
-    plt.ylabel("Accuracy")
-    plt.axhline(y=0.9, c="red", linestyle="--")
-    plt.plot(
-        range(1, len(list_train_presicion_incorrect) + 1),
-        list_train_presicion_incorrect,
-        c="r",
-        label="train incorrect",
-        linestyle="-",
-    )
-    plt.plot(
-        range(1, len(list_train_presicion) + 1),
-        list_train_presicion,
-        c="g",
-        label="train",
-        linestyle="-.",
-    )
-    plt.plot(
-        range(1, len(list_eval_presicion) + 1),
-        list_eval_presicion,
-        c="b",
-        label="eval",
-        linestyle="--",
-    )
-    plt.legend()
-    plt.show()
+    end_time = time.perf_counter()
+
+    execution_time = end_time - start_time
+    log(hyperparameters, execution_time)
+
+
+if __name__ == "__main__":
+    main()
