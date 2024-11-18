@@ -223,7 +223,7 @@ def generate_data(batch_size):
         transform=transform,
     )
 
-    plot_some_data(training_data)
+    # plot_some_data(training_data)
     train_loader = torch.utils.data.DataLoader(
         training_data, batch_size=batch_size, shuffle=True
     )
@@ -377,7 +377,7 @@ def main():
     batch_size = 100  # 100  500, 1000,
     dropout = 0.1  # 0.1, 0.2, 0.5
     lr = 2e-3  # 1e-3, 2e-3, 5e-3
-    epochs = 2  # 15, 30, 100
+    epochs = 30  # 15, 30, 100
     hidden_sizes = [128, 64]  # [128, 64],  [128], [256], [64, 32] [64, 32, 32]
     optimizer_option = 2  # 1:SGD 2:Adam
 
@@ -386,7 +386,7 @@ def main():
     loss_fn = nn.CrossEntropyLoss()
     input_size = 28 * 28
     output_size = 10
-    verbose = True
+    verbose = False
 
     model = NeuralNetwork(
         input_size=input_size,
@@ -395,31 +395,48 @@ def main():
         dropout=dropout,
     )
 
-    if optimizer_option == 1:
-        optimizer = torch.optim.SGD(model.parameters(), lr=lr)
-    else:
-        optimizer = torch.optim.Adam(model.parameters(), lr=lr, eps=1e-08)
+    for epochs in [30]:
+        for batch_size in [100, 500]:
+            for dropout in [0.1, 0.2]:
+                for lr in [1e-3]:
+                    for hidden_sizes in [[128, 64], [256], [64, 32], [64, 32, 32]]:
+                        for optimizer_option in [2]:
+                            # 3*3*3*3*5*2 = 810 tests
+                            # 2*2*2*1*4*1 = 32 tests
+                            if optimizer_option == 1:
+                                optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+                            else:
+                                optimizer = torch.optim.Adam(
+                                    model.parameters(), lr=lr, eps=1e-08
+                                )
 
-    hyperparameters = {
-        "Device": device,
-        "Hidden Layers": hidden_sizes,
-        "Batch Size": batch_size,
-        "Epochs": epochs,
-        "Learning Rate": lr,
-        "Loss Function": loss_fn,
-        "Optimizer": optimizer,
-        "Dropout": dropout,
-    }
+                            hyperparameters = {
+                                "Device": device,
+                                "Hidden Layers": hidden_sizes,
+                                "Batch Size": batch_size,
+                                "Epochs": epochs,
+                                "Learning Rate": lr,
+                                "Loss Function": loss_fn,
+                                "Optimizer": optimizer,
+                                "Dropout": dropout,
+                            }
+                            start_time = time.perf_counter()
 
-    start_time = time.perf_counter()
+                            train_dataloader, valid_dataloader = generate_data(
+                                batch_size
+                            )
+                            train_and_eval(
+                                model,
+                                train_dataloader,
+                                valid_dataloader,
+                                hyperparameters,
+                                verbose,
+                            )
 
-    train_dataloader, valid_dataloader = generate_data(batch_size)
-    train_and_eval(model, train_dataloader, valid_dataloader, hyperparameters, verbose)
+                            end_time = time.perf_counter()
+                            execution_time = end_time - start_time
 
-    end_time = time.perf_counter()
-    execution_time = end_time - start_time
-
-    log(execution_time=execution_time)
+                            log(execution_time=execution_time)
 
 
 if __name__ == "__main__":
