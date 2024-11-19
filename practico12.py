@@ -138,27 +138,28 @@ def plot_results(
 
     num_samples = len(list_train_avg_loss_incorrect)
     x = range(num_samples)
+    fontsize = 12
 
-    plt.xlabel("Epochs")
-    plt.ylabel("Loss")
+    plt.xlabel("Épocas", size=fontsize)
+    plt.ylabel("Error", size=fontsize)
     plt.grid(True)
-    plt.title("Average loss per epochs")
+    plt.title("Error promedio por épocas", size=fontsize)
     plt.figtext(
-        0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=10
+        0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=fontsize
     )
 
     y = list_train_avg_loss_incorrect
-    plt.plot(x, y, c="r", label="train incorrect", linestyle="-")
+    plt.plot(x, y, c="r", label="Error durante entrenamiento", linestyle="-")
     plt.plot(x[-1], y[-1], c="r", marker="o", markersize=5)
     plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
 
     y = list_train_avg_loss
-    plt.plot(x, y, c="g", label="train", linestyle="-.")
+    plt.plot(x, y, c="g", label="Evaluación en datos de entrenamiento", linestyle="-.")
     plt.plot(x[-1], y[-1], c="g", marker="o", markersize=5)
     plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
 
     y = list_eval_avg_loss
-    plt.plot(x, y, c="b", label="eval", linestyle="--")
+    plt.plot(x, y, c="b", label="Evaluación en datos de validación", linestyle="--")
     plt.plot(x[-1], y[-1], c="b", marker="o", markersize=5)
     plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
     plt.legend()
@@ -170,28 +171,27 @@ def plot_results(
     plt.savefig(full_path, bbox_inches="tight")
     plt.show()
 
-
-    plt.xlabel("Epochs")
-    plt.ylabel("Accuracy")
-    plt.title("Accuracy per epochs")
+    plt.xlabel("Épocas", size=fontsize)
+    plt.ylabel("Precisión", size=fontsize)
+    plt.title("Precisión por épocas", size=fontsize)
     plt.grid(True)
     plt.figtext(
-        0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=10
+        0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=12
     )
     plt.axhline(y=0.9, c="red", linestyle="--")
 
     y = list_train_precision_incorrect
-    plt.plot(x, y, c="r", label="train incorrect", linestyle="-")
+    plt.plot(x, y, c="r", label="Precisión durante entrenamiento", linestyle="-")
     plt.plot(x[-1], y[-1], c="r", marker="o", markersize=5)
     plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
 
     y = list_train_precision
-    plt.plot(x, y, c="g", label="train", linestyle="-.")
+    plt.plot(x, y, c="g", label="Evaluación en datos de entrenamiento", linestyle="-.")
     plt.plot(x[-1], y[-1], c="g", marker="o", markersize=5)
     plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
 
     y = list_eval_precision
-    plt.plot(x, y, c="b", label="eval", linestyle="--")
+    plt.plot(x, y, c="b", label="Evaluación en datos de validación", linestyle="--")
     plt.plot(x[-1], y[-1], c="b", marker="o", markersize=5)
     plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
 
@@ -388,19 +388,25 @@ def main():
     output_size = 10
     verbose = False
 
-    model = NeuralNetwork(
-        input_size=input_size,
-        hidden_sizes=hidden_sizes,
-        output_size=output_size,
-        dropout=dropout,
-    )
-
-    for epochs in [30]:
+    for epochs in [15, 30]:
         for batch_size in [100, 500]:
             for dropout in [0.1, 0.2]:
-                for lr in [1e-3]:
-                    for hidden_sizes in [[128, 64], [256], [64, 32], [64, 32, 32]]:
+                for lr in [1e-3, 2e-3, 5e-3]:
+                    for hidden_sizes in [
+                        [128, 64],
+                        [128],
+                        [256],
+                        [64, 32],
+                        [64, 32, 32],
+                    ]:
                         for optimizer_option in [2]:
+                            model = NeuralNetwork(
+                                input_size=input_size,
+                                hidden_sizes=hidden_sizes,
+                                output_size=output_size,
+                                dropout=dropout,
+                            )
+
                             # 3*3*3*3*5*2 = 810 tests
                             # 2*2*2*1*4*1 = 32 tests
                             if optimizer_option == 1:
@@ -420,11 +426,12 @@ def main():
                                 "Optimizer": optimizer,
                                 "Dropout": dropout,
                             }
-                            start_time = time.perf_counter()
-
                             train_dataloader, valid_dataloader = generate_data(
                                 batch_size
                             )
+                            
+                            start_time = time.perf_counter()
+                            
                             train_and_eval(
                                 model,
                                 train_dataloader,

@@ -1,17 +1,11 @@
-
-
-
-
-
 import time
+
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 from torchvision import datasets, transforms
 
-
 torch._dynamo.config.disable = True
-
 
 
 def get_device():
@@ -86,7 +80,6 @@ def log(
     last_train_precision_incorrect=None,
     execution_time=None,
 ):
-
     if execution_time:
         key = "Execution time"
         print("-" * 30)
@@ -103,9 +96,7 @@ def log(
         print(f"{k:<20} {str(v):<10}")
     print("-" * 30)
 
-    print(
-        f"{'Last train avg loss incorrect':<20} {last_train_avg_loss_incorrect:>7f}"
-    )
+    print(f"{'Last train avg loss incorrect':<20} {last_train_avg_loss_incorrect:>7f}")
     print(
         f"{'Last train precision incorrect':<20} {last_train_precision_incorrect:>7f}",
     )
@@ -129,17 +120,16 @@ def plot_results(
     hyperparameters_to_log = format_to_log(hyperparameters)
 
     caption = ", ".join([f"{k}: {v}" for k, v in hyperparameters_to_log.items()])
-    filename = "_".join([f"{k}-{v}".lower() for k, v in hyperparameters_to_log.items()])
 
     num_samples = len(list_train_avg_loss_incorrect)
     x = range(num_samples)
-
-    plt.xlabel("Epochs")
-    plt.ylabel("Loss")
+    fontsize = 14
+    plt.xlabel("Epochs", size=fontsize)
+    plt.ylabel("Loss", size=fontsize)
     plt.grid(True)
-    plt.title("Average loss per epochs")
+    plt.title("Average loss per epochs", size=fontsize)
     plt.figtext(
-        0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=10
+        0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=fontsize
     )
 
     y = list_train_avg_loss_incorrect
@@ -157,18 +147,11 @@ def plot_results(
     plt.plot(x[-1], y[-1], c="b", marker="o", markersize=5)
     plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
     plt.legend()
-
-    metric = "loss"
-    path = "trabajo_practico2"
-    extension = "png"
-    full_path = f"{path}/{metric}_{filename}.{extension}"
-    plt.savefig(full_path, bbox_inches="tight")
     plt.show()
 
-
-    plt.xlabel("Epochs")
-    plt.ylabel("Accuracy")
-    plt.title("Accuracy per epochs")
+    plt.xlabel("Epochs", size=fontsize)
+    plt.ylabel("Accuracy", size=fontsize)
+    plt.title("Accuracy per epochs", size=fontsize)
     plt.grid(True)
     plt.figtext(
         0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=10
@@ -189,11 +172,6 @@ def plot_results(
     plt.plot(x, y, c="b", label="eval", linestyle="--")
     plt.plot(x[-1], y[-1], c="b", marker="o", markersize=5)
     plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
-
-    metric = "precision"
-    full_path = f"{path}/{metric}_{filename}.{extension}"
-    plt.legend()
-    plt.savefig(full_path, bbox_inches="tight")
     plt.show()
 
 
@@ -380,7 +358,7 @@ device = get_device()
 loss_fn = nn.CrossEntropyLoss()
 input_size = 28 * 28
 output_size = 10
-verbose = True
+verbose = False
 
 model = NeuralNetwork(
     input_size=input_size,
@@ -389,7 +367,7 @@ model = NeuralNetwork(
     dropout=dropout,
 )
 
-for epochs in [30]:
+for epochs in [15, 30]:
     for batch_size in [100, 500]:
         for dropout in [0.1, 0.2]:
             for lr in [1e-3]:
@@ -416,9 +394,7 @@ for epochs in [30]:
                         }
                         start_time = time.perf_counter()
 
-                        train_dataloader, valid_dataloader = generate_data(
-                            batch_size
-                        )
+                        train_dataloader, valid_dataloader = generate_data(batch_size)
                         train_and_eval(
                             model,
                             train_dataloader,
@@ -431,5 +407,3 @@ for epochs in [30]:
                         execution_time = end_time - start_time
 
                         log(execution_time=execution_time)
-
-
