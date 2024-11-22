@@ -1,0 +1,547 @@
+%% ****** Start of file apstemplate.tex ****** %
+%%
+%%
+%%   This file is part of the APS files in the REVTeX 4.2 distribution.
+%%   Version 4.2a of REVTeX, January, 2015
+%%
+%%
+%%   Copyright (c) 2015 The American Physical Society.
+%%
+%%   See the REVTeX 4 README file for restrictions and more information.
+%%
+%
+% This is a template for producing manuscripts for use with REVTEX 4.2
+% Copy this file to another name and then work on that file.
+% That way, you always have this original template file to use.
+%
+% Group addresses by affiliation; use superscriptaddress for long
+% author lists, or if there are many overlapping affiliations.
+% For Phys. Rev. appearance, change preprint to twocolumn.
+% Choose pra, prb, prc, prd, pre, prl, prstab, prstper, or rmp for journal
+%  Add 'draft' option to mark overfull boxes with black boxes
+%  Add 'showkeys' option to make keywords appear
+%\documentclass[aps,prl,preprint,groupedaddress]{revtex4-2}
+\documentclass[aps,prl,twocolumn,groupedaddress]{revtex4-2}
+%\documentclass[aps,prl,preprint,superscriptaddress]{revtex4-2}
+%\documentclass[aps,prl,reprint,groupedaddress]{revtex4-2}
+
+% You should use BibTeX and apsrev.bst for references
+% Choosing a journal automatically selects the correct APS
+% BibTeX style file (bst file), so only uncomment the line
+% below if necessary.
+%\bibliographystyle{apsrev4-2}
+
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\usepackage[font={small,it}]{caption}
+ \usepackage{url}
+
+
+\usepackage{epstopdf}
+%\usepackage{amsmath}% http://ctan.org/pkg/amsmath
+%\usepackage{amsthm}
+%\usepackage{amsfonts}
+%\usepackage{subfigure}
+%\usepackage{hhline}
+%\usepackage[miktex]{gnuplottex}
+%\usepackage{xcolor}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{hyperref}
+%\usepackage[percent]{overpic}
+\usepackage{tikz}
+\usepackage{mathrsfs}
+\usepackage{wasysym}
+\usepackage{tikz-cd}
+%\usepackage{stix} %\fisheye
+\usepackage{stackengine,scalerel}
+
+% so sections, subsections, etc. become numerated.
+\setcounter{secnumdepth}{3}
+
+% Comandos proprios
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand{\avrg}[1]{\left\langle #1 \right\rangle}
+\newcommand{\nelta}{\bar{\delta}}
+\newcommand{\bra}[1]{\left\langle #1\right|}
+\newcommand{\ket}[1]{\left| #1 \right\rangle}
+\newcommand{\sbra}[1]{\langle #1|}
+\newcommand{\sket}[1]{| #1 \rangle}
+\newcommand{\bek}[3]{\left\langle #1 \right| #2 \left| #3 \right\rangle}
+\newcommand{\sbek}[3]{\langle #1 | #2 | #3 \rangle}
+\newcommand{\braket}[2]{\left\langle #1 \middle| #2 \right\rangle}
+\newcommand{\ketbra}[2]{\left| #1 \middle\rangle \middle\langle #2  \right|}
+\newcommand{\sbraket}[2]{\langle #1 | #2 \rangle}
+\newcommand{\sketbra}[2]{| #1 \rangle  \langle #2 |}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\snorm}[1]{\lVert#1\rVert}
+\newcommand{\bvec}[1]{\boldsymbol{\mathsf{#1}}}
+\newcommand{\bcov}[1]{\boldsymbol{#1}}
+\newcommand{\bdua}[1]{\boldsymbol{\check{#1}}}
+%\newcommand{\bdov}[1]{\boldsymbol{\breve{#1}}}
+\newcommand{\bdov}[1]{\breve{#1}}
+%\newcommand{\bten}[1]{\boldsymbol{\mathfrak{#1}}}
+\newcommand{\bten}[1]{\boldsymbol{\mathfrak{#1}}}
+\newcommand{\forany}{\tilde{\forall}}
+\newcommand{\qed}{$\overset{\circ}{.}\;$}
+
+\newcommand\bigeye{\ensurestackMath{\stackinset{c}{}{c}{-.3pt}%
+  {\bullet}{\scriptstyle\bigcirc}}}
+\newcommand\eye{\scalerel*{\bigeye}{x}}
+%\newcommand*{\fisheye}{%
+%    \mathbin{%
+%        \ooalign{$\circledcirc$\cr\hidewidth$\bullet$\hidewidth}%
+%    }%
+%}
+\renewcommand{\appendixname}{Apéndice} % Change "Appendix" to "Apéndice"
+
+\begin{document}
+
+% Use the \preprint command to place your local institutional report
+% number in the upper righthand corner of the title page in preprint mode.
+% Multiple \preprint commands are allowed.
+% Use the 'preprintnumbers' class option to override journal defaults
+% to display numbers if necessary
+%\preprint{}
+
+%Title of paper
+\title{
+Implementación de red neuronal para resolver Fashion-MNIST
+}
+
+% repeat the \author .. \affiliation  etc. as needed
+% \email, \thanks, \homepage, \altaffiliation all apply to the current
+% author. Explanatory text should go in the []'s, actual e-mail
+% address or url should go in the {}'s for \email and \homepage.
+% Please use the appropriate macro foreach each type of information
+
+% \affiliation command applies to all authors since the last
+% \affiliation command. The \affiliation command should follow the
+% other information
+% \affiliation can be followed by \email, \homepage, \thanks as well.
+\author{Luis Miguel Vargas Calderon}
+\email[]{miguel.vargas@unc.edu.ar}
+%\homepage[]{Your web page}
+%\thanks{}
+%\altaffiliation{}
+%\affiliation{}
+\affiliation{Facultad de Matem\'atica, Astronom\'ia, F\'isica y Computaci\'on, Universidad Nacional de C\'ordoba, Ciudad Universitaria, 5000 C\'ordoba, Argentina}
+
+%Collaboration name if desired (requires use of superscriptaddress
+%option in \documentclass). \noaffiliation is required (may also be
+%used with the \author command).
+%\collaboration can be followed by \email, \homepage, \thanks as well.
+%\collaboration{Juan Perez}
+%\noaffiliation
+
+\date{\today}
+
+\begin{abstract}
+Este proyecto tiene como objetivo construir un modelo robusto que clasifique con precisión el conjunto de datos Fashion-MNIST y, al mismo tiempo, desarrollar habilidades prácticas en el uso de PyTorch y el diseño de redes neuronales profundas.
+\end{abstract}
+
+% insert suggested keywords - APS authors don't need to do this
+%\keywords{}
+
+%\maketitle must follow title, authors, abstract, and keywords
+\maketitle
+
+\section{Introducción}
+
+En el campo del aprendizaje automático, el conjunto de datos Fashion-MNIST se ha convertido en un recurso popular para evaluar algoritmos de clasificación de imágenes. Fashion-MNIST es un reemplazo más complejo para el clásico MNIST, compuesto por imágenes en escala de grises de 28 x 28 píxeles, (ver figura ~\ref{fig1}), que representan artículos de ropa, como camisetas, pantalones y zapatos, distribuidos en 10 categorías. Este conjunto de datos ofrece un desafío ideal para probar la capacidad de las redes neuronales de capturar patrones más complejos que los que se encuentran en los dígitos numéricos de MNIST.
+
+El objetivo de este proyecto es diseñar e implementar una red neuronal multicapa utilizando la librería de código abierto de aprendizaje automático desarrollada por Facebook: PyTorch, capaz de aprender y modelar eficazmente las imágenes de Fashion-MNIST. A través de un proceso de entrenamiento supervisado, la red neuronal se optimiza mediante técnicas de descenso por gradiente y se estructura con capas ocultas que utilizan la función de activación ReLU para capturar las no linealidades en los datos. La capa de salida emplea la función softmax para clasificar las imágenes en una de las 10 categorías.
+
+En este trabajo se han explorado estrategias de regularización y ajustes de hiperparámetros para mejorar la capacidad generalizadora de la red. La implementación en PyTorch permite un desarrollo flexible y eficiente, aprovechando las capacidades de optimización y la simplicidad de uso de la biblioteca. Con esta red, se busca demostrar la viabilidad de las arquitecturas de redes neuronales para resolver problemas de clasificación de imágenes en conjuntos de datos de mediana complejidad como Fashion-MNIST~\cite{FashionMNIST}.
+\section{Teoría e Implementación}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=.4]{figs/practico2/clasificacion_de_prendas.png}
+%\vspace{-0.25cm}
+\caption{un conjunto aleatorio de 9 imágenes leídas del dataset. \label{fig1}}
+\end{figure}
+
+
+A continuación se describe la implementación y estructura de la red neuronal.
+El código presentado define una clase llamada \textbf{NeuralNetwork} que implementa una red neuronal multicapa (MLP) utilizando la biblioteca PyTorch.\newline
+
+
+\begin{small}
+\begin{verbatim}
+
+class NeuralNetwork(nn.Module):
+    def __init__(
+        self, 
+        input_size,
+        hidden_sizes,
+        output_size,
+        dropout
+    ):
+        super().__init__()
+        prev_size = input_size
+        layers = [nn.Flatten()]
+        for size in hidden_sizes:
+            layers.append(nn.Linear(prev_size, size))
+            layers.append(nn.ReLU())
+            layers.append(nn.Dropout(dropout))
+            prev_size = size
+        layers.append(nn.Linear(prev_size, output_size))
+        self.model = nn.Sequential(*layers)
+
+    def forward(self, x):
+        return self.model(x)
+\end{verbatim}
+\end{small}
+
+
+La clase NeuralNetwork hereda de nn.Module, la clase base en PyTorch, lo que permite que la clase sea tratada como un módulo de PyTorch. Esto es necesario para que la red tenga funcionalidades integradas, como el uso de forward y la capacidad de almacenar parámetros y calcular gradientes.
+
+\begin{itemize}
+    \item \textbf{\_\_init\_\_}: Es el método inicializador de la clase, donde se define la estructura de la red. recibe los siguientes parámetros:
+     \begin{itemize}
+        \item \textbf{input\_size}: Número de entradas en la primera capa. Para nuestro caso es un total de 28 x 28 flotantes que representan los pixeles de la imagen.
+        \item \textbf{hidden\_sizes}: Es una lista de valores enteros que representa el numero de capas y de neuronas por cada capa. Por ejemplo hidden\_sizes=[128, 64, 32] representan 3 capas ocultas con 128, 64 y 32 neuronas respectivamente.
+        \item \textbf{output\_size}: Valor entero. Es el número de neuronas en la capa de salida. En este caso 10, que representa cada una de las clases a clasificar.
+        \item \textbf{dropout}: Probabilidad de "dropout" que se aplicará para la regularización de las capas ocultas.
+    \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+  \item \textbf{implementación}: La idea es generar una lista de capas que serán ejecutas en secuencia. Cada uno de estos elementos son módulos de PyTorch.
+  \begin{itemize}
+    \item \textbf{nn.Flatten()}: Este modulo de PyTorch se aplica solo a la primera capa, y su objetivo es aplanar la primera capa de entrada para convertirla en un vector de una dimensión, lo cual es útil cuando se trabaja con imágenes u otras entradas multidimensionales. Para el caso Fashion-MNIST convierte la matriz de tamaño 28 x 28 a un vector unidimensional de tamaño 1 x 784. 
+    \item \textbf{Bucle for size in hidden\_sizes}: Se agregan capas lineales (nn.Linear) a las capas intermedias que conectan la salida de una capa a la siguiente. Se añade nn.ReLU() para aplicar la función de activación ReLU. Se incluye nn.Dropout(dropout) para evitar el sobreajuste durante el entrenamiento. La variable prev\_size se actualiza para reflejar el tamaño de la capa actual y permitir que la siguiente capa tenga las dimensiones correctas.
+    \item \textbf{Capa de salida}: Se añade una última capa nn.Linear que conecta la última capa oculta con la salida.
+    \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+  \item \textbf{Método forward}: Este método define cómo los datos fluyen a través de la red. La función toma una entrada X y la pasa a través de self.model, que es el modelo secuencial definido en \_\_init\_\_.
+Devuelve la salida procesada por la red.
+\end{itemize}
+
+Esta implementación tiene la ventaja de que permite definir la estructura de la red, inclusive en tiempo de ejecución, a través de de los hiperparámetros proporcionados. 
+
+Los hiperparámetros en una red neuronal son valores que el diseñador del modelo debe establecer antes del entrenamiento. A diferencia de los parámetros que la red aprende durante el entrenamiento (como los pesos y sesgos), los hiperparámetros no se optimizan de manera automática, sino que deben seleccionarse manualmente o mediante técnicas de optimización. Estos tienen un gran impacto en el rendimiento y la eficiencia del modelo. 
+A continuación se detallan los hiperparámetros utilizados para este trabajo:
+
+\begin{itemize}
+    \item \textbf{Épocas}: Es el número de veces que el modelo recorre todo el conjunto de datos de entrenamiento. Aumentar el número de épocas permite que el modelo aprenda más, pero también incrementa el riesgo de sobreajuste si se entrena durante demasiadas iteraciones.
+
+    \item \textbf{Tamaño de Lote (Batch size)}: Controla cuántas muestras del conjunto de datos se procesan antes de actualizar los pesos del modelo durante el entrenamiento. Si el tamaño de lote es pequeño, cada iteración procesará menos datos, lo que hará que las actualizaciones de gradiente sean más frecuentes pero menos estables.
+    Si el tamaño de lote es grande, habrá menos iteraciones, pero las actualizaciones serán más estables debido a que utilizan más muestras para calcular el gradiente.
+    \item \textbf{Dropout}: Es una técnica de regularización que consiste en "desactivar" aleatoriamente un porcentaje de neuronas durante el entrenamiento en cada paso de propagación hacia adelante. Esto ayuda a prevenir el sobreajuste al evitar que las neuronas se vuelvan demasiado dependientes entre sí. La tasa de dropout se define como un valor entre 0 y 1, donde un valor de 0.2 indica que el 20\% de las neuronas se desactivan durante el entrenamiento.
+    
+    \item \textbf{Taza de aprendisaje (Learning rate)}: Representa la tasa de aprendizaje, es decir, el tamaño de los pasos que se toman al actualizar los pesos de la red durante el proceso de optimización. Un valor demasiado alto puede hacer que el modelo no converja, mientras que un valor muy bajo puede hacer que la convergencia sea demasiado lenta.
+    
+    \item \textbf{Numero de capas ocultas o intermedias}: Un mayor número de capas permite que la red aprenda características más complejas, pero también aumenta el tiempo de entrenamiento y el riesgo de sobreajuste si no se utiliza la regularización adecuada.
+
+    \item \textbf{Numero de neuronas por capa}: Un número mayor de neuronas aumenta la capacidad de la red para aprender representaciones complejas, pero también incrementa el número de parámetros y, por lo tanto, el costo computacional y el riesgo de sobreajuste.
+
+    \item \textbf{Optimizadores: SGD vs. Adam}:
+    \begin{itemize}
+        \item \textbf{SGD (Stochastic Gradient Descent)}: Es un optimizador que actualiza los pesos del modelo usando el gradiente de un solo batch de datos. Puede requerir un ajuste cuidadoso de la tasa de aprendizaje y puede ser lento en encontrar óptimos en espacios de alta dimensionalidad.
+        \item \textbf{Adam (Adaptive Moment Estimation)}: Es un optimizador más avanzado que ajusta automáticamente la tasa de aprendizaje para cada parámetro del modelo utilizando momentos de primer y segundo orden (media y varianza de los gradientes). Esto permite una convergencia más rápida y eficiente, especialmente en problemas con funciones de pérdida complejas. Generalmente requiere menos ajuste de hiperparámetros en comparación con SGD.
+    \end{itemize}
+\end{itemize}
+
+También son hiperparámetros las funciones de activación y las funciones de costo. En este trabajo se fijo ReLU como función de activación para las capas intermedias y softmax para la ultima capa. Como función de costo se utilizo la función de Entropía cruzada. La función softmax viene integrada en la función de costo.
+El tipo de dispositivo(device) es otro hiperparámetros y es la arquitectura de procesador en el que se ejecuta el código. Las opciones disponibles con "cpu", "gpu". 
+
+
+\section{Resultados}
+
+Se realizaron experimentos sobre la siguiente arquitectura computacional.
+Se ejecutaron estableciendo device en modo "cpu".
+\begin{small}
+\begin{center}
+\begin{tabular}{| c | c |}
+\hline
+Chip & Apple M1 Max \\  \hline
+Total Numero de núcleos & 10 (8 performance - 2 eficiencia) \\  \hline
+Memoria & 32 GB \\ \hline
+\end{tabular}
+\end{center}
+\end{small}
+
+ En la búsqueda de un trade-off entre precisión en la clasificación de imágenes vs computo computacional se realizaron experimentos utilizando las siguientes combinaciones de hiperparametros:\\
+
+\begin{small}
+\begin{itemize}
+    \item Número de épocas: 15, 30.    
+    \item Tamaño de batch: 100, 500.    
+    \item Número de capas y cantidad de neuronas por capa: [128],
+                        [256],
+                        [64, 32],
+                        [64, 32, 32].    
+    \item Dropout: 0,1, 0,2.    
+    \item Taza de aprendizaje: 0,001, 0002, 0005.    
+    \item Optimizador: Adam.    
+    \item Dispositivo: cpu.    
+    \item Función de costo : Entropía cruzada.    
+\end{itemize}
+\end{small}
+
+De este total de combinaciones de hiperparametros detallaremos tres ejemplos para evaluar
+el comportamiento de la función de perdida o costo durante el entrenamiento y luego durante validación y también tres ejemplos sobre el comportamiento de la precisión.\\
+
+\textbf{Análisis de Error promedio y precisión}\\
+
+
+Primera configuración:
+
+\begin{small}
+\begin{center}
+\begin{tabular}{| c | c |}
+\hline
+Capas ocultas & [256]\\ \hline
+Batch Size & 128 \\ \hline
+Épocas & 30 \\ \hline
+Learning Rate & 0.002 \\ \hline
+Dropout & 0.1 \\ \hline
+\end{tabular}
+\end{center}
+\end{small}
+
+
+Se observa en la figura ~\ref{fig2}. El error durante el entrenamiento (línea roja) desciende de forma constante y alcanza valores muy bajos.
+El error de evaluación en los datos de entrenamiento (línea verde) es cercano al error de entrenamiento.
+El error en los datos de validación (línea azul) es significativamente más alto que los otros errores hacia el final, con un aumento visible, lo que sugiere un posible sobreajuste.
+Conclusión: El learning rate intermedio (0.002), el mayor número de épocas (30), y el dropout más bajo (0.1) permitieron una buena optimización en los datos de entrenamiento, pero esto parece haber llevado a un sobreajuste, reflejado en el error creciente de validación.
+
+
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=.4]{figs/practico2/loss_device-cpu_hidden layers-[256]_batch size-128_epochs-30_learning rate-0.002_optimizer-adam_dropout-0.1.png}
+%\vspace{-0.25cm}
+\caption{\label{fig2}}
+\end{figure}
+
+
+Con respecto a la precisión (ver figura ~\ref{fig3}), se observa que para los hiperparametros dados, la línea roja (precisión durante el entrenamiento) y la linea verde (precisión con datos de entrenamiento) son similares entre si alcanzando un porcentaje alto de precisión (entre 93\% y 94\%) lo que puede indicar sobreajuste.
+Ademas ambas lineas son significativamente más altas que la línea azul (precisión en validación) lo que indica que, en este caso, la red ha aprendido a memorizar los datos de entrenamiento, pero no generaliza bien a nuevos datos.\\
+
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=.4]{figs/practico2/precision_device-cpu_hidden layers-[256]_batch size-128_epochs-30_learning rate-0.002_optimizer-adam_dropout-0.1.png}
+%\vspace{-0.25cm}
+\caption{\label{fig3}}
+\end{figure}
+
+
+
+Segunda configuración:\\ 
+
+\begin{small}
+\begin{center}
+\begin{tabular}{| c | c |}
+\hline
+Capas ocultas & [256]\\ \hline
+Batch Size & 512 \\ \hline
+Épocas & 15 \\ \hline
+Learning Rate & 0.001 \\ \hline
+Dropout & 0.2 \\ \hline
+\end{tabular}
+\end{center}
+\end{small}
+
+Para este experimento (ver figura ~\ref{fig4}) se redujo el numero de épocas a la mitad. modificando el resto de los hiperparametros se observa que el error durante el entrenamiento (línea roja) disminuye constantemente a lo largo de las épocas, pero menos abruptamente que en la primera gráfica.
+El error de evaluación en los datos de entrenamiento (línea verde) es casi igual al error durante el entrenamiento.
+El error en los datos de validación (línea azul) disminuye inicialmente pero se estabiliza y termina siendo algo mayor que los otros errores.
+Conclusión: Esta configuración tiene un learning rate más bajo (0.001) y menos épocas (15), lo que permite un entrenamiento más gradual. El menor número de épocas podría haber reducido el posible sobreajuste visto en la primera gráfica.
+
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=.4]{figs/practico2/loss_device-cpu_hidden layers-[256]_batch size-512_epochs-15_learning rate-0.001_optimizer-adam_dropout-0.2.png}
+%\vspace{-0.25cm}
+\caption{\label{fig4}}
+\end{figure}
+
+
+
+Con respecto a la precisión (ver figura ~\ref{fig5}) se observa un comportamiento mas uniforme en todas las lineas. Baja un poco la precisión con datos de entrenamiento pero se reduce la brecha con respecto a los datos de validación. Lo que significa que la reducción de épocas de 30 a 15 atenuó el soobreajuste.\\
+
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=.4]{figs/practico2/precision_device-cpu_hidden layers-[256]_batch size-512_epochs-15_learning rate-0.001_optimizer-adam_dropout-0.2.png}
+%\vspace{-0.25cm}
+\caption{\label{fig5}}
+\end{figure}
+
+
+
+Tercera configuración:
+
+\begin{small}
+\begin{center}
+\begin{tabular}{| c | c |}
+\hline
+Capas ocultas & [64, 32, 32]\\ \hline
+Batch Size & 512 \\ \hline
+Épocas & 30 \\ \hline
+Learning Rate & 0.005 \\ \hline
+Dropout & 0.2 \\ \hline
+\end{tabular}
+\end{center}
+\end{small}
+
+
+Se introdujeron dos capas de neuronas con 32 neuronas cada una, pero reduciendo la cantidad de neuronas en la primer capa a 64 neuronas. El objetivo de esta prueba fue evaluar como se comporta la red cuando se le da mas profundidad.
+Se observa que el error durante el entrenamiento (línea roja) disminuye rápidamente durante las primeras épocas y se estabiliza cerca de los valores finales.
+El error de evaluación en los datos de entrenamiento (línea verde) sigue una tendencia similar, pero es consistentemente menor que el error durante el entrenamiento.
+El error en los datos de validación (línea azul) es ligeramente mayor que en los datos de entrenamiento, pero se mantiene estable hacia el final.
+Conclusión: La red parece bien ajustada, ya que los errores de validación y entrenamiento están cercanos. Sin embargo, el learning rate relativamente alto (0.005) provoca una convergencia rápida pero menos estable hacia el final.
+Se observa un sobreajuste menor al de los expermientos anteriores.
+
+
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=.4]{figs/practico2/loss_device-cpu_hidden layers-[64, 32, 32]_batch size-512_epochs-30_learning rate-0.005_optimizer-adam_dropout-0.2.png}
+%\vspace{-0.25cm}
+\caption{\label{fig6}}
+\end{figure}
+
+Con respecto a la precisión (Ver figura ~\ref{fig7}) se observa que  la precisión durante entrenamiento y evaluación con datos de entrenamiento son consistentes entre si aunque bastante menores a los primeros experimentos (por debajo del 90\%)
+Sin embargo La curva de evaluación en datos de validación se comporta al igual que en los experimentos anteriores. La brecha entre todas las curvas es menor en este experimento. Indica que la red se esta adaptando y clasificando bien para nuevos datos.
+
+
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=.4]{figs/practico2/precision_device-cpu_hidden layers-[64, 32, 32]_batch size-512_epochs-30_learning rate-0.005_optimizer-adam_dropout-0.2.png}
+%\vspace{-0.25cm}
+\caption{\label{fig7}}
+\end{figure}
+
+
+Comparación General
+Primera configuración: Ofrece un equilibrio entre entrenamiento y validación, pero la convergencia podría ser más estable.
+Segunda configuración: Es más conservadora, con menos sobreajuste pero con un entrenamiento más lento y menos completo.
+Tercera configuración: Tiene el mejor desempeño en entrenamiento, con un sobreajuste leve con respecto a los datos de validación.
+
+
+\section{Conclusiones}
+
+La implementación de una red neuronal con capas ocultas y funciones de activación como ReLU es eficaz para problemas de clasificación para un conjunto de datos como el Fashion-MNIST.
+Desempeño durante el entrenamiento: Un buen entrenamiento requiere encontrar un equilibrio adecuado en la elección de hiperparámetros como la tasa de aprendizaje y el tamaño del lote. Estos factores afectan directamente la velocidad de convergencia y la estabilidad del entrenamiento.
+Curvas de aprendizaje: Las curvas de pérdida y precisión son útiles para monitorear el progreso del entrenamiento y detectar problemas como el sobreajuste. En las redes bien configuradas, la pérdida de entrenamiento debe disminuir de manera constante, y la pérdida de validación debe seguir una tendencia similar sin grandes divergencias.
+Uso de dropout: La inclusión de dropout como técnica de regularización reduce el riesgo de sobreajuste y mejora la generalización del modelo en datos de prueba.
+
+Precisión en el conjunto de validación/prueba: Una red neuronal con los hiperparámetros correctamente afinados debe mostrar una alta precisión en el conjunto de validación, indicando que ha aprendido de los datos de manera efectiva sin sobreajustarse.
+Generalización: El uso de un conjunto de prueba o validación al final del entrenamiento es crucial para evaluar cómo se desempeña el modelo con datos que no ha visto antes. Un buen resultado en este conjunto indica que el modelo es capaz de generalizar y no simplemente memorizar los datos de entrenamiento.
+Desafíos Comunes:
+
+Sobreajuste: Si la red muestra un desempeño mucho mejor en el conjunto de entrenamiento que en el de validación, es posible que esté sobreajustada. En tal caso, se deben considerar más técnicas de regularización o el uso de más datos de entrenamiento.
+
+Conclusión sobre el batch size
+Un batch size pequeño es útil en modelos que necesitan escapar de mínimos locales, pero puede ser más lento y ruidoso.
+Un batch size mediano proporciona un equilibrio ideal entre estabilidad y eficiencia.
+Un batch size grande es adecuado si el hardware tiene suficiente memoria y se busca un entrenamiento más rápido y estable, pero podría limitar la generalización del modelo.
+Para el caso de Fashion-MNIST, un batch size mediano (e.g., 128) suele ser una buena elección para combinar rendimiento y estabilidad.
+Relación entre Batch Size y Velocidad:
+
+Batch pequeño (e.g., 32): Mayor ruido en las actualizaciones, puede ser más lento pero permite generalización más robusta.
+Batch mediano (e.g., 64 o 128): Balance entre velocidad y estabilidad.
+Batch grande (e.g., 512 o más): Muy estable, pero puede quedarse atascado en mínimos locales y consumir más memoria.
+
+En conclusión, la implementación y el entrenamiento de redes neuronales requieren un enfoque equilibrado y cuidadoso en la selección de hiperparámetros y técnicas de regularización. Evaluar constantemente los resultados mediante métricas adecuadas y ajustar el modelo es esencial para obtener un rendimiento óptimo y una buena capacidad de generalización.
+
+
+% If in two-column mode, this environment will change to single-column
+% format so that long equations can be displayed. Use
+% sparingly.
+%\begin{widetext}
+% put long equation here
+%\end{widetext}
+
+% figures should be put into the text as floats.
+% Use the graphics or graphicx packages (distributed with LaTeX2e)
+% and the \includegraphics macro defined in those packages.
+% See the LaTeX Graphics Companion by Michel Goosens, Sebastian Rahtz,
+% and Frank Mittelbach for instance.
+%
+% Here is an example of the general form of a figure:
+% Fill in the caption in the braces of the \caption{} command. Put the label
+% that you will use with \ref{} command in the braces of the \label{} command.
+% Use the figure* environment if the figure should span across the
+% entire page. There is no need to do explicit centering.
+
+% \begin{figure}
+% \includegraphics{}%
+% \caption{\label{}}
+% \end{figure}
+
+% Surround figure environment with turnpage environment for landscape
+% figure
+% \begin{turnpage}
+% \begin{figure}
+% \includegraphics{}%
+% \caption{\label{}}
+% \end{figure}
+% \end{turnpage}
+
+% tables should appear as floats within the text
+%
+% Here is an example of the general form of a table:
+% Fill in the caption in the braces of the \caption{} command. Put the label
+% that you will use with \ref{} command in the braces of the \label{} command.
+% Insert the column specifiers (l, r, c, d, etc.) in the empty braces of the
+% \begin{tabular}{} command.
+% The ruledtabular enviroment adds doubled rules to table and sets a
+% reasonable default table settings.
+% Use the table* environment to get a full-width table in two-column
+% Add \usepackage{longtable} and the longtable (or longtable*}
+% environment for nicely formatted long tables. Or use the the [H]
+% placement option to break a long table (with less control than 
+% in longtable).
+% \begin{table}%[H] add [H] placement to break table across pages
+% \caption{\label{}}
+% \begin{ruledtabular}
+% \begin{tabular}{}
+% Lines of table here ending with \\
+% \end{tabular}
+% \end{ruledtabular}
+% \end{table}
+
+% Surround table environment with turnpage environment for landscape
+% table
+% \begin{turnpage}
+% \begin{table}
+% \caption{\label{}}
+% \begin{ruledtabular}
+% \begin{tabular}{}
+% \end{tabular}
+% \end{ruledtabular}
+% \end{table}
+% \end{turnpage}
+
+%\section{Aknowledgments}
+\section{Agradecimientos}
+
+\begin{acknowledgments}
+a FaMAF, siempre FaMAF y a la educación publica.
+\end{acknowledgments}
+% Create the reference section using BibTeX:
+\bibliography{ref}
+
+% Specify following sections are appendices. Use \appendix* if there
+% only one appendix.
+
+\onecolumngrid
+
+\appendix
+
+
+\end{document}
+%
+% ****** End of file apstemplate.tex ******
+

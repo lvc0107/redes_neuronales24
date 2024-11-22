@@ -2516,3 +2516,108 @@ Last eval avg loss   0.379614
 Last eval precision  0.866200
 ------------------------------
 Execution time       176.41645270799927
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [256]     
+Batch Size           100       
+Epochs               30        
+Learning Rate        0.002     
+Optimizer            Adam      
+Dropout              0.1       
+------------------------------
+Last train avg loss incorrect 0.181270
+Last train precision incorrect 0.931333
+Last train avg loss  0.153264
+Last train avg loss  0.941400
+Last eval avg loss   0.405623
+Last eval precision  0.886000
+------------------------------
+Execution time       201.26243291702121
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [256]     
+Batch Size           512       
+Epochs               15        
+Learning Rate        0.002     
+Optimizer            Adam      
+Dropout              0.1       
+------------------------------
+Last train avg loss incorrect 0.228582
+Last train precision incorrect 0.914850
+Last train avg loss  0.200023
+Last train avg loss  0.927000
+Last eval avg loss   0.337461
+Last eval precision  0.885100
+------------------------------
+Execution time       92.68689374998212
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [256]     
+Batch Size           128       
+Epochs               30        
+Learning Rate        0.002     
+Optimizer            Adam      
+Dropout              0.1       
+------------------------------
+Last train avg loss incorrect 0.172036
+Last train precision incorrect 0.933267
+Last train avg loss  0.158735
+Last train avg loss  0.940050
+Last eval avg loss   0.414727
+Last eval precision  0.881200
+------------------------------
+Execution time       196.97905754100066
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [256]     
+Batch Size           512       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.252136
+Last train precision incorrect 0.906167
+Last train avg loss  0.222243
+Last train avg loss  0.919983
+Last eval avg loss   0.325880
+Last eval precision  0.886400
+------------------------------
+Execution time       92.36763929200242
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           512       
+Epochs               30        
+Learning Rate        0.005     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.353500
+Last train precision incorrect 0.876633
+Last train avg loss  0.265646
+Last train avg loss  0.901917
+Last eval avg loss   0.367835
+Last eval precision  0.871400
+------------------------------
+Execution time       182.02994970802683
