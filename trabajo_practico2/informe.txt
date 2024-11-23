@@ -151,7 +151,7 @@ Este proyecto tiene como objetivo construir un modelo robusto que clasifique con
 
 \section{Introducción}
 
-En el campo del aprendizaje automático, el conjunto de datos Fashion-MNIST se ha convertido en un recurso popular para evaluar algoritmos de clasificación de imágenes. Fashion-MNIST es un reemplazo más complejo para el clásico MNIST, compuesto por imágenes en escala de grises de 28 x 28 píxeles, (ver figura ~\ref{fig1}), que representan artículos de ropa, como camisetas, pantalones y zapatos, distribuidos en 10 categorías. Este conjunto de datos ofrece un desafío ideal para probar la capacidad de las redes neuronales de capturar patrones más complejos que los que se encuentran en los dígitos numéricos de MNIST.
+En el campo del aprendizaje automático, el conjunto de datos Fashion-MNIST se ha convertido en un recurso popular para evaluar algoritmos de clasificación de imágenes. Fashion-MNIST es un reemplazo más complejo para el clásico MNIST, compuesto por imágenes en escala de grises de 28 x 28 píxeles, (ver figura~\ref{fig1}), que representan artículos de ropa, como camisetas, pantalones y zapatos, distribuidos en 10 categorías. Este conjunto de datos ofrece un desafío ideal para probar la capacidad de las redes neuronales de capturar patrones más complejos que los que se encuentran en los dígitos numéricos de MNIST.
 
 El objetivo de este proyecto es diseñar e implementar una red neuronal multicapa utilizando la librería de código abierto de aprendizaje automático desarrollada por Facebook: PyTorch, capaz de aprender y modelar eficazmente las imágenes de Fashion-MNIST. A través de un proceso de entrenamiento supervisado, la red neuronal se optimiza mediante técnicas de descenso por gradiente y se estructura con capas ocultas que utilizan la función de activación ReLU para capturar las no linealidades en los datos. La capa de salida emplea la función softmax para clasificar las imágenes en una de las 10 categorías.
 
@@ -308,7 +308,7 @@ Dropout & 0.1 \\ \hline
 \end{small}
 
 
-Se observa en la figura ~\ref{fig2}. El error durante el entrenamiento (línea roja) desciende de forma constante y alcanza valores muy bajos.
+Se observa en la figura~\ref{fig2}, que el error durante el entrenamiento (línea roja) desciende de forma constante y alcanza valores muy bajos.
 El error de evaluación en los datos de entrenamiento (línea verde) es cercano al error de entrenamiento.
 El error en los datos de validación (línea azul) es significativamente más alto que los otros errores hacia el final, con un aumento visible, lo que sugiere un posible sobreajuste.
 Conclusión: El learning rate intermedio (0.002), el mayor número de épocas (30), y el dropout más bajo (0.1) permitieron una buena optimización en los datos de entrenamiento, pero esto parece haber llevado a un sobreajuste, reflejado en el error creciente de validación.
@@ -323,9 +323,8 @@ Conclusión: El learning rate intermedio (0.002), el mayor número de épocas (3
 \end{figure}
 
 
-Con respecto a la precisión (ver figura ~\ref{fig3}), se observa que para los hiperparametros dados, la línea roja (precisión durante el entrenamiento) y la linea verde (precisión con datos de entrenamiento) son similares entre si alcanzando un porcentaje alto de precisión (entre 93\% y 94\%) lo que puede indicar sobreajuste.
-Ademas ambas lineas son significativamente más altas que la línea azul (precisión en validación) lo que indica que, en este caso, la red ha aprendido a memorizar los datos de entrenamiento, pero no generaliza bien a nuevos datos.\\
-
+Con respecto a la precisión (ver figura~\ref{fig3}), se observa que para los hiperparametros dados, la línea roja (precisión durante el entrenamiento) y la linea verde (precisión con datos de entrenamiento) son similares entre si alcanzando un porcentaje alto de precisión (entre 93\% y 94\%). Ambas lineas son significativamente más altas que la línea azul (precisión en validación), lo que puede indicar sobreajuste.\\
+Esto significa, que en este caso, la red ha aprendido a memorizar los datos de entrenamiento, pero no generaliza bien a nuevos datos.\\
 
 \begin{figure}[h!]
 \centering
@@ -351,7 +350,7 @@ Dropout & 0.2 \\ \hline
 \end{center}
 \end{small}
 
-Para este experimento (ver figura ~\ref{fig4}) se redujo el numero de épocas a la mitad. modificando el resto de los hiperparametros se observa que el error durante el entrenamiento (línea roja) disminuye constantemente a lo largo de las épocas, pero menos abruptamente que en la primera gráfica.
+Para este experimento (ver figura~\ref{fig4}) se redujo el numero de épocas a la mitad. modificando el resto de los hiperparametros se observa que el error durante el entrenamiento (línea roja) disminuye constantemente a lo largo de las épocas, pero menos abruptamente que en la primera gráfica.
 El error de evaluación en los datos de entrenamiento (línea verde) es casi igual al error durante el entrenamiento.
 El error en los datos de validación (línea azul) disminuye inicialmente pero se estabiliza y termina siendo algo mayor que los otros errores.
 Conclusión: Esta configuración tiene un learning rate más bajo (0.001) y menos épocas (15), lo que permite un entrenamiento más gradual. El menor número de épocas podría haber reducido el posible sobreajuste visto en la primera gráfica.
@@ -366,7 +365,7 @@ Conclusión: Esta configuración tiene un learning rate más bajo (0.001) y meno
 
 
 
-Con respecto a la precisión (ver figura ~\ref{fig5}) se observa un comportamiento mas uniforme en todas las lineas. Baja un poco la precisión con datos de entrenamiento pero se reduce la brecha con respecto a los datos de validación. Lo que significa que la reducción de épocas de 30 a 15 atenuó el soobreajuste.\\
+Con respecto a la precisión (ver figura~\ref{fig5}), se observa un comportamiento mas uniforme en todas las lineas. Baja un poco la precisión con datos de entrenamiento pero se reduce la brecha con respecto a los datos de validación. Lo que significa que la reducción de épocas de 30 a 15 atenuó el sobreajuste.\\
 
 
 \begin{figure}[h!]
@@ -378,7 +377,7 @@ Con respecto a la precisión (ver figura ~\ref{fig5}) se observa un comportamien
 
 
 
-Tercera configuración:
+Tercera configuración:\\
 
 \begin{small}
 \begin{center}
@@ -394,12 +393,13 @@ Dropout & 0.2 \\ \hline
 \end{small}
 
 
-Se introdujeron dos capas de neuronas con 32 neuronas cada una, pero reduciendo la cantidad de neuronas en la primer capa a 64 neuronas. El objetivo de esta prueba fue evaluar como se comporta la red cuando se le da mas profundidad.
-Se observa que el error durante el entrenamiento (línea roja) disminuye rápidamente durante las primeras épocas y se estabiliza cerca de los valores finales.
+Se introdujeron dos capas de neuronas con 32 neuronas cada una, pero reduciendo la cantidad de neuronas en la primer capa a 64 neuronas. El objetivo de esta prueba es evaluar como se comporta la red cuando se construye con más profundidad.\\
+
+Se observa en la figura~\ref{fig6}, que el error durante el entrenamiento (línea roja) disminuye rápidamente durante las primeras épocas y se estabiliza cerca de los valores finales.
 El error de evaluación en los datos de entrenamiento (línea verde) sigue una tendencia similar, pero es consistentemente menor que el error durante el entrenamiento.
 El error en los datos de validación (línea azul) es ligeramente mayor que en los datos de entrenamiento, pero se mantiene estable hacia el final.
 Conclusión: La red parece bien ajustada, ya que los errores de validación y entrenamiento están cercanos. Sin embargo, el learning rate relativamente alto (0.005) provoca una convergencia rápida pero menos estable hacia el final.
-Se observa un sobreajuste menor al de los expermientos anteriores.
+Se observa un sobreajuste menor al de los experimentos anteriores.\\
 
 
 
@@ -410,51 +410,46 @@ Se observa un sobreajuste menor al de los expermientos anteriores.
 \caption{\label{fig6}}
 \end{figure}
 
-Con respecto a la precisión (Ver figura ~\ref{fig7}) se observa que  la precisión durante entrenamiento y evaluación con datos de entrenamiento son consistentes entre si aunque bastante menores a los primeros experimentos (por debajo del 90\%)
+
+Con respecto a la precisión (ver figura~\ref{fig7}), se observa que la precisión durante entrenamiento y evaluación con datos de entrenamiento son consistentes entre si aunque bastante menores a los primeros experimentos (por debajo del 90\%)
 Sin embargo La curva de evaluación en datos de validación se comporta al igual que en los experimentos anteriores. La brecha entre todas las curvas es menor en este experimento. Indica que la red se esta adaptando y clasificando bien para nuevos datos.
 
 
 
 \begin{figure}[h!]
-\centering
 \includegraphics[scale=.4]{figs/practico2/precision_device-cpu_hidden layers-[64, 32, 32]_batch size-512_epochs-30_learning rate-0.005_optimizer-adam_dropout-0.2.png}
 %\vspace{-0.25cm}
 \caption{\label{fig7}}
 \end{figure}
 
 
-Comparación General
-Primera configuración: Ofrece un equilibrio entre entrenamiento y validación, pero la convergencia podría ser más estable.
-Segunda configuración: Es más conservadora, con menos sobreajuste pero con un entrenamiento más lento y menos completo.
-Tercera configuración: Tiene el mejor desempeño en entrenamiento, con un sobreajuste leve con respecto a los datos de validación.
-
-
 \section{Conclusiones}
 
-La implementación de una red neuronal con capas ocultas y funciones de activación como ReLU es eficaz para problemas de clasificación para un conjunto de datos como el Fashion-MNIST.
-Desempeño durante el entrenamiento: Un buen entrenamiento requiere encontrar un equilibrio adecuado en la elección de hiperparámetros como la tasa de aprendizaje y el tamaño del lote. Estos factores afectan directamente la velocidad de convergencia y la estabilidad del entrenamiento.
-Curvas de aprendizaje: Las curvas de pérdida y precisión son útiles para monitorear el progreso del entrenamiento y detectar problemas como el sobreajuste. En las redes bien configuradas, la pérdida de entrenamiento debe disminuir de manera constante, y la pérdida de validación debe seguir una tendencia similar sin grandes divergencias.
-Uso de dropout: La inclusión de dropout como técnica de regularización reduce el riesgo de sobreajuste y mejora la generalización del modelo en datos de prueba.
+\textbf{Comparación entre los tres experimentos}:\\
 
-Precisión en el conjunto de validación/prueba: Una red neuronal con los hiperparámetros correctamente afinados debe mostrar una alta precisión en el conjunto de validación, indicando que ha aprendido de los datos de manera efectiva sin sobreajustarse.
-Generalización: El uso de un conjunto de prueba o validación al final del entrenamiento es crucial para evaluar cómo se desempeña el modelo con datos que no ha visto antes. Un buen resultado en este conjunto indica que el modelo es capaz de generalizar y no simplemente memorizar los datos de entrenamiento.
-Desafíos Comunes:
+Primera configuración: El número de épocas parece producir un sobreajuste.\\
+Segunda configuración: La reducción de épocas mejora el sobreajuste. pero la precisión es más baja que en el primer experimento.\\
+Tercera configuración: Se mejora bastante el sobreajuste pero la precisión es peor que en los experimentos anteriores.\\
 
-Sobreajuste: Si la red muestra un desempeño mucho mejor en el conjunto de entrenamiento que en el de validación, es posible que esté sobreajustada. En tal caso, se deben considerar más técnicas de regularización o el uso de más datos de entrenamiento.
+\textbf{Conclusiones particulares}:\\
 
-Conclusión sobre el batch size
-Un batch size pequeño es útil en modelos que necesitan escapar de mínimos locales, pero puede ser más lento y ruidoso.
-Un batch size mediano proporciona un equilibrio ideal entre estabilidad y eficiencia.
-Un batch size grande es adecuado si el hardware tiene suficiente memoria y se busca un entrenamiento más rápido y estable, pero podría limitar la generalización del modelo.
-Para el caso de Fashion-MNIST, un batch size mediano (e.g., 128) suele ser una buena elección para combinar rendimiento y estabilidad.
+\textbf{Desempeño durante el entrenamiento:} Un buen entrenamiento requiere encontrar un equilibrio adecuado en la elección de hiperparámetros como la tasa de aprendizaje y el tamaño del lote. Estos factores afectan directamente la velocidad de convergencia y la estabilidad del entrenamiento.\\
+\textbf{Curvas de aprendizaje:} Las curvas de pérdida y precisión son útiles para monitorear el progreso del entrenamiento y detectar problemas como el sobreajuste. En las redes bien configuradas, la pérdida de entrenamiento debe disminuir de manera constante, y la pérdida de validación debe seguir una tendencia similar sin grandes divergencias.\\
+\textbf{Uso de dropout:} La inclusión de dropout como técnica de regularización reduce el riesgo de sobreajuste y mejora la generalización del modelo en datos de prueba.\\
+\textbf{Precisión en el conjunto de validación/prueba:} Una red neuronal con los hiperparámetros correctamente afinados debe mostrar una alta precisión en el conjunto de validación, indicando que ha aprendido de los datos de manera efectiva sin sobreajustarse.\\
+\textbf{Generalización:} El uso de un conjunto de prueba o validación al final del entrenamiento es crucial para evaluar cómo se desempeña el modelo con datos que no ha visto antes. Un buen resultado en este conjunto indica que el modelo es capaz de generalizar y no simplemente memorizar los datos de entrenamiento.\\
+\textbf{Conclusión sobre el batch size}:Para el caso de Fashion-MNIST, un batch size mediano (e.g., 128) parece ser una buena elección para combinar rendimiento y estabilidad.
 Relación entre Batch Size y Velocidad:
 
-Batch pequeño (e.g., 32): Mayor ruido en las actualizaciones, puede ser más lento pero permite generalización más robusta.
-Batch mediano (e.g., 64 o 128): Balance entre velocidad y estabilidad.
-Batch grande (e.g., 512 o más): Muy estable, pero puede quedarse atascado en mínimos locales y consumir más memoria.
+Batch pequeño (e.g., 32): Mayor ruido en las actualizaciones, puede ser más lento pero permite generalización más robusta.\\
+Batch mediano (e.g., 64 o 128): Balance entre velocidad y estabilidad.\\
+Batch grande (e.g., 512 o más): Muy estable, pero puede quedarse atascado en mínimos locales y consumir más memoria.\\
+
+
+\textbf{Conclusiones generales}:\\
 
 En conclusión, la implementación y el entrenamiento de redes neuronales requieren un enfoque equilibrado y cuidadoso en la selección de hiperparámetros y técnicas de regularización. Evaluar constantemente los resultados mediante métricas adecuadas y ajustar el modelo es esencial para obtener un rendimiento óptimo y una buena capacidad de generalización.
-
+La implementación de una red neuronal con capas ocultas y funciones de activación como ReLU es eficaz para problemas de clasificación para un conjunto de datos como el Fashion-MNIST.\\
 
 % If in two-column mode, this environment will change to single-column
 % format so that long equations can be displayed. Use
