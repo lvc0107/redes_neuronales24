@@ -433,7 +433,6 @@ Tercera configuración: Se mejora bastante el sobreajuste pero la precisión es 
 
 \textbf{Conclusiones particulares}:\\
 
-\textbf{Desempeño durante el entrenamiento:} Un buen entrenamiento requiere encontrar un equilibrio adecuado en la elección de hiperparámetros como la tasa de aprendizaje y el tamaño del lote. Estos factores afectan directamente la velocidad de convergencia y la estabilidad del entrenamiento.\\
 \textbf{Curvas de aprendizaje:} Las curvas de pérdida y precisión son útiles para monitorear el progreso del entrenamiento y detectar problemas como el sobreajuste. En las redes bien configuradas, la pérdida de entrenamiento debe disminuir de manera constante, y la pérdida de validación debe seguir una tendencia similar sin grandes divergencias.\\
 \textbf{Uso de dropout:} La inclusión de dropout como técnica de regularización reduce el riesgo de sobreajuste y mejora la generalización del modelo en datos de prueba.\\
 \textbf{Precisión en el conjunto de validación/prueba:} Una red neuronal con los hiperparámetros correctamente afinados debe mostrar una alta precisión en el conjunto de validación, indicando que ha aprendido de los datos de manera efectiva sin sobreajustarse.\\
@@ -447,8 +446,8 @@ Batch grande (e.g., 512 o más): Muy estable, pero puede quedarse atascado en m�
 
 
 \textbf{Conclusiones generales}:\\
-
-En conclusión, la implementación y el entrenamiento de redes neuronales requieren un enfoque equilibrado y cuidadoso en la selección de hiperparámetros y técnicas de regularización. Evaluar constantemente los resultados mediante métricas adecuadas y ajustar el modelo es esencial para obtener un rendimiento óptimo y una buena capacidad de generalización.
+ 
+Un buen entrenamiento requiere encontrar un equilibrio adecuado en la elección de hiperparámetros como la tasa de aprendizaje y el tamaño del lote. Estos factores afectan directamente la velocidad de convergencia y la estabilidad del entrenamiento. Se debe evaluar constantemente los resultados mediante métricas adecuadas y ajustar el modelo es esencial para obtener un rendimiento óptimo y una buena capacidad de generalización.
 La implementación de una red neuronal con capas ocultas y funciones de activación como ReLU es eficaz para problemas de clasificación para un conjunto de datos como el Fashion-MNIST.\\
 
 % If in two-column mode, this environment will change to single-column
