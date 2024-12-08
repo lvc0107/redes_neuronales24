@@ -2621,3 +2621,528 @@ Last eval avg loss   0.367835
 Last eval precision  0.871400
 ------------------------------
 Execution time       182.02994970802683
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           512       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.388375
+Last train precision incorrect 0.867633
+Last train avg loss  0.305906
+Last train avg loss  0.888333
+Last eval avg loss   0.372454
+Last eval precision  0.868500
+------------------------------
+Execution time       88.21334362499874
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           512       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.390557
+Last train precision incorrect 0.864733
+Last train avg loss  0.308677
+Last train avg loss  0.889283
+Last eval avg loss   0.378733
+Last eval precision  0.865300
+------------------------------
+Execution time       89.02548508399923
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           128       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.367818
+Last train precision incorrect 0.870550
+Last train avg loss  0.287119
+Last train avg loss  0.895200
+Last eval avg loss   0.370565
+Last eval precision  0.868800
+------------------------------
+Execution time       93.14507924999998
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [32]      
+Batch Size           512       
+Epochs               2         
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.578568
+Last train precision incorrect 0.794817
+Last train avg loss  0.478572
+Last train avg loss  0.829233
+Last eval avg loss   0.501682
+Last eval precision  0.818800
+------------------------------
+Execution time       11.77557466700091
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [32]      
+Batch Size           512       
+Epochs               2         
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.573407
+Last train precision incorrect 0.799400
+Last train avg loss  0.471207
+Last train avg loss  0.834017
+Last eval avg loss   0.501473
+Last eval precision  0.818100
+------------------------------
+Execution time       11.924558833998162
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [32]      
+Batch Size           512       
+Epochs               2         
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.570475
+Last train precision incorrect 0.798283
+Last train avg loss  0.472346
+Last train avg loss  0.834050
+Last eval avg loss   0.500461
+Last eval precision  0.819700
+------------------------------
+Execution time       11.766922167000303
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [32]      
+Batch Size           512       
+Epochs               2         
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.577983
+Last train precision incorrect 0.797617
+Last train avg loss  0.479144
+Last train avg loss  0.831833
+Last eval avg loss   0.510175
+Last eval precision  0.818500
+------------------------------
+Execution time       11.837593666998146
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [32]      
+Batch Size           512       
+Epochs               2         
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.565339
+Last train precision incorrect 0.803117
+Last train avg loss  0.464543
+Last train avg loss  0.835350
+Last eval avg loss   0.492012
+Last eval precision  0.820400
+------------------------------
+Execution time       11.836206165997282
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [32]      
+Batch Size           512       
+Epochs               2         
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.589450
+Last train precision incorrect 0.790300
+Last train avg loss  0.474726
+Last train avg loss  0.834333
+Last eval avg loss   0.501501
+Last eval precision  0.821400
+------------------------------
+Execution time       11.81082691699703
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           512       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.394045
+Last train precision incorrect 0.863700
+Last train avg loss  0.310604
+Last train avg loss  0.888083
+Last eval avg loss   0.377837
+Last eval precision  0.865800
+------------------------------
+Execution time       1622.0012376249979
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           512       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.392732
+Last train precision incorrect 0.863833
+Last train avg loss  0.308141
+Last train avg loss  0.889000
+Last eval avg loss   0.372117
+Last eval precision  0.867000
+------------------------------
+Execution time       89.55994445800025
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           128       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.369941
+Last train precision incorrect 0.871267
+Last train avg loss  0.283710
+Last train avg loss  0.895067
+Last eval avg loss   0.362781
+Last eval precision  0.870900
+------------------------------
+Execution time       92.05019604100016
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           128       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.371541
+Last train precision incorrect 0.869817
+Last train avg loss  0.279398
+Last train avg loss  0.898417
+Last eval avg loss   0.357171
+Last eval precision  0.872300
+------------------------------
+Execution time       89.8028917920019
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           128       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.368785
+Last train precision incorrect 0.871200
+Last train avg loss  0.288580
+Last train avg loss  0.894500
+Last eval avg loss   0.362377
+Last eval precision  0.870400
+------------------------------
+Execution time       90.3646162920013
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           128       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.369339
+Last train precision incorrect 0.870683
+Last train avg loss  0.283781
+Last train avg loss  0.895450
+Last eval avg loss   0.363841
+Last eval precision  0.870200
+------------------------------
+Execution time       90.04505995799991
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           128       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.365711
+Last train precision incorrect 0.871467
+Last train avg loss  0.283740
+Last train avg loss  0.895633
+Last eval avg loss   0.360254
+Last eval precision  0.870400
+------------------------------
+Execution time       90.18717816700155
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           128       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.376245
+Last train precision incorrect 0.866850
+Last train avg loss  0.289639
+Last train avg loss  0.896517
+Last eval avg loss   0.359596
+Last eval precision  0.872900
+------------------------------
+Execution time       90.33783645800213
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           128       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.365472
+Last train precision incorrect 0.870067
+Last train avg loss  0.282279
+Last train avg loss  0.893817
+Last eval avg loss   0.363977
+Last eval precision  0.870100
+------------------------------
+Execution time       90.553936332999
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           128       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.369737
+Last train precision incorrect 0.870800
+Last train avg loss  0.280633
+Last train avg loss  0.896133
+Last eval avg loss   0.366900
+Last eval precision  0.871700
+------------------------------
+Execution time       90.44615616699957
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           128       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.363514
+Last train precision incorrect 0.873433
+Last train avg loss  0.277856
+Last train avg loss  0.899967
+Last eval avg loss   0.355248
+Last eval precision  0.872600
+------------------------------
+Execution time       89.99241299999994
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           128       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.365314
+Last train precision incorrect 0.871733
+Last train avg loss  0.282513
+Last train avg loss  0.896400
+Last eval avg loss   0.362193
+Last eval precision  0.870500
+------------------------------
+Execution time       90.36172325000007
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           128       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.371029
+Last train precision incorrect 0.870467
+Last train avg loss  0.284349
+Last train avg loss  0.896267
+Last eval avg loss   0.360544
+Last eval precision  0.871000
+------------------------------
+Execution time       89.93417570800011
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [64, 32, 32]
+Batch Size           128       
+Epochs               15        
+Learning Rate        0.001     
+Optimizer            Adam      
+Dropout              0.2       
+------------------------------
+Last train avg loss incorrect 0.367618
+Last train precision incorrect 0.871800
+Last train avg loss  0.287214
+Last train avg loss  0.894433
+Last eval avg loss   0.369984
+Last eval precision  0.867800
+------------------------------
+Execution time       99.6821246249965
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [256]     
+Batch Size           128       
+Epochs               30        
+Learning Rate        0.002     
+Optimizer            Adam      
+Dropout              0.1       
+------------------------------
+Last train avg loss incorrect 0.172548
+Last train precision incorrect 0.934233
+Last train avg loss  0.139673
+Last train avg loss  0.947600
+Last eval avg loss   0.415639
+Last eval precision  0.887100
+------------------------------
+Execution time       195.0662740830012
+------------------------------
+
+
+Hyperparameter       Value     
+------------------------------
+Device               cpu       
+Hidden Layers        [256]     
+Batch Size           128       
+Epochs               15        
+Learning Rate        0.002     
+Optimizer            Adam      
+Dropout              0.1       
+------------------------------
+Last train avg loss incorrect 0.231918
+Last train precision incorrect 0.912567
+Last train avg loss  0.211184
+Last train avg loss  0.919750
+Last eval avg loss   0.366884
+Last eval precision  0.875000
+------------------------------
+Execution time       100.56606775000546

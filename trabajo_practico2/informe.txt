@@ -34,9 +34,10 @@
 \usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage{caption}
-\usepackage[font={small,it}]{caption}
- \usepackage{url}
+\usepackage[font={small}]{caption}
+    
 
+ \usepackage{url}
 
 \usepackage{epstopdf}
 %\usepackage{amsmath}% http://ctan.org/pkg/amsmath
@@ -342,23 +343,23 @@ Segunda configuración:\\
 \begin{tabular}{| c | c |}
 \hline
 Capas ocultas & [256]\\ \hline
-Batch Size & 512 \\ \hline
+Batch Size & 128 \\ \hline
 Épocas & 15 \\ \hline
-Learning Rate & 0.001 \\ \hline
-Dropout & 0.2 \\ \hline
+Learning Rate & 0.002 \\ \hline
+Dropout & 0.1 \\ \hline
 \end{tabular}
 \end{center}
 \end{small}
 
-Para este experimento (ver figura~\ref{fig4}) se redujo el numero de épocas a la mitad. modificando el resto de los hiperparametros se observa que el error durante el entrenamiento (línea roja) disminuye constantemente a lo largo de las épocas, pero menos abruptamente que en la primera gráfica.
-El error de evaluación en los datos de entrenamiento (línea verde) es casi igual al error durante el entrenamiento.
+Para este experimento (ver figura~\ref{fig4}) se redujo el numero de épocas a la mitad, sin modificar el resto de los hiperparametros. Se observa que el error durante el entrenamiento (línea roja) disminuye constantemente a lo largo de las épocas, pero menos abruptamente que en la primera gráfica.
+El error de evaluación en los datos de entrenamiento (línea verde) es similar al error durante el entrenamiento.
 El error en los datos de validación (línea azul) disminuye inicialmente pero se estabiliza y termina siendo algo mayor que los otros errores.
-Conclusión: Esta configuración tiene un learning rate más bajo (0.001) y menos épocas (15), lo que permite un entrenamiento más gradual. El menor número de épocas podría haber reducido el posible sobreajuste visto en la primera gráfica.
+Conclusión: El menor número de épocas podría haber reducido el posible sobreajuste visto en la primera gráfica.
 
 
 \begin{figure}[h!]
 \centering
-\includegraphics[scale=.4]{figs/practico2/loss_device-cpu_hidden layers-[256]_batch size-512_epochs-15_learning rate-0.001_optimizer-adam_dropout-0.2.png}
+\includegraphics[scale=.4]{figs/practico2/loss_device-cpu_hidden layers-[256]_batch size-128_epochs-15_learning rate-0.002_optimizer-adam_dropout-0.1.png}
 %\vspace{-0.25cm}
 \caption{\label{fig4}}
 \end{figure}
@@ -370,42 +371,43 @@ Con respecto a la precisión (ver figura~\ref{fig5}), se observa un comportamien
 
 \begin{figure}[h!]
 \centering
-\includegraphics[scale=.4]{figs/practico2/precision_device-cpu_hidden layers-[256]_batch size-512_epochs-15_learning rate-0.001_optimizer-adam_dropout-0.2.png}
+\includegraphics[scale=.4]{figs/practico2/precision_device-cpu_hidden layers-[256]_batch size-128_epochs-15_learning rate-0.002_optimizer-adam_dropout-0.1.png}
 %\vspace{-0.25cm}
 \caption{\label{fig5}}
 \end{figure}
 
 
 
-Tercera configuración:\\
+Tercera configuración:
 
 \begin{small}
 \begin{center}
 \begin{tabular}{| c | c |}
 \hline
 Capas ocultas & [64, 32, 32]\\ \hline
-Batch Size & 512 \\ \hline
-Épocas & 30 \\ \hline
-Learning Rate & 0.005 \\ \hline
+Batch Size & 128 \\ \hline
+Épocas & 15 \\ \hline
+Learning Rate & 0.001 \\ \hline
 Dropout & 0.2 \\ \hline
 \end{tabular}
 \end{center}
 \end{small}
 
 
-Se introdujeron dos capas de neuronas con 32 neuronas cada una, pero reduciendo la cantidad de neuronas en la primer capa a 64 neuronas. El objetivo de esta prueba es evaluar como se comporta la red cuando se construye con más profundidad.\\
+Se introdujeron dos capas de neuronas con 32 neuronas cada una, pero reduciendo la cantidad de neuronas en la primer capa a 64 neuronas.
+Tambien se modificaron levemente el Learning Rate y Dropout. 
+El objetivo de esta prueba es evaluar como se comporta la red cuando se construye con más profundidad.\\
 
 Se observa en la figura~\ref{fig6}, que el error durante el entrenamiento (línea roja) disminuye rápidamente durante las primeras épocas y se estabiliza cerca de los valores finales.
 El error de evaluación en los datos de entrenamiento (línea verde) sigue una tendencia similar, pero es consistentemente menor que el error durante el entrenamiento.
 El error en los datos de validación (línea azul) es ligeramente mayor que en los datos de entrenamiento, pero se mantiene estable hacia el final.
-Conclusión: La red parece bien ajustada, ya que los errores de validación y entrenamiento están cercanos. Sin embargo, el learning rate relativamente alto (0.005) provoca una convergencia rápida pero menos estable hacia el final.
-Se observa un sobreajuste menor al de los experimentos anteriores.\\
+Conclusión: La red parece bien ajustada, ya que los errores de validación y entrenamiento están cercanos. Se observa un sobreajuste menor al de los experimentos anteriores.\\
 
 
 
 \begin{figure}[h!]
 \centering
-\includegraphics[scale=.4]{figs/practico2/loss_device-cpu_hidden layers-[64, 32, 32]_batch size-512_epochs-30_learning rate-0.005_optimizer-adam_dropout-0.2.png}
+\includegraphics[scale=.4]{figs/practico2/loss_device-cpu_hidden layers-[64, 32, 32]_batch size-128_epochs-15_learning rate-0.001_optimizer-adam_dropout-0.2.png}
 %\vspace{-0.25cm}
 \caption{\label{fig6}}
 \end{figure}
@@ -417,7 +419,7 @@ Sin embargo La curva de evaluación en datos de validación se comporta al igual
 
 
 \begin{figure}[h!]
-\includegraphics[scale=.4]{figs/practico2/precision_device-cpu_hidden layers-[64, 32, 32]_batch size-512_epochs-30_learning rate-0.005_optimizer-adam_dropout-0.2.png}
+\includegraphics[scale=.4]{figs/practico2/precision_device-cpu_hidden layers-[64, 32, 32]_batch size-128_epochs-15_learning rate-0.001_optimizer-adam_dropout-0.2.png}
 %\vspace{-0.25cm}
 \caption{\label{fig7}}
 \end{figure}
@@ -437,7 +439,7 @@ Tercera configuración: Se mejora bastante el sobreajuste pero la precisión es 
 \textbf{Uso de dropout:} La inclusión de dropout como técnica de regularización reduce el riesgo de sobreajuste y mejora la generalización del modelo en datos de prueba.\\
 \textbf{Precisión en el conjunto de validación/prueba:} Una red neuronal con los hiperparámetros correctamente afinados debe mostrar una alta precisión en el conjunto de validación, indicando que ha aprendido de los datos de manera efectiva sin sobreajustarse.\\
 \textbf{Generalización:} El uso de un conjunto de prueba o validación al final del entrenamiento es crucial para evaluar cómo se desempeña el modelo con datos que no ha visto antes. Un buen resultado en este conjunto indica que el modelo es capaz de generalizar y no simplemente memorizar los datos de entrenamiento.\\
-\textbf{Conclusión sobre el batch size}:Para el caso de Fashion-MNIST, un batch size mediano (e.g., 128) parece ser una buena elección para combinar rendimiento y estabilidad.
+\textbf{Conclusión sobre el batch size}: Para el caso de Fashion-MNIST, un batch size mediano (e.g., 128) parece ser una buena elección para combinar rendimiento y estabilidad.
 Relación entre Batch Size y Velocidad:
 
 Batch pequeño (e.g., 32): Mayor ruido en las actualizaciones, puede ser más lento pero permite generalización más robusta.\\

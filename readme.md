@@ -4,9 +4,9 @@
 
 * Teórico: [Dr. Francisco A. Tamarit](mailto:francisco.tamarit@unc.edu.ar)
 * Prácticos:
-  * [Dr. Juan I. Perotti](mailto:juan.perotti@unc.edu.ar)
+  * [Dr. Juan I. Perotti](mailto:juan.perotti@unc.edu.ar) 
   * [Lic. Benamín Marcolongo](mailto:benjaminmarcolongo@unc.edu.ar)
-  * [Lic. Martín Abrudsky](mailto:martin.abrudsky@unc.edu.ar)
+  * [Lic. Martín Abrudsky](mailto:martin.abrudsky@unc.edu.ar)  
 
 ## Salas virtuales
 
@@ -15,19 +15,33 @@
   * [Sala de Juan](https://meet.google.com/mxn-kaid-oxe)
   * [Sala de Benjamín](https://meet.google.com/kcg-grrz-qin)
   * [Sala de Martín](https://meet.google.com/tpn-pfia-uzb)
-
+  
 ## Links útiles
 
 * [Página oficial del curso](https://www.famaf.unc.edu.ar/~ftamarit/redes2024/)
 * [Programa del curso](http://www.famaf.unc.edu.ar/~ftamarit/redes2024/programa_redes_neuronales_2024.pdf)
 * [Link al aula virtual](TODO)
-
+  
 ## Anuncios
 
 * **2024-08-12**: El Lunes 12 de Agosto tendremos excepcionalmente primero el téorico de 17h a 19h, y luego los prácticos de 19h a 20h.
 * **2024-08-26**: Subimos el archivo [ode.py](https://github.com/jipphysics/redes-neuronales-2024/blob/main/ode.py) para resolver ODEs.
 * **2024-10-03**: Hoy se introduce el Trabajo Práctico 1. Habrá dos horas de práctico. Una en el Lab 30 y otra en el aula 31.
 * **2024-10-10**: Con el fin de solidarizarse con el paro, hoy sólo clase de consulta de 17:00 a 18:00. No es obligatorio asistir. Además, se extiende el plazo de entrega del TP1 al Lunes 21 de Octubre.
+* **2024-11-21**: Se posterga la fecha de entrega del Trabajo Práctico 2 (TP2) al Lunes 25 de Noviembre a las 23:59h.
+
+## Fechas de exámenes
+
+* [Fechas examenes **definitivas** 2do cuatrimestre, grado](https://www.famaf.unc.edu.ar/documents/5148/ANEXO_Fechas_de_Ex%C3%A1menes_de_Asignaturas_de_Grado.pdf)
+  * 06-dic
+  * 20-dic 
+  * 14-feb 
+  * 28-feb
+* [Fechas examenes **tenativas** 2do cuatrimestre, posgrado](https://www.famaf.unc.edu.ar/documents/5150/TENTATIVAS_POSGRADO_2024-2025.pdf)
+  * 06-dic 
+  * 20-dic 
+  * 14-feb 
+  * 28-feb
 
 ## Guías de Prácticos
 
@@ -45,6 +59,7 @@
 * [Guía 11, 2024-11-04, Cuadrados mínimos con *PyTorch*](https://colab.research.google.com/drive/1zL4YxbrxSWcSWPzvbIArdHYBzbHbhAe2?usp=drive_link)
 * [Guía 12, 2024-11-11, Clasificando *Fashion-MNIST* con *PyTorch*](https://colab.research.google.com/drive/1nsgBXwDPPIqF5OBdAnyC2B9QwnJQs5lx?usp=drive_link)
   * [Material Suplementario, Fashion-MNIST](https://github.com/zalandoresearch/fashion-mnist)
+* [Guía 13, 2024-11-11, Autoencoder convolucional sobre *Fashion-MNIST*](https://colab.research.google.com/drive/11i9OWd_kPdEiEyWdwL__9m09UM7jCdy7?usp=drive_link)
 
 ## Videos de las clases
 
@@ -76,12 +91,23 @@
 * [Clase 24, 2024-11-04, Cuadrados mínimos con *PyTorch*, parte 1](https://drive.google.com/file/d/1ZHWkLGAFjjOtSGDh13ar1Pi551-AeSbo/view?usp=drive_link)
 * [Clase 25, 2024-11-07, Consulta guía 10](https://drive.google.com/file/d/1afeBA85rCQWChQa6Az1zZcZ37daLuUFA/view?usp=drive_link)
 * [Clase 26, 2024-11-11, Presentación de la guía 12 y el Trabajo Práctico 2, Clasificando *Fashion-MNIST* con *PyTorch*](https://drive.google.com/file/d/1uM3XyJOpMX-jLL_BX5rb4-3cTYcOuLRQ/view?usp=drive_link)
+* [Clase 27, 2024-11-14, Clasificando *Fashion-MNIST* con *PyTorch*](https://drive.google.com/file/d/12AONwUzt_OGprP76Zf8PiZyfLmRL1HYs/view?usp=drive_link)
+* [Clase 28, 2024-11-18, Consulta *Fashion-MNIST* con *PyTorch*](https://drive.google.com/file/d/1-Qf-KYfJ4D_OD6PQswUfl6QEAGKSGjai/view?usp=drive_link)
+* [Clase 29, 2024-11-21, Parte 1, Autoencoder convolucional con *Fashion-MNIST* y *PyTorch*, presentación de la Guía 13](https://drive.google.com/file/d/1RZPWGCa-p0KYjx2iTAi-wd6yGIFoTW-S/view?usp=drive_link)
+* [Clase 29, 2024-11-21, Parte 2, Autoencoder convolucional con *Fashion-MNIST* y *PyTorch*, presentación del Trabajo Final](https://drive.google.com/file/d/11bXK_kEf74JT_v6FubdX8kJpV_yl13CC/view?usp=drive_link)
+* [Clase 30, 2024-11-25, Clase de consulta](https://drive.google.com/file/d/1iZibTUN_puUuFtBAze3jtYNLJlsKmbax/view?usp=drive_link)
 
 ## Trabajos Prácticos
 
 * [Trabajo Práctico 1, El modelo de **Hodgkin y Huxley** (fecha entrega 2024-10-21)](https://github.com/jipphysics/redes-neuronales-2024/blob/main/tp1-2024.pdf)
-* [Trabajo Práctico 2, Clasificando **Fashion-MNIST** con **PyTorch** (fecha entrega 2024-11-19 [Martes])](https://github.com/jipphysics/redes-neuronales-2024/blob/main/tp2-2024.pdf)
+* [Trabajo Práctico 2, Clasificando **Fashion-MNIST** con **PyTorch** (nueva fecha entrega 2024-11-25 [Lunes])](https://github.com/jipphysics/redes-neuronales-2024/blob/main/tp2-2024.pdf)
 * [Plantilla LaTeX en overleaf](https://www.overleaf.com/read/qwctszcmgpkn#ed2041) [(o en el repo)](https://github.com/jipphysics/redes-neuronales-2024/tree/main/latex)
+
+## Trabajo final
+
+* [Autoencoder y clasificador convolucional profundo sobre FashionMNIST](https://github.com/jipphysics/redes-neuronales-2024/blob/main/tf-2024.pdf)
+  * Recuerde entregarlo 4 días hábiles antes del día del examen.
+  * Luego, el día del examen, deberá defenderlo en una exposición oral de 10 min.
 
 ## Útiles
 

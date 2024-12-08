@@ -12,7 +12,7 @@ import torch
 import torch.nn as nn
 from pathlib import Path
 from torchvision import datasets, transforms
-
+from torch.utils.data import Dataset
 
 
 
@@ -91,7 +91,7 @@ def log(
     last_train_precision_incorrect=None,
     execution_time=None,
 ):
-    extension = "png"
+    extension = "p"
     filename = "results"
     full_path = f"{CURRENT_PATH}/{filename}.{extension}"
 
@@ -209,13 +209,25 @@ def plot_results(
 
 
 
+class CustomDataset(Dataset):
+    
+    def __init__(self, dataset):
+        self.dataset = dataset
+        
+    def __len__(self):
+        return len(self.dataset)
+    
+    def __getitem__(self, i):
+        image, label = self.dataset[i]
+        return image, image
+
 def generate_data(batch_size):
     # transform number to [0,1]
     transform = transforms.Compose(
         [transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))]
     )
 
-    training_data = datasets.FashionMNIST(
+    train_set_orig = datasets.FashionMNIST(
         root="MNIST_data/",
         train=True,
         download=True,
@@ -223,39 +235,59 @@ def generate_data(batch_size):
     )
 
     # Download test data from open datasets.
-    test_data = datasets.FashionMNIST(
+    valid_set_orig = datasets.FashionMNIST(
         root="MNIST_data/",
         train=False,
         download=True,
         transform=transform,
     )
 
-    plot_some_data(training_data)
+    plot_some_data(train_set_orig)
+
+
+    train_set = CustomDataset(train_set_orig)
+    valid_set = CustomDataset(valid_set_orig)
+
     train_loader = torch.utils.data.DataLoader(
-        training_data, batch_size=batch_size, shuffle=True
+        train_set, batch_size=batch_size, shuffle=True
     )
     valid_loader = torch.utils.data.DataLoader(
-        test_data, batch_size=batch_size, shuffle=True
+        valid_set, batch_size=batch_size, shuffle=True
     )
+
 
     return train_loader, valid_loader
 
 
-class NeuralNetwork(nn.Module):
+class AutoEncoder(nn.Module):
     def __init__(self, input_size, hidden_sizes, output_size, dropout):
         super().__init__()
-        prev_size = input_size
-        layers = [nn.Flatten()]
-        for size in hidden_sizes:
-            layers.append(nn.Linear(prev_size, size))
-            layers.append(nn.ReLU())
-            layers.append(nn.Dropout(dropout))
-            prev_size = size
-        layers.append(nn.Linear(prev_size, output_size))
-        self.model = nn.Sequential(*layers)
+        
 
+        self.conv2d = nn.Sequential(
+            nn.Conv2d(1, 16, kernel_size=3, padding=0), #  (1, 28, 28) -> (16, 26, 26)
+            nn.ReLU(), # activacion
+            nn.Dropout(dropout),
+            nn.MaxPool2d(2,2) #  (16, 26, 26) -> (16, 13, 13)            
+        )
+        
+        self.linear = nn.Sequential(
+            nn.Flatten(), #  (16, 13, 13) -> 16 * 13 * 13
+            nn.Linear(16 * 13 * 13, 16 * 13 * 13), # fully connected 16 * 13 * 13  => 16 * 13 * 13
+            nn.ReLU(),
+            nn.Dropout(dropout),
+        )
+        self.convt2d = nn.Sequential(
+            nn.UnFlatten(1, (16, 13, 13)), #  16 * 13 * 13 -> (16, 13, 13)
+            nn.ConvTranspose2d(16, 1, kernel_size=6, stride=2, padding=1), # (16, 13, 13) -> (1, 28, 28) 
+            nn.Sigmoid()
+        )
+        
     def forward(self, x):
-        return self.model(x)
+        x = self.conv2d(x)
+        x = self.linear(x)
+        x = self.convt2d(x)
+        return x
 
 
 def train_loop(dataloader, model, hyperparameters, verbose=False):
@@ -395,7 +427,7 @@ def main():
     output_size = 10
     verbose = False
 
-    model = NeuralNetwork(
+    model = AutoEncoder(
         input_size=input_size,
         hidden_sizes=hidden_sizes,
         output_size=output_size,

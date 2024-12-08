@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 Created on Sun Nov 10 17:00:17 2024
 
@@ -9,7 +10,13 @@ import time
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
+from pathlib import Path
+
 from torchvision import datasets, transforms
+
+
+CURRENT_PATH = Path(__file__).resolve().parent
+
 
 
 def get_device():
@@ -84,10 +91,10 @@ def log(
     last_train_precision_incorrect=None,
     execution_time=None,
 ):
-    path = "trabajo_practico2"
+    
     extension = "p"
     filename = "results"
-    full_path = f"{path}/{filename}.{extension}"
+    full_path = f"{CURRENT_PATH}/{filename}.{extension}"
 
     with open(full_path, "a") as f:
         if execution_time:
@@ -137,44 +144,44 @@ def plot_results(
     filename = "_".join([f"{k}-{v}".lower() for k, v in hyperparameters_to_log.items()])
 
     num_samples = len(list_train_avg_loss_incorrect)
-    x = range(num_samples)
+    x = range(1,num_samples + 1)
     fontsize = 12
 
     plt.xlabel("Épocas", size=fontsize)
     plt.ylabel("Error", size=fontsize)
     plt.grid(True)
+    #plt.xlim([0, len(x) + 1])
     plt.title("Error promedio por épocas", size=fontsize)
     plt.figtext(
         0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=fontsize
     )
 
     y = list_train_avg_loss_incorrect
-    plt.plot(x, y, c="r", label="Error durante entrenamiento", linestyle="-")
+    plt.plot(x, y, c="r", label="Error durante entrenamiento.", linestyle="-")
     plt.plot(x[-1], y[-1], c="r", marker="o", markersize=5)
-    plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
 
     y = list_train_avg_loss
-    plt.plot(x, y, c="g", label="Evaluación en datos de entrenamiento", linestyle="-.")
+    plt.plot(x, y, c="g", label="Evaluación en datos de entrenamiento.", linestyle="-.")
     plt.plot(x[-1], y[-1], c="g", marker="o", markersize=5)
-    plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
 
     y = list_eval_avg_loss
-    plt.plot(x, y, c="b", label="Evaluación en datos de validación", linestyle="--")
+    plt.plot(x, y, c="b", label="Evaluación en datos de validación.", linestyle="--")
     plt.plot(x[-1], y[-1], c="b", marker="o", markersize=5)
-    plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
+
     plt.legend()
 
     metric = "loss"
-    path = "trabajo_practico2"
     extension = "png"
-    full_path = f"{path}/{metric}_{filename}.{extension}"
+    full_path = f"{CURRENT_PATH}/{metric}_{filename}.{extension}"
     plt.savefig(full_path, bbox_inches="tight")
     plt.show()
+
 
     plt.xlabel("Épocas", size=fontsize)
     plt.ylabel("Precisión", size=fontsize)
     plt.title("Precisión por épocas", size=fontsize)
     plt.grid(True)
+    #plt.xlim([0, len(x)])
     plt.figtext(
         0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=12
     )
@@ -183,23 +190,24 @@ def plot_results(
     y = list_train_precision_incorrect
     plt.plot(x, y, c="r", label="Precisión durante entrenamiento", linestyle="-")
     plt.plot(x[-1], y[-1], c="r", marker="o", markersize=5)
-    plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
+
 
     y = list_train_precision
     plt.plot(x, y, c="g", label="Evaluación en datos de entrenamiento", linestyle="-.")
     plt.plot(x[-1], y[-1], c="g", marker="o", markersize=5)
-    plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
 
     y = list_eval_precision
     plt.plot(x, y, c="b", label="Evaluación en datos de validación", linestyle="--")
     plt.plot(x[-1], y[-1], c="b", marker="o", markersize=5)
-    plt.annotate(f"{y[-1]:.4f}", (x[-1], y[-1]), ha="left")
 
     metric = "precision"
-    full_path = f"{path}/{metric}_{filename}.{extension}"
+    full_path = f"{CURRENT_PATH}/{metric}_{filename}.{extension}"
     plt.legend()
     plt.savefig(full_path, bbox_inches="tight")
+
     plt.show()
+
+
 
 
 def generate_data(batch_size):
@@ -374,11 +382,11 @@ def train_and_eval(model, train_dataloader, valid_dataloader, hyperparameters, v
 def main():
     ####################################
     # Hyperparameters to test:
-    batch_size = 100  # 100  500, 1000,
+    batch_size = 128  # 128  512, 1024,
     dropout = 0.1  # 0.1, 0.2, 0.5
     lr = 2e-3  # 1e-3, 2e-3, 5e-3
-    epochs = 30  # 15, 30, 100
-    hidden_sizes = [128, 64]  # [128, 64],  [128], [256], [64, 32] [64, 32, 32]
+    epochs = 15  # 15, 30, 100
+    hidden_sizes = [256]  # [128, 64],  [128], [256], [64, 32] [64, 32, 32]
     optimizer_option = 2  # 1:SGD 2:Adam
 
     ####################################
@@ -388,62 +396,50 @@ def main():
     output_size = 10
     verbose = False
 
-    for epochs in [15, 30]:
-        for batch_size in [100, 500]:
-            for dropout in [0.1, 0.2]:
-                for lr in [1e-3, 2e-3, 5e-3]:
-                    for hidden_sizes in [
-                        [128, 64],
-                        [128],
-                        [256],
-                        [64, 32],
-                        [64, 32, 32],
-                    ]:
-                        for optimizer_option in [2]:
-                            model = NeuralNetwork(
-                                input_size=input_size,
-                                hidden_sizes=hidden_sizes,
-                                output_size=output_size,
-                                dropout=dropout,
-                            )
+    model = NeuralNetwork(
+        input_size=input_size,
+        hidden_sizes=hidden_sizes,
+        output_size=output_size,
+        dropout=dropout,
+    )
 
-                            # 3*3*3*3*5*2 = 810 tests
-                            # 2*2*2*1*4*1 = 32 tests
-                            if optimizer_option == 1:
-                                optimizer = torch.optim.SGD(model.parameters(), lr=lr)
-                            else:
-                                optimizer = torch.optim.Adam(
-                                    model.parameters(), lr=lr, eps=1e-08
-                                )
+    # 3*3*3*3*5*2 = 810 tests
+    # 2*2*2*3*5*1 = 120 tests
+    if optimizer_option == 1:
+        optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+    else:
+        optimizer = torch.optim.Adam(
+            model.parameters(), lr=lr, eps=1e-08
+        )
 
-                            hyperparameters = {
-                                "Device": device,
-                                "Hidden Layers": hidden_sizes,
-                                "Batch Size": batch_size,
-                                "Epochs": epochs,
-                                "Learning Rate": lr,
-                                "Loss Function": loss_fn,
-                                "Optimizer": optimizer,
-                                "Dropout": dropout,
-                            }
-                            train_dataloader, valid_dataloader = generate_data(
-                                batch_size
-                            )
-                            
-                            start_time = time.perf_counter()
-                            
-                            train_and_eval(
-                                model,
-                                train_dataloader,
-                                valid_dataloader,
-                                hyperparameters,
-                                verbose,
-                            )
+    hyperparameters = {
+        "Device": device,
+        "Hidden Layers": hidden_sizes,
+        "Batch Size": batch_size,
+        "Epochs": epochs,
+        "Learning Rate": lr,
+        "Loss Function": loss_fn,
+        "Optimizer": optimizer,
+        "Dropout": dropout,
+    }
+    train_dataloader, valid_dataloader = generate_data(
+        batch_size
+    )
+    
+    start_time = time.perf_counter()
+    
+    train_and_eval(
+        model,
+        train_dataloader,
+        valid_dataloader,
+        hyperparameters,
+        verbose,
+    )
 
-                            end_time = time.perf_counter()
-                            execution_time = end_time - start_time
+    end_time = time.perf_counter()
+    execution_time = end_time - start_time
 
-                            log(execution_time=execution_time)
+    log(execution_time=execution_time)
 
 
 if __name__ == "__main__":
