@@ -6,15 +6,13 @@ Created on Sun Nov 10 17:00:17 2024
 @author: luisvargas
 """
 import time
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
-from pathlib import Path
-from torchvision import datasets, transforms
 from torch.utils.data import Dataset
-
-
+from torchvision import datasets, transforms
 
 CURRENT_PATH = Path(__file__).resolve().parent
 
@@ -38,36 +36,41 @@ def get_device():
     return device
 
 
-def plot_some_data(training_data):
-    label_names = {
-        0: "T-shirt/top",
-        1: "Trouser",
-        2: "Pullover",
-        3: "Dress",
-        4: "Coat",
-        5: "Sandal",
-        6: "Shirt",
-        7: "Sneaker",
-        8: "Bag",
-        9: "Ankle boot",
-    }
-    import json
+def batch(x):
+    return x.unsqueeze(0)  # -> (28, 28) => (1, 28, 28)
 
-    pretty_dict = json.dumps(label_names, indent=4, sort_keys=True)
-    print(f"label_names = {pretty_dict}")
 
+def unbatch(x):
+    return x.squeeze().detach().cpu().numpy()  # (1, 28, 28) => (28, 28)
+
+
+def plot_image_and_prediction(model, train_set, hyperparameters):
+    hyperparameters_to_log = format_to_log(hyperparameters)
+    filename = "_".join([f"{k}-{v}".lower() for k, v in hyperparameters_to_log.items()])
     figure = plt.figure()
-    cols, rows = 3, 3
-    for i in range(1, cols * rows + 1):
-        j = torch.randint(len(training_data), size=(1,)).item()
-        image, label = training_data[j]
+    rows, cols = 3, 2
+    i = 0  # subplot index
+    for row in range(1, rows + 1):
+        j = torch.randint(len(train_set), size=(1,)).item()
+        i += 1
+        image, _ = train_set[j]
         figure.add_subplot(rows, cols, i)
-        plt.title(label_names[label])
+        if row == 1:
+            plt.title("original")
         plt.axis("off")
-        # remove channel. Not needed for classification
-        image_to_plot = image.squeeze()
-        plt.imshow(image_to_plot, cmap="Greys_r")
+        plt.imshow(unbatch(image), cmap="Greys_r")
 
+        i += 1
+        figure.add_subplot(rows, cols, i)
+        if row == 1:
+            plt.title("predicha")
+        plt.axis("off")
+        pred_image = unbatch(model(batch(image)))
+        plt.imshow(pred_image, cmap="Greys_r")
+
+    extension = "png"
+    full_path = f"{CURRENT_PATH}/prediccion_{filename}.{extension}"
+    plt.savefig(full_path, bbox_inches="tight")
     plt.show()
 
 
@@ -143,13 +146,13 @@ def plot_results(
     filename = "_".join([f"{k}-{v}".lower() for k, v in hyperparameters_to_log.items()])
 
     num_samples = len(list_train_avg_loss_incorrect)
-    x = range(1,num_samples + 1)
+    x = range(1, num_samples + 1)
     fontsize = 12
 
     plt.xlabel("Épocas", size=fontsize)
     plt.ylabel("Error", size=fontsize)
     plt.grid(True)
-    #plt.xlim([0, len(x) + 1])
+    # plt.xlim([0, len(x) + 1])
     plt.title("Error promedio por épocas", size=fontsize)
     plt.figtext(
         0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=fontsize
@@ -162,12 +165,10 @@ def plot_results(
     y = list_train_avg_loss
     plt.plot(x, y, c="g", label="Evaluación en datos de entrenamiento.", linestyle="-.")
     plt.plot(x[-1], y[-1], c="g", marker="o", markersize=5)
-  
 
     y = list_eval_avg_loss
     plt.plot(x, y, c="b", label="Evaluación en datos de validación.", linestyle="--")
     plt.plot(x[-1], y[-1], c="b", marker="o", markersize=5)
- 
 
     plt.legend()
 
@@ -182,7 +183,7 @@ def plot_results(
     plt.ylabel("Precisión", size=fontsize)
     plt.title("Precisión por épocas", size=fontsize)
     plt.grid(True)
-    #plt.xlim([0, len(x)])
+    # plt.xlim([0, len(x)])
     plt.figtext(
         0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=12
     )
@@ -195,11 +196,11 @@ def plot_results(
     y = list_train_precision
     plt.plot(x, y, c="g", label="Evaluación en datos de entrenamiento", linestyle="-.")
     plt.plot(x[-1], y[-1], c="g", marker="o", markersize=5)
- 
+
     y = list_eval_precision
     plt.plot(x, y, c="b", label="Evaluación en datos de validación", linestyle="--")
     plt.plot(x[-1], y[-1], c="b", marker="o", markersize=5)
- 
+
     metric = "precision"
     full_path = f"{CURRENT_PATH}/{metric}_{filename}.{extension}"
     plt.legend()
@@ -207,19 +208,17 @@ def plot_results(
     plt.show()
 
 
-
-
 class CustomDataset(Dataset):
-    
     def __init__(self, dataset):
         self.dataset = dataset
-        
+
     def __len__(self):
         return len(self.dataset)
-    
+
     def __getitem__(self, i):
         image, label = self.dataset[i]
         return image, image
+
 
 def generate_data(batch_size):
     # transform number to [0,1]
@@ -242,47 +241,48 @@ def generate_data(batch_size):
         transform=transform,
     )
 
-    plot_some_data(train_set_orig)
-
-
     train_set = CustomDataset(train_set_orig)
     valid_set = CustomDataset(valid_set_orig)
+    return train_set, valid_set
 
-    train_loader = torch.utils.data.DataLoader(
-        train_set, batch_size=batch_size, shuffle=True
+
+def convt2d_z_out(z_in, stride, padding, dilation, kernel_zise, outpoud_padding):
+    return (
+        (z_in - 1) * stride
+        - 2 * padding
+        + dilation * (kernel_zise - 1)
+        + outpoud_padding
+        + 1
     )
-    valid_loader = torch.utils.data.DataLoader(
-        valid_set, batch_size=batch_size, shuffle=True
-    )
-
-
-    return train_loader, valid_loader
 
 
 class AutoEncoder(nn.Module):
     def __init__(self, input_size, hidden_sizes, output_size, dropout):
         super().__init__()
-        
 
         self.conv2d = nn.Sequential(
-            nn.Conv2d(1, 16, kernel_size=3, padding=0), #  (1, 28, 28) -> (16, 26, 26)
-            nn.ReLU(), # activacion
+            nn.Conv2d(1, 16, kernel_size=3, padding=0),  #  (1, 28, 28) -> (16, 26, 26)
+            nn.ReLU(),  # activacion
             nn.Dropout(dropout),
-            nn.MaxPool2d(2,2) #  (16, 26, 26) -> (16, 13, 13)            
+            nn.MaxPool2d(2, 2),  #  (16, 26, 26) -> (16, 13, 13)
         )
-        
+
         self.linear = nn.Sequential(
-            nn.Flatten(), #  (16, 13, 13) -> 16 * 13 * 13
-            nn.Linear(16 * 13 * 13, 16 * 13 * 13), # fully connected 16 * 13 * 13  => 16 * 13 * 13
+            nn.Flatten(),  #  (16, 13, 13) -> 16 * 13 * 13
+            nn.Linear(
+                16 * 13 * 13, 16 * 13 * 13
+            ),  # fully connected 16 * 13 * 13  => 16 * 13 * 13
             nn.ReLU(),
             nn.Dropout(dropout),
         )
         self.convt2d = nn.Sequential(
-            nn.UnFlatten(1, (16, 13, 13)), #  16 * 13 * 13 -> (16, 13, 13)
-            nn.ConvTranspose2d(16, 1, kernel_size=6, stride=2, padding=1), # (16, 13, 13) -> (1, 28, 28) 
-            nn.Sigmoid()
+            nn.Unflatten(1, (16, 13, 13)),  #  16 * 13 * 13 -> (16, 13, 13)
+            nn.ConvTranspose2d(
+                16, 1, kernel_size=6, stride=2, padding=1
+            ),  # (16, 13, 13) -> (1, 28, 28)
+            nn.Sigmoid(),
         )
-        
+
     def forward(self, x):
         x = self.conv2d(x)
         x = self.linear(x)
@@ -410,55 +410,17 @@ def train_and_eval(model, train_dataloader, valid_dataloader, hyperparameters, v
     )
 
 
-def main():
-    ####################################
-    # Hyperparameters to test:
-    batch_size = 128  # 128  512, 1024,
-    dropout = 0.1  # 0.1, 0.2, 0.5
-    lr = 2e-3  # 1e-3, 2e-3, 5e-3
-    epochs = 15  # 15, 30, 100
-    hidden_sizes = [256]  # [128, 64],  [128], [256], [64, 32] [64, 32, 32]
-    optimizer_option = 2  # 1:SGD 2:Adam
-
-    ####################################
-    device = get_device()
-    loss_fn = nn.CrossEntropyLoss()
-    input_size = 28 * 28
-    output_size = 10
-    verbose = False
-
-    model = AutoEncoder(
-        input_size=input_size,
-        hidden_sizes=hidden_sizes,
-        output_size=output_size,
-        dropout=dropout,
+def execute_model(model, train_set, valid_set, hyperparameters, verbose):
+    batch_size = hyperparameters["Batch Size"]
+    train_dataloader = torch.utils.data.DataLoader(
+        train_set, batch_size=batch_size, shuffle=True
+    )
+    valid_dataloader = torch.utils.data.DataLoader(
+        valid_set, batch_size=batch_size, shuffle=True
     )
 
-    # 3*3*3*3*5*2 = 810 tests
-    # 2*2*2*3*5*1 = 120 tests
-    if optimizer_option == 1:
-        optimizer = torch.optim.SGD(model.parameters(), lr=lr)
-    else:
-        optimizer = torch.optim.Adam(
-            model.parameters(), lr=lr, eps=1e-08
-        )
-
-    hyperparameters = {
-        "Device": device,
-        "Hidden Layers": hidden_sizes,
-        "Batch Size": batch_size,
-        "Epochs": epochs,
-        "Learning Rate": lr,
-        "Loss Function": loss_fn,
-        "Optimizer": optimizer,
-        "Dropout": dropout,
-    }
-    train_dataloader, valid_dataloader = generate_data(
-        batch_size
-    )
-    
     start_time = time.perf_counter()
-    
+
     train_and_eval(
         model,
         train_dataloader,
@@ -471,6 +433,52 @@ def main():
     execution_time = end_time - start_time
 
     log(execution_time=execution_time)
+
+    plot_image_and_prediction(model, train_set, hyperparameters)
+
+
+def main():
+    ####################################
+    # Hyperparameters to test:
+    batch_size = 128  # 128  512, 1024,
+    dropout = 0.1  # 0.1, 0.2, 0.5
+    lr = 2e-3  # 1e-3, 2e-3, 5e-3
+    epochs = 4  # 15, 30, 100
+    hidden_sizes = [64]  # [128, 64],  [128], [256], [64, 32] [64, 32, 32]
+    optimizer_option = 2  # 1:SGD 2:Adam
+    verbose = False
+
+    ####################################
+    device = get_device()
+    loss_fn = nn.MSELoss()
+    input_size = 28 * 28
+    output_size = 10
+
+    model = AutoEncoder(
+        input_size=input_size,
+        hidden_sizes=hidden_sizes,
+        output_size=output_size,
+        dropout=dropout,
+    )
+
+    if optimizer_option == 1:
+        optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+    else:
+        optimizer = torch.optim.Adam(model.parameters(), lr=lr, eps=1e-08)
+
+    hyperparameters = {
+        "Device": device,
+        "Hidden Layers": hidden_sizes,
+        "Batch Size": batch_size,
+        "Epochs": epochs,
+        "Learning Rate": lr,
+        "Loss Function": loss_fn,
+        "Optimizer": optimizer,
+        "Dropout": dropout,
+    }
+    train_set, valid_set = generate_data(batch_size)
+
+    execute_model(model, train_set, valid_set, hyperparameters, verbose)
 
 
 if __name__ == "__main__":

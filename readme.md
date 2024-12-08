@@ -4,9 +4,9 @@
 
 * Teórico: [Dr. Francisco A. Tamarit](mailto:francisco.tamarit@unc.edu.ar)
 * Prácticos:
-  * [Dr. Juan I. Perotti](mailto:juan.perotti@unc.edu.ar) 
+  * [Dr. Juan I. Perotti](mailto:juan.perotti@unc.edu.ar)
   * [Lic. Benamín Marcolongo](mailto:benjaminmarcolongo@unc.edu.ar)
-  * [Lic. Martín Abrudsky](mailto:martin.abrudsky@unc.edu.ar)  
+  * [Lic. Martín Abrudsky](mailto:martin.abrudsky@unc.edu.ar)
 
 ## Salas virtuales
 
@@ -15,13 +15,13 @@
   * [Sala de Juan](https://meet.google.com/mxn-kaid-oxe)
   * [Sala de Benjamín](https://meet.google.com/kcg-grrz-qin)
   * [Sala de Martín](https://meet.google.com/tpn-pfia-uzb)
-  
+
 ## Links útiles
 
 * [Página oficial del curso](https://www.famaf.unc.edu.ar/~ftamarit/redes2024/)
 * [Programa del curso](http://www.famaf.unc.edu.ar/~ftamarit/redes2024/programa_redes_neuronales_2024.pdf)
 * [Link al aula virtual](TODO)
-  
+
 ## Anuncios
 
 * **2024-08-12**: El Lunes 12 de Agosto tendremos excepcionalmente primero el téorico de 17h a 19h, y luego los prácticos de 19h a 20h.
@@ -34,13 +34,13 @@
 
 * [Fechas examenes **definitivas** 2do cuatrimestre, grado](https://www.famaf.unc.edu.ar/documents/5148/ANEXO_Fechas_de_Ex%C3%A1menes_de_Asignaturas_de_Grado.pdf)
   * 06-dic
-  * 20-dic 
-  * 14-feb 
+  * 20-dic
+  * 14-feb
   * 28-feb
 * [Fechas examenes **tenativas** 2do cuatrimestre, posgrado](https://www.famaf.unc.edu.ar/documents/5150/TENTATIVAS_POSGRADO_2024-2025.pdf)
-  * 06-dic 
-  * 20-dic 
-  * 14-feb 
+  * 06-dic
+  * 20-dic
+  * 14-feb
   * 28-feb
 
 ## Guías de Prácticos

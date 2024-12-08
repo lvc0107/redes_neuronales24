@@ -6,17 +6,14 @@ Created on Sun Nov 10 17:00:17 2024
 @author: luisvargas
 """
 import time
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
-from pathlib import Path
-
 from torchvision import datasets, transforms
 
-
 CURRENT_PATH = Path(__file__).resolve().parent
-
 
 
 def get_device():
@@ -91,7 +88,6 @@ def log(
     last_train_precision_incorrect=None,
     execution_time=None,
 ):
-    
     extension = "p"
     filename = "results"
     full_path = f"{CURRENT_PATH}/{filename}.{extension}"
@@ -144,13 +140,13 @@ def plot_results(
     filename = "_".join([f"{k}-{v}".lower() for k, v in hyperparameters_to_log.items()])
 
     num_samples = len(list_train_avg_loss_incorrect)
-    x = range(1,num_samples + 1)
+    x = range(1, num_samples + 1)
     fontsize = 12
 
     plt.xlabel("Épocas", size=fontsize)
     plt.ylabel("Error", size=fontsize)
     plt.grid(True)
-    #plt.xlim([0, len(x) + 1])
+    # plt.xlim([0, len(x) + 1])
     plt.title("Error promedio por épocas", size=fontsize)
     plt.figtext(
         0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=fontsize
@@ -176,12 +172,11 @@ def plot_results(
     plt.savefig(full_path, bbox_inches="tight")
     plt.show()
 
-
     plt.xlabel("Épocas", size=fontsize)
     plt.ylabel("Precisión", size=fontsize)
     plt.title("Precisión por épocas", size=fontsize)
     plt.grid(True)
-    #plt.xlim([0, len(x)])
+    # plt.xlim([0, len(x)])
     plt.figtext(
         0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=12
     )
@@ -190,7 +185,6 @@ def plot_results(
     y = list_train_precision_incorrect
     plt.plot(x, y, c="r", label="Precisión durante entrenamiento", linestyle="-")
     plt.plot(x[-1], y[-1], c="r", marker="o", markersize=5)
-
 
     y = list_train_precision
     plt.plot(x, y, c="g", label="Evaluación en datos de entrenamiento", linestyle="-.")
@@ -206,8 +200,6 @@ def plot_results(
     plt.savefig(full_path, bbox_inches="tight")
 
     plt.show()
-
-
 
 
 def generate_data(batch_size):
@@ -408,9 +400,7 @@ def main():
     if optimizer_option == 1:
         optimizer = torch.optim.SGD(model.parameters(), lr=lr)
     else:
-        optimizer = torch.optim.Adam(
-            model.parameters(), lr=lr, eps=1e-08
-        )
+        optimizer = torch.optim.Adam(model.parameters(), lr=lr, eps=1e-08)
 
     hyperparameters = {
         "Device": device,
@@ -422,12 +412,10 @@ def main():
         "Optimizer": optimizer,
         "Dropout": dropout,
     }
-    train_dataloader, valid_dataloader = generate_data(
-        batch_size
-    )
-    
+    train_dataloader, valid_dataloader = generate_data(batch_size)
+
     start_time = time.perf_counter()
-    
+
     train_and_eval(
         model,
         train_dataloader,
