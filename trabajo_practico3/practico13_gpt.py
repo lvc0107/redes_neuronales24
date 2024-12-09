@@ -202,29 +202,53 @@ def generate_data(batch_size):
 
 
 class AutoEncoder(nn.Module):
-    def __init__(self, dropout):
+    def __init__(
+        self,
+        input_channels,
+        conv_channels,
+        kernel_size,
+        pool_size,
+        linear_size,
+        dropout,
+    ):
         super().__init__()
 
+        # Encoder: Convolutional + MaxPool2D
         self.conv2d = nn.Sequential(
-            nn.Conv2d(1, 16, kernel_size=3, padding=0),  #  (1, 28, 28) -> (16, 26, 26)
-            nn.ReLU(),  # activacion
+            nn.Conv2d(
+                input_channels,
+                conv_channels,
+                kernel_size=kernel_size,
+                padding=(kernel_size // 2),
+            ),
+            nn.ReLU(),
             nn.Dropout(dropout),
-            nn.MaxPool2d(2, 2),  #  (16, 26, 26) -> (16, 13, 13)
+            nn.MaxPool2d(pool_size),
         )
 
+        # Flattened dimensions after convolution and pooling
+        flattened_dim = conv_channels * (28 // pool_size) * (28 // pool_size)
+
+        # Fully connected layer
         self.linear = nn.Sequential(
-            nn.Flatten(),  #  (16, 13, 13) -> 16 * 13 * 13
-            nn.Linear(
-                16 * 13 * 13, 16 * 13 * 13
-            ),  # fully connected 16 * 13 * 13  => 16 * 13 * 13
+            nn.Flatten(),
+            nn.Linear(flattened_dim, linear_size),
             nn.ReLU(),
             nn.Dropout(dropout),
         )
+
+        # Decoder: ConvTranspose2D
         self.convt2d = nn.Sequential(
-            nn.Unflatten(1, (16, 13, 13)),  #  16 * 13 * 13 -> (16, 13, 13)
+            nn.Linear(linear_size, flattened_dim),
+            nn.ReLU(),
+            nn.Unflatten(1, (conv_channels, 28 // pool_size, 28 // pool_size)),
             nn.ConvTranspose2d(
-                16, 1, kernel_size=6, stride=2, padding=1
-            ),  # (16, 13, 13) -> (1, 28, 28)
+                conv_channels,
+                input_channels,
+                kernel_size=(kernel_size + 1),
+                stride=2,
+                padding=1,
+            ),
             nn.Sigmoid(),
         )
 
@@ -373,7 +397,14 @@ def main():
     device = get_device()
     loss_fn = nn.MSELoss()
 
-    model = AutoEncoder(dropout=dropout)
+    model = AutoEncoder(
+        input_channels=1,
+        conv_channels=16,
+        kernel_size=3,
+        pool_size=2,
+        linear_size=128,
+        dropout=0.5,
+    )
 
     if optimizer_option == 1:
         optimizer = torch.optim.SGD(model.parameters(), lr=lr)
