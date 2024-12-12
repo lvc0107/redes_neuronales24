@@ -76,10 +76,10 @@ def plot_image_and_prediction(model, train_set, hyperparameters):
 
 def format_to_log(hyperparameters):
     hyperparameters_to_log = hyperparameters.copy()
-    hyperparameters_to_log["Device"] = hyperparameters["Device"].type
-    hyperparameters_to_log.pop("Loss Function", None)
-    hyperparameters_to_log["Optimizer"] = (
-        "SGD" if isinstance(hyperparameters["Optimizer"], torch.optim.SGD) else "Adam"
+    hyperparameters_to_log["device"] = hyperparameters["device"].type
+    hyperparameters_to_log.pop("loss_function", None)
+    hyperparameters_to_log["optimizer"] = (
+        "SGD" if isinstance(hyperparameters["optimizer"], torch.optim.SGD) else "Adam"
     )
     return hyperparameters_to_log
 
@@ -202,13 +202,13 @@ def generate_data(batch_size):
 
 
 class AutoEncoder(nn.Module):
+
     def __init__(
         self,
         input_channels,
         conv_channels,
         kernel_size,
         pool_size,
-        linear_size,
         dropout,
     ):
         super().__init__()
@@ -219,7 +219,7 @@ class AutoEncoder(nn.Module):
                 input_channels,
                 conv_channels,
                 kernel_size=kernel_size,
-                padding=(kernel_size // 2),
+                padding=(kernel_size // 2) -1,
             ),
             nn.ReLU(),
             nn.Dropout(dropout),
@@ -227,25 +227,23 @@ class AutoEncoder(nn.Module):
         )
 
         # Flattened dimensions after convolution and pooling
-        flattened_dim = conv_channels * (28 // pool_size) * (28 // pool_size)
+        flattened_dim = conv_channels * (26 // pool_size) * (26 // pool_size)
 
         # Fully connected layer
         self.linear = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(flattened_dim, linear_size),
+            nn.Linear(flattened_dim, flattened_dim),
             nn.ReLU(),
             nn.Dropout(dropout),
         )
 
         # Decoder: ConvTranspose2D
         self.convt2d = nn.Sequential(
-            nn.Linear(linear_size, flattened_dim),
-            nn.ReLU(),
-            nn.Unflatten(1, (conv_channels, 28 // pool_size, 28 // pool_size)),
+            nn.Unflatten(1, (conv_channels, 26 // pool_size, 26 // pool_size)),
             nn.ConvTranspose2d(
                 conv_channels,
                 input_channels,
-                kernel_size=(kernel_size + 1),
+                kernel_size=(kernel_size * 2),
                 stride=2,
                 padding=1,
             ),
@@ -260,9 +258,9 @@ class AutoEncoder(nn.Module):
 
 
 def train_loop(dataloader, model, hyperparameters, verbose=False):
-    device = hyperparameters["Device"]
-    loss_fn = hyperparameters["Loss Function"]
-    optimizer = hyperparameters["Optimizer"]
+    device = hyperparameters["device"]
+    loss_fn = hyperparameters["loss_function"]
+    optimizer = hyperparameters["optimizer"]
 
     model.train()
     num_samples = len(dataloader.dataset)
@@ -296,8 +294,8 @@ def train_loop(dataloader, model, hyperparameters, verbose=False):
 
 
 def eval_loop(dataloader, model, hyperparameters, verbose=False):
-    device = hyperparameters["Device"]
-    loss_fn = hyperparameters["Loss Function"]
+    device = hyperparameters["device"]
+    loss_fn = hyperparameters["loss_function"]
 
     model.eval()
     num_batches = len(dataloader)
@@ -326,7 +324,7 @@ def train_and_eval(model, train_dataloader, valid_dataloader, hyperparameters, v
     list_train_avg_loss = []
     list_eval_avg_loss = []
 
-    epochs = hyperparameters["Epochs"]
+    epochs = hyperparameters["epochs"]
     for epoch in range(1, epochs + 1):
         print(f"\nEpoch: {epoch}")
         print("-" * 70)
@@ -357,7 +355,7 @@ def train_and_eval(model, train_dataloader, valid_dataloader, hyperparameters, v
 
 
 def execute_model(model, train_set, valid_set, hyperparameters, verbose):
-    batch_size = hyperparameters["Batch Size"]
+    batch_size = hyperparameters["batch_size"]
     train_dataloader = torch.utils.data.DataLoader(
         train_set, batch_size=batch_size, shuffle=True
     )
@@ -386,25 +384,35 @@ def execute_model(model, train_set, valid_set, hyperparameters, verbose):
 def main():
     ####################################
     # Hyperparameters to test:
-    batch_size = 128  # 128  512, 1024,
+    batch_size = 100  # 128  512, 1024,
     dropout = 0.1  # 0.1, 0.2, 0.5
-    lr = 2e-3  # 1e-3, 2e-3, 5e-3
+    lr = 1e-3  # 1e-3, 2e-3, 5e-3
     epochs = 10  # 15, 30, 100
     optimizer_option = 2  # 1:SGD 2:Adam
     verbose = True
+    fn_loss_option = 1  # 1:MSE 2:CEL
 
+    input_channels=1
+    conv_channels = 16
+    kernel_size = 3
+    pool_size = 2
     ####################################
     device = get_device()
-    loss_fn = nn.MSELoss()
 
     model = AutoEncoder(
-        input_channels=1,
-        conv_channels=16,
-        kernel_size=3,
-        pool_size=2,
-        linear_size=128,
+        input_channels=input_channels,
+        conv_channels=conv_channels,
+        kernel_size=kernel_size,
+        pool_size=pool_size,
         dropout=0.5,
     )
+    
+    if fn_loss_option == 1:
+        loss_fn = nn.MSELoss()
+    else:
+        loss_fn = nn.CrossEntropyLoss()
+
+
 
     if optimizer_option == 1:
         optimizer = torch.optim.SGD(model.parameters(), lr=lr)
@@ -412,14 +420,19 @@ def main():
         optimizer = torch.optim.Adam(model.parameters(), lr=lr, eps=1e-08)
 
     hyperparameters = {
-        "Device": device,
-        "Batch Size": batch_size,
-        "Epochs": epochs,
-        "Learning Rate": lr,
-        "Loss Function": loss_fn,
-        "Optimizer": optimizer,
-        "Dropout": dropout,
+        "device": device,
+        "batch_size": batch_size,
+        "epochs": epochs,
+        "learning_rate": lr,
+        "loss_function": loss_fn,
+        "optimizer": optimizer,
+        "dropout": dropout,
+        "input_channels": input_channels,
+        "conv_channels": conv_channels,
+        "kernel_size": kernel_size,
+        "pool_size": pool_size,    
     }
+    
     train_set, valid_set = generate_data(batch_size)
 
     execute_model(model, train_set, valid_set, hyperparameters, verbose)
