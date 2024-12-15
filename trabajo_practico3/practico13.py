@@ -236,9 +236,9 @@ class AutoEncoder(nn.Module):
 
 
 def train_loop(dataloader, model, hyperparameters, verbose=False):
-    device = hyperparameters["Device"]
-    loss_fn = hyperparameters["Loss Function"]
-    optimizer = hyperparameters["Optimizer"]
+    device = hyperparameters["device"]
+    loss_fn = hyperparameters["loss_function"]
+    optimizer = hyperparameters["optimizer"]
 
     model.train()
     num_samples = len(dataloader.dataset)

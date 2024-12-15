@@ -17,25 +17,6 @@ from torchvision import datasets, transforms
 CURRENT_PATH = Path(__file__).resolve().parent
 
 
-def get_device():
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-    # # Check that MPS is available
-    # if not torch.backends.mps.is_available():
-    #     if not torch.backends.mps.is_built():
-    #         print("MPS not available because the current PyTorch install was not "
-    #               "built with MPS enabled.")
-    #     else:
-    #         print("MPS not available because the current MacOS version is not 12.3+ "
-    #               "and/or you do not have an MPS-enabled device on this machine.")
-
-    # else:
-    #     device = torch.device("mps")
-
-    print(f"Using {device} device")
-    return device
-
-
 def batch(x):
     return x.unsqueeze(0)  # -> (28, 28) => (1, 28, 28)
 
@@ -44,9 +25,7 @@ def unbatch(x):
     return x.squeeze().detach().cpu().numpy()  # (1, 28, 28) => (28, 28)
 
 
-def plot_image_and_prediction(model, train_set, hyperparameters):
-    hyperparameters_to_log = format_to_log(hyperparameters)
-    filename = "_".join([f"{k}-{v}".lower() for k, v in hyperparameters_to_log.items()])
+def plot_image_and_prediction(model, train_set, h_params):
     figure = plt.figure()
     rows, cols = 3, 2
     i = 0  # subplot index
@@ -69,23 +48,13 @@ def plot_image_and_prediction(model, train_set, hyperparameters):
         plt.imshow(pred_image, cmap="Greys_r")
 
     extension = "png"
-    full_path = f"{CURRENT_PATH}/prediccion_{filename}.{extension}"
+    full_path = f"{CURRENT_PATH}/prediccion_{h_params.filename}.{extension}"
     plt.savefig(full_path, bbox_inches="tight")
     plt.show()
 
 
-def format_to_log(hyperparameters):
-    hyperparameters_to_log = hyperparameters.copy()
-    hyperparameters_to_log["device"] = hyperparameters["device"].type
-    hyperparameters_to_log.pop("loss_function", None)
-    hyperparameters_to_log["optimizer"] = (
-        "SGD" if isinstance(hyperparameters["optimizer"], torch.optim.SGD) else "Adam"
-    )
-    return hyperparameters_to_log
-
-
 def log(
-    hyperparameters=None,
+    h_params=None,
     last_eval_avg_loss=None,
     last_train_avg_loss=None,
     last_train_avg_loss_incorrect=None,
@@ -102,13 +71,12 @@ def log(
             print(f"{key:<20} {execution_time:<10}", file=f)
             return
 
-        hyperparameters_to_log = format_to_log(hyperparameters)
         print("-" * 30, file=f)
         print("\n", file=f)
 
         print(f"{'Hyperparameter':<20} {'Value':<10}", file=f)
         print("-" * 30, file=f)
-        for k, v in hyperparameters_to_log.items():
+        for k, v in h_params.attrs.items():
             print(f"{k:<20} {str(v):<10}", file=f)
         print("-" * 30, file=f)
 
@@ -119,15 +87,12 @@ def log(
 
 
 def plot_results(
-    hyperparameters,
+    h_params,
     list_eval_avg_loss,
     list_train_avg_loss,
     list_train_avg_loss_incorrect,
 ):
-    hyperparameters_to_log = format_to_log(hyperparameters)
-
-    caption = ", ".join([f"{k}: {v}" for k, v in hyperparameters_to_log.items()])
-    filename = "_".join([f"{k}-{v}".lower() for k, v in hyperparameters_to_log.items()])
+    caption = ", ".join([f"{k}: {v}" for k, v in h_params.attrs.items()])
 
     num_samples = len(list_train_avg_loss_incorrect)
     x = range(1, num_samples + 1)
@@ -158,7 +123,7 @@ def plot_results(
 
     metric = "loss"
     extension = "png"
-    full_path = f"{CURRENT_PATH}/{metric}_{filename}.{extension}"
+    full_path = f"{CURRENT_PATH}/{metric}_{h_params.filename}.{extension}"
     plt.savefig(full_path, bbox_inches="tight")
     plt.show()
 
@@ -175,7 +140,7 @@ class CustomDataset(Dataset):
         return image, image
 
 
-def generate_data(batch_size):
+def generate_data():
     # transform number to [0,1]
     transform = transforms.Compose(
         [transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))]
@@ -202,24 +167,24 @@ def generate_data(batch_size):
 
 
 class AutoEncoder(nn.Module):
-
-    def __init__(
-        self,
-        input_channels,
-        conv_channels,
-        kernel_size,
-        pool_size,
-        dropout,
-    ):
+    def __init__(self, h_params):
         super().__init__()
 
+        input_channels = h_params.input_channels
+        conv_channels = h_params.conv_channels
+        kernel_size = h_params.kernel_size
+        pool_size = h_params.pool_size
+        dropout = h_params.dropout
+
         # Encoder: Convolutional + MaxPool2D
+
+        padding = (kernel_size // 2) - 1
         self.conv2d = nn.Sequential(
             nn.Conv2d(
                 input_channels,
                 conv_channels,
                 kernel_size=kernel_size,
-                padding=(kernel_size // 2) -1,
+                padding=padding,
             ),
             nn.ReLU(),
             nn.Dropout(dropout),
@@ -257,10 +222,10 @@ class AutoEncoder(nn.Module):
         return x
 
 
-def train_loop(dataloader, model, hyperparameters, verbose=False):
-    device = hyperparameters["device"]
-    loss_fn = hyperparameters["loss_function"]
-    optimizer = hyperparameters["optimizer"]
+def train_loop(dataloader, model, h_params):
+    device = h_params.device
+    loss_fn = h_params.loss_fn
+    optimizer = h_params.optimizer
 
     model.train()
     num_samples = len(dataloader.dataset)
@@ -280,7 +245,7 @@ def train_loop(dataloader, model, hyperparameters, verbose=False):
         sum_batch_avg_loss += batch_avg_loss
         num_processed_samples += batch_size
 
-        if verbose and batch % (num_batches / 10) == 0:
+        if h_params.verbose and batch % (num_batches / 10) == 0:
             processed_samples = 100 * num_processed_samples / num_samples
             print(
                 f"train loop: batch={batch:>5d}"
@@ -293,149 +258,176 @@ def train_loop(dataloader, model, hyperparameters, verbose=False):
     return avg_loss
 
 
-def eval_loop(dataloader, model, hyperparameters, verbose=False):
-    device = hyperparameters["device"]
-    loss_fn = hyperparameters["loss_function"]
-
+def eval_loop(dataloader, model, h_params):
     model.eval()
     num_batches = len(dataloader)
     sum_batch_avg_loss = 0
     num_processed_samples = 0
     with torch.no_grad():
         for X, y in dataloader:
-            X = X.to(device)
-            y = y.to(device)
+            X = X.to(h_params.device)
+            y = y.to(h_params.device)
             batch_size = len(X)
             pred = model(X)
-            loss = loss_fn(pred, y)
+            loss = h_params.loss_fn(pred, y)
             batch_avg_loss = loss.item()
             sum_batch_avg_loss += batch_avg_loss
             num_processed_samples += batch_size
 
     avg_loss = sum_batch_avg_loss / num_batches
-    if verbose:
+    if h_params.verbose:
         print(f"eval loop: avg loss={avg_loss:>8f}")
 
     return avg_loss
 
 
-def train_and_eval(model, train_dataloader, valid_dataloader, hyperparameters, verbose):
+def train_and_eval(model, train_dataloader, valid_dataloader, h_params):
     list_train_avg_loss_incorrect = []
     list_train_avg_loss = []
     list_eval_avg_loss = []
 
-    epochs = hyperparameters["epochs"]
-    for epoch in range(1, epochs + 1):
+    for epoch in range(1, h_params.epochs + 1):
         print(f"\nEpoch: {epoch}")
         print("-" * 70)
-        train_avg_loss_incorrect = train_loop(
-            train_dataloader, model, hyperparameters, verbose
-        )
+        train_avg_loss_incorrect = train_loop(train_dataloader, model, h_params)
         list_train_avg_loss_incorrect.append(train_avg_loss_incorrect)
 
-        train_avg_loss = eval_loop(train_dataloader, model, hyperparameters, verbose)
+        train_avg_loss = eval_loop(train_dataloader, model, h_params)
         list_train_avg_loss.append(train_avg_loss)
 
-        eval_avg_loss = eval_loop(valid_dataloader, model, hyperparameters, verbose)
+        eval_avg_loss = eval_loop(valid_dataloader, model, h_params)
         list_eval_avg_loss.append(eval_avg_loss)
 
     plot_results(
-        hyperparameters,
+        h_params,
         list_eval_avg_loss,
         list_train_avg_loss,
         list_train_avg_loss_incorrect,
     )
 
     log(
-        hyperparameters,
+        h_params,
         list_eval_avg_loss[-1],
         list_train_avg_loss[-1],
         list_train_avg_loss_incorrect[-1],
     )
 
 
-def execute_model(model, train_set, valid_set, hyperparameters, verbose):
-    batch_size = hyperparameters["batch_size"]
+def execute_model(h_params):
+    train_set, valid_set = generate_data()
     train_dataloader = torch.utils.data.DataLoader(
-        train_set, batch_size=batch_size, shuffle=True
+        train_set, batch_size=h_params.batch_size, shuffle=True
     )
     valid_dataloader = torch.utils.data.DataLoader(
-        valid_set, batch_size=batch_size, shuffle=True
+        valid_set, batch_size=h_params.batch_size, shuffle=True
     )
 
-    start_time = time.perf_counter()
+    for epochs in [10, 20, 30]:
+        h_params.epochs = epochs
+        for conv_channels in [16, 32, 64]:
+            h_params.conv_channels = conv_channels
+            for kernel_size in [3]:
+                h_params.kernel_size = kernel_size
 
-    train_and_eval(
-        model,
-        train_dataloader,
-        valid_dataloader,
-        hyperparameters,
-        verbose,
-    )
+                model = AutoEncoder(h_params)
 
-    end_time = time.perf_counter()
-    execution_time = end_time - start_time
+                if h_params.optimizer_option == 1:
+                    h_params.optimizer = torch.optim.SGD(
+                        model.parameters(), lr=h_params.lr
+                    )
+                else:
+                    h_params.optimizer = torch.optim.Adam(
+                        model.parameters(), lr=h_params.lr, eps=1e-08
+                    )
 
-    log(execution_time=execution_time)
+                start_time = time.perf_counter()
+                train_and_eval(model, train_dataloader, valid_dataloader, h_params)
+                end_time = time.perf_counter()
+                execution_time = end_time - start_time
+                log(execution_time=execution_time)
 
-    plot_image_and_prediction(model, train_set, hyperparameters)
+                if h_params.verbose:
+                    print(model.state_dict())
+                    # torch.save(model.state_dict(), f"{h_params.filename}_learning.pt")
+                plot_image_and_prediction(model, train_set, h_params)
 
 
-def main():
+class Hyperparameters:
     ####################################
-    # Hyperparameters to test:
+    # Hyperparameters:
     batch_size = 100  # 128  512, 1024,
     dropout = 0.1  # 0.1, 0.2, 0.5
     lr = 1e-3  # 1e-3, 2e-3, 5e-3
     epochs = 10  # 15, 30, 100
+    loss_fn_option = 1  # 1:MSE 2:CEL
+    loss_fn = None
     optimizer_option = 2  # 1:SGD 2:Adam
-    verbose = True
-    fn_loss_option = 1  # 1:MSE 2:CEL
+    optimizer = None
+    device = None
+    verbose = False
 
-    input_channels=1
+    # Convolution Hyperparameters
+    input_channels = 1
     conv_channels = 16
     kernel_size = 3
     pool_size = 2
-    ####################################
-    device = get_device()
 
-    model = AutoEncoder(
-        input_channels=input_channels,
-        conv_channels=conv_channels,
-        kernel_size=kernel_size,
-        pool_size=pool_size,
-        dropout=0.5,
-    )
-    
-    if fn_loss_option == 1:
-        loss_fn = nn.MSELoss()
-    else:
-        loss_fn = nn.CrossEntropyLoss()
+    def __init__(self, epochs=2, batch_size=100, loss_fn_option=1):
+        self.epochs = epochs
+        self.batch_size = batch_size
+        self.device = self.get_device()
+        self.loss_fn_option = loss_fn_option
+
+        if loss_fn_option == 1:
+            self.loss_fn = nn.MSELoss()
+        else:
+            self.loss_fn = nn.CrossEntropyLoss()
+
+    def get_device(self):
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        # # Check that MPS is available
+        # if not torch.backends.mps.is_available():
+        #     if not torch.backends.mps.is_built():
+        #         print("MPS not available because the current PyTorch install was not "
+        #               "built with MPS enabled.")
+        #     else:
+        #         print("MPS not available because the current MacOS version is not 12.3+ "
+        #               "and/or you do not have an MPS-enabled device on this machine.")
+
+        # else:
+        #     device = torch.device("mps")
+
+        print(f"Using {device} device")
+        return device
+
+    @property
+    def attrs(self):
+        nn_attrs = {
+            "batch_size": self.batch_size,
+            "dropout": self.dropout,
+            "lr": self.lr,
+            "device": self.device.type,
+        }
+
+        autoencoder_attrs = {
+            "epochs": self.epochs,
+            "loss_fn": "MSE" if self.loss_fn_option == 1 else "CrossEntropy",
+            "optimizer": "SGD" if self.optimizer_option == 1 else "ADAM",
+            "conv_channels": self.conv_channels,
+            "kernel_size": self.kernel_size,
+            "pool_size": self.pool_size,
+        }
+        return autoencoder_attrs
+
+    @property
+    def filename(self):
+        return "_".join([f"{k}-{v}" for k, v in self.attrs.items()])
 
 
-
-    if optimizer_option == 1:
-        optimizer = torch.optim.SGD(model.parameters(), lr=lr)
-    else:
-        optimizer = torch.optim.Adam(model.parameters(), lr=lr, eps=1e-08)
-
-    hyperparameters = {
-        "device": device,
-        "batch_size": batch_size,
-        "epochs": epochs,
-        "learning_rate": lr,
-        "loss_function": loss_fn,
-        "optimizer": optimizer,
-        "dropout": dropout,
-        "input_channels": input_channels,
-        "conv_channels": conv_channels,
-        "kernel_size": kernel_size,
-        "pool_size": pool_size,    
-    }
-    
-    train_set, valid_set = generate_data(batch_size)
-
-    execute_model(model, train_set, valid_set, hyperparameters, verbose)
+def main():
+    h_params = Hyperparameters(batch_size=100)
+    execute_model(h_params)
 
 
 if __name__ == "__main__":
