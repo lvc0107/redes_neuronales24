@@ -5,6 +5,7 @@ Created on Sun Nov 10 17:00:17 2024
 
 @author: luisvargas
 """
+import copy
 import time
 from pathlib import Path
 
@@ -76,7 +77,7 @@ def log(
 
         print(f"{'Hyperparameter':<20} {'Value':<10}", file=f)
         print("-" * 30, file=f)
-        for k, v in h_params.attrs.items():
+        for k, v in h_params.autoencoder_attrs.items():
             print(f"{k:<20} {str(v):<10}", file=f)
         print("-" * 30, file=f)
 
@@ -86,23 +87,23 @@ def log(
         )
 
 
-def plot_results(
+def plot_loss(
     h_params,
     list_eval_avg_loss,
     list_train_avg_loss,
     list_train_avg_loss_incorrect,
 ):
-    caption = ", ".join([f"{k}: {v}" for k, v in h_params.attrs.items()])
-
     num_samples = len(list_train_avg_loss_incorrect)
     x = range(1, num_samples + 1)
     fontsize = 12
+    caption = ", ".join([f"{k}: {v}" for k, v in h_params.autoencoder_attrs.items()])
 
     plt.xlabel("Épocas", size=fontsize)
     plt.ylabel("Error", size=fontsize)
+    stage = "clasificación" if h_params.classification_stage_running else "convolución"
+    plt.title(f"Error promedio por épocas durante {stage}", size=fontsize)
     plt.grid(True)
     # plt.xlim([0, len(x) + 1])
-    plt.title("Error promedio por épocas", size=fontsize)
     plt.figtext(
         0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=fontsize
     )
@@ -126,6 +127,74 @@ def plot_results(
     full_path = f"{CURRENT_PATH}/{metric}_{h_params.filename}.{extension}"
     plt.savefig(full_path, bbox_inches="tight")
     plt.show()
+
+
+def plot_accuracy(
+    h_params,
+    list_train_precision_incorrect,
+    list_train_precision,
+    list_eval_precision,
+):
+    num_samples = len(list_train_precision_incorrect)
+    x = range(1, num_samples + 1)
+    fontsize = 12
+
+    caption = ", ".join([f"{k}: {v}" for k, v in h_params.classificator_attrs.items()])
+
+    plt.xlabel("Épocas", size=fontsize)
+    plt.ylabel("Precisión", size=fontsize)
+    plt.title("Precisión por épocas", size=fontsize)
+    plt.grid(True)
+    # plt.xlim([0, len(x) + 1])
+    plt.figtext(
+        0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=fontsize
+    )
+
+    y = list_train_precision_incorrect
+    plt.title("Precision promedio por épocas durante clasificación", size=fontsize)
+    plt.plot(x, y, c="r", label="Precisión durante entrenamiento.", linestyle="-")
+    plt.plot(x[-1], y[-1], c="r", marker="o", markersize=5)
+
+    y = list_train_precision
+    plt.title("Precisión promedio por épocas", size=fontsize)
+    plt.plot(x, y, c="g", label="Evaluación en datos de entrenamiento.", linestyle="-.")
+    plt.plot(x[-1], y[-1], c="g", marker="o", markersize=5)
+
+    y = list_eval_precision
+    plt.title("Precisión promedio por épocas", size=fontsize)
+    plt.plot(x, y, c="b", label="Evaluación en datos de validación.", linestyle="--")
+    plt.plot(x[-1], y[-1], c="b", marker="o", markersize=5)
+    plt.legend()
+
+    metric = "accuracy"
+    extension = "png"
+    full_path = f"{CURRENT_PATH}/{metric}_{h_params.filename}.{extension}"
+    plt.savefig(full_path, bbox_inches="tight")
+    plt.show()
+
+
+def plot_results(
+    h_params,
+    list_eval_avg_loss,
+    list_train_avg_loss,
+    list_train_avg_loss_incorrect,
+    list_train_precision_incorrect,
+    list_train_precision,
+    list_eval_precision,
+):
+    plot_loss(
+        h_params,
+        list_eval_avg_loss,
+        list_train_avg_loss,
+        list_train_avg_loss_incorrect,
+    )
+    if h_params.classification_stage_running:
+        plot_accuracy(
+            h_params,
+            list_train_precision_incorrect,
+            list_train_precision,
+            list_eval_precision,
+        )
 
 
 class CustomDataset(Dataset):
@@ -163,7 +232,7 @@ def generate_data():
 
     train_set = CustomDataset(train_set_orig)
     valid_set = CustomDataset(valid_set_orig)
-    return train_set, valid_set
+    return train_set, train_set_orig, valid_set, valid_set_orig
 
 
 class AutoEncoder(nn.Module):
@@ -176,49 +245,68 @@ class AutoEncoder(nn.Module):
         pool_size = h_params.pool_size
         dropout = h_params.dropout
 
-        # Encoder: Convolutional + MaxPool2D
+        self.n = 28 * 28
 
+        # Encoder: Convolutional + MaxPool2D
         padding = (kernel_size // 2) - 1
-        self.conv2d = nn.Sequential(
+        self.encoder = nn.Sequential(
             nn.Conv2d(
                 input_channels,
                 conv_channels,
                 kernel_size=kernel_size,
                 padding=padding,
-            ),
+            ),  # (1, 28, 28) -> (16, 26, 26)
             nn.ReLU(),
             nn.Dropout(dropout),
-            nn.MaxPool2d(pool_size),
-        )
-
-        # Flattened dimensions after convolution and pooling
-        flattened_dim = conv_channels * (26 // pool_size) * (26 // pool_size)
-
-        # Fully connected layer
-        self.linear = nn.Sequential(
+            nn.MaxPool2d(pool_size),  # (16, 26, 26) ->  (16, 13, 13) ->
+            # conv 2
+            nn.Conv2d(16, 32, kernel_size=3, padding=0),  # (16, 13, 13) -> (32, 11, 11)
+            nn.ReLU(),  # activacion
+            nn.Dropout(dropout),
+            nn.MaxPool2d(2, 2),  # (32, 11, 11) -> (32, 5, 5)
+            # Flattened dimensions after convolution and pooling
+            # self.flattened_dim = conv_channels * (26 // pool_size) * (26 // pool_size)
+            # Fully connected layer
+            # self.linear = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(flattened_dim, flattened_dim),
+            nn.Linear(32 * 5 * 5, self.n),
             nn.ReLU(),
             nn.Dropout(dropout),
         )
 
         # Decoder: ConvTranspose2D
-        self.convt2d = nn.Sequential(
-            nn.Unflatten(1, (conv_channels, 26 // pool_size, 26 // pool_size)),
+        self.decoder = nn.Sequential(
+            nn.Linear(self.n, 32 * 5 * 5),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Unflatten(1, (32, 5, 5)),  # 32*5*5  -> (32,5,5)
             nn.ConvTranspose2d(
-                conv_channels,
-                input_channels,
-                kernel_size=(kernel_size * 2),
-                stride=2,
-                padding=1,
+                32, 16, kernel_size=5, stride=2, padding=2, output_padding=0, dilation=2
             ),
-            nn.Sigmoid(),
+            nn.ConvTranspose2d(
+                16, 1, kernel_size=6, stride=2, padding=1, output_padding=0, dilation=1
+            ),
+            # nn.Sigmoid(),
         )
 
     def forward(self, x):
-        x = self.conv2d(x)
-        x = self.linear(x)
-        x = self.convt2d(x)
+        x = self.encoder(x)
+        x = self.decoder(x)
+        return x
+
+
+class Classificator(nn.Module):
+    def __init__(self, autoencoder, h_params):
+        super().__init__()
+
+        self.n = autoencoder.n
+        self.dropout = h_params.dropout
+        self.encoder = copy.deepcopy(autoencoder.encoder)
+        self.classificator = nn.Sequential(nn.Linear(self.n, 10))
+
+    def forward(self, x):
+        x = self.encoder(x)
+        x = self.classificator(x)
         return x
 
 
@@ -232,6 +320,7 @@ def train_loop(dataloader, model, h_params):
     num_batches = len(dataloader)
     sum_batch_avg_loss = 0
     num_processed_samples = 0
+    sum_correct = 0
     for batch, (X, y) in enumerate(dataloader):
         X = X.to(device)
         y = y.to(device)
@@ -243,6 +332,7 @@ def train_loop(dataloader, model, h_params):
         optimizer.step()
         batch_avg_loss = loss.item()
         sum_batch_avg_loss += batch_avg_loss
+        sum_correct += (pred.argmax(1) == y).type(torch.float).sum().item()
         num_processed_samples += batch_size
 
         if h_params.verbose and batch % (num_batches / 10) == 0:
@@ -254,14 +344,16 @@ def train_loop(dataloader, model, h_params):
             )
 
     avg_loss = sum_batch_avg_loss / num_batches
-
-    return avg_loss
+    precision = sum_correct / num_samples
+    return avg_loss, precision
 
 
 def eval_loop(dataloader, model, h_params):
     model.eval()
     num_batches = len(dataloader)
+    num_samples = len(dataloader.dataset)
     sum_batch_avg_loss = 0
+    sum_correct = 0
     num_processed_samples = 0
     with torch.no_grad():
         for X, y in dataloader:
@@ -272,37 +364,53 @@ def eval_loop(dataloader, model, h_params):
             loss = h_params.loss_fn(pred, y)
             batch_avg_loss = loss.item()
             sum_batch_avg_loss += batch_avg_loss
+            sum_correct += (pred.argmax(1) == y).type(torch.float).sum().item()
             num_processed_samples += batch_size
 
     avg_loss = sum_batch_avg_loss / num_batches
+    precision = sum_correct / num_samples
     if h_params.verbose:
-        print(f"eval loop: avg loss={avg_loss:>8f}")
+        print(f"eval loop precision={100 * precision:>0.1f} avg loss={avg_loss:>8f}")
 
-    return avg_loss
+    return avg_loss, precision
 
 
 def train_and_eval(model, train_dataloader, valid_dataloader, h_params):
     list_train_avg_loss_incorrect = []
+    list_train_precision_incorrect = []
     list_train_avg_loss = []
+    list_train_precision = []
     list_eval_avg_loss = []
+    list_eval_precision = []
 
     for epoch in range(1, h_params.epochs + 1):
-        print(f"\nEpoch: {epoch}")
+        if h_params.classification_stage_running:
+            print(f"\nEpoch classification: {epoch}")
+        else:
+            print(f"\nEpoch convolution: {epoch}")
         print("-" * 70)
-        train_avg_loss_incorrect = train_loop(train_dataloader, model, h_params)
+        train_avg_loss_incorrect, train_precision_incorrect = train_loop(
+            train_dataloader, model, h_params
+        )
         list_train_avg_loss_incorrect.append(train_avg_loss_incorrect)
+        list_train_precision_incorrect.append(train_precision_incorrect)
 
-        train_avg_loss = eval_loop(train_dataloader, model, h_params)
+        train_avg_loss, train_precision = eval_loop(train_dataloader, model, h_params)
         list_train_avg_loss.append(train_avg_loss)
+        list_train_precision.append(train_precision)
 
-        eval_avg_loss = eval_loop(valid_dataloader, model, h_params)
+        eval_avg_loss, eval_precision = eval_loop(valid_dataloader, model, h_params)
         list_eval_avg_loss.append(eval_avg_loss)
+        list_eval_precision.append(eval_precision)
 
     plot_results(
         h_params,
         list_eval_avg_loss,
         list_train_avg_loss,
         list_train_avg_loss_incorrect,
+        list_train_precision_incorrect,
+        list_train_precision,
+        list_eval_precision,
     )
 
     log(
@@ -313,8 +421,9 @@ def train_and_eval(model, train_dataloader, valid_dataloader, h_params):
     )
 
 
-def execute_model(h_params):
-    train_set, valid_set = generate_data()
+def main():
+    h_params = Hyperparameters(batch_size=100)
+    train_set, train_set_orig, valid_set, valid_set_orig = generate_data()
     train_dataloader = torch.utils.data.DataLoader(
         train_set, batch_size=h_params.batch_size, shuffle=True
     )
@@ -322,34 +431,63 @@ def execute_model(h_params):
         valid_set, batch_size=h_params.batch_size, shuffle=True
     )
 
-    for epochs in [10, 20, 30]:
-        h_params.epochs = epochs
-        for conv_channels in [16, 32, 64]:
-            h_params.conv_channels = conv_channels
-            for kernel_size in [3]:
-                h_params.kernel_size = kernel_size
+    for conv_channels in [16]:
+        h_params.conv_channels = conv_channels
+        # TODO make this parameter configurable in Autoencoder class
+        for kernel_size in [3]:
+            h_params.kernel_size = kernel_size
 
-                model = AutoEncoder(h_params)
+            autoencoder = AutoEncoder(h_params)
+            if h_params.optimizer_option == 1:
+                h_params.optimizer = torch.optim.SGD(
+                    autoencoder.parameters(), lr=h_params.lr
+                )
+            else:
+                h_params.optimizer = torch.optim.Adam(
+                    autoencoder.parameters(), lr=h_params.lr, eps=1e-08
+                )
 
-                if h_params.optimizer_option == 1:
-                    h_params.optimizer = torch.optim.SGD(
-                        model.parameters(), lr=h_params.lr
-                    )
-                else:
-                    h_params.optimizer = torch.optim.Adam(
-                        model.parameters(), lr=h_params.lr, eps=1e-08
-                    )
-
+            for epochs in h_params.epochs_convolution_options:
+                h_params.epochs_convolution = epochs
+                h_params.epochs = epochs
                 start_time = time.perf_counter()
-                train_and_eval(model, train_dataloader, valid_dataloader, h_params)
+                train_and_eval(
+                    autoencoder, train_dataloader, valid_dataloader, h_params
+                )
                 end_time = time.perf_counter()
                 execution_time = end_time - start_time
                 log(execution_time=execution_time)
 
                 if h_params.verbose:
-                    print(model.state_dict())
+                    print(autoencoder.state_dict())
                     # torch.save(model.state_dict(), f"{h_params.filename}_learning.pt")
-                plot_image_and_prediction(model, train_set, h_params)
+                plot_image_and_prediction(autoencoder, train_set, h_params)
+
+                train_dataloader = torch.utils.data.DataLoader(
+                    train_set_orig, batch_size=h_params.batch_size, shuffle=True
+                )
+                valid_dataloader = torch.utils.data.DataLoader(
+                    valid_set_orig, batch_size=h_params.batch_size, shuffle=True
+                )
+                h_params = Hyperparameters(loss_fn_option=2)
+                h_params.classification_stage_running = True
+                model = Classificator(autoencoder, h_params)
+                h_params.optimizer = torch.optim.Adam(
+                    model.classificator.parameters(), lr=h_params.lr, eps=1e-08
+                )
+                for epochs in h_params.epochs_classification_options:
+                    h_params.epochs_classification = epochs
+                    h_params.epochs = epochs
+
+                    start_time = time.perf_counter()
+                    train_and_eval(model, train_dataloader, valid_dataloader, h_params)
+                    end_time = time.perf_counter()
+
+                    execution_time = end_time - start_time
+                    log(execution_time=execution_time)
+                    if h_params.verbose:
+                        print(model.state_dict())
+                        # torch.save(model.state_dict(), f"{h_params.filename}_learning.pt")
 
 
 class Hyperparameters:
@@ -358,7 +496,7 @@ class Hyperparameters:
     batch_size = 100  # 128  512, 1024,
     dropout = 0.1  # 0.1, 0.2, 0.5
     lr = 1e-3  # 1e-3, 2e-3, 5e-3
-    epochs = 10  # 15, 30, 100
+    epochs = 0
     loss_fn_option = 1  # 1:MSE 2:CEL
     loss_fn = None
     optimizer_option = 2  # 1:SGD 2:Adam
@@ -367,13 +505,22 @@ class Hyperparameters:
     verbose = False
 
     # Convolution Hyperparameters
+    # epochs_convolution_options = [10, 15, 20]
+    epochs_convolution_options = [2]
+    epochs_convolution = 0
     input_channels = 1
     conv_channels = 16
     kernel_size = 3
     pool_size = 2
 
-    def __init__(self, epochs=2, batch_size=100, loss_fn_option=1):
-        self.epochs = epochs
+    # Classification Hyperparameters
+
+    # epochs_classification_options = [10]
+    epochs_classification_options = [2]
+    epochs_classification = 0
+    classification_stage_running = False
+
+    def __init__(self, batch_size=100, loss_fn_option=1):
         self.batch_size = batch_size
         self.device = self.get_device()
         self.loss_fn_option = loss_fn_option
@@ -402,32 +549,29 @@ class Hyperparameters:
         return device
 
     @property
-    def attrs(self):
-        nn_attrs = {
+    def classificator_attrs(self):
+        return {
+            "epochs": self.epochs_classification,
             "batch_size": self.batch_size,
             "dropout": self.dropout,
             "lr": self.lr,
             "device": self.device.type,
         }
 
-        autoencoder_attrs = {
-            "epochs": self.epochs,
+    @property
+    def autoencoder_attrs(self):
+        return {
+            "epochs": self.epochs_convolution,
             "loss_fn": "MSE" if self.loss_fn_option == 1 else "CrossEntropy",
             "optimizer": "SGD" if self.optimizer_option == 1 else "ADAM",
             "conv_channels": self.conv_channels,
             "kernel_size": self.kernel_size,
             "pool_size": self.pool_size,
         }
-        return autoencoder_attrs
 
     @property
     def filename(self):
-        return "_".join([f"{k}-{v}" for k, v in self.attrs.items()])
-
-
-def main():
-    h_params = Hyperparameters(batch_size=100)
-    execute_model(h_params)
+        return "_".join([f"{k}-{v}" for k, v in self.autoencoder_attrs.items()])
 
 
 if __name__ == "__main__":
