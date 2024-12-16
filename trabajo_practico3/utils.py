@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Sun Dec 15 21:55:11 2024
 
 @author: luisvargas
 """
+from pathlib import Path
+
 import torch
+import torch.nn as nn
 from matplotlib import pyplot as plt
 from torch.utils.data import Dataset
 from torchvision import datasets, transforms
-from pathlib import Path
-
-import torch.nn as nn
 
 CURRENT_PATH = Path(__file__).resolve().parent
 
@@ -137,11 +136,11 @@ def unbatch(x):
 
 
 def log(
-        h_params=None,
-        last_eval_avg_loss=None,
-        last_train_avg_loss=None,
-        last_train_avg_loss_incorrect=None,
-        execution_time=None,
+    h_params=None,
+    last_eval_avg_loss=None,
+    last_train_avg_loss=None,
+    last_train_avg_loss_incorrect=None,
+    execution_time=None,
 ):
     extension = "p"
     filename = "results"
@@ -170,10 +169,10 @@ def log(
 
 
 def plot_loss(
-        h_params,
-        list_eval_avg_loss,
-        list_train_avg_loss,
-        list_train_avg_loss_incorrect,
+    h_params,
+    list_eval_avg_loss,
+    list_train_avg_loss,
+    list_train_avg_loss_incorrect,
 ):
     num_samples = len(list_train_avg_loss_incorrect)
     x = range(1, num_samples + 1)
@@ -212,10 +211,10 @@ def plot_loss(
 
 
 def plot_accuracy(
-        h_params,
-        list_train_precision_incorrect,
-        list_train_precision,
-        list_eval_precision,
+    h_params,
+    list_train_precision_incorrect,
+    list_train_precision,
+    list_eval_precision,
 ):
     num_samples = len(list_train_precision_incorrect)
     x = range(1, num_samples + 1)
@@ -256,26 +255,23 @@ def plot_accuracy(
 
 
 def plot_results(
-        h_params,
-        list_eval_avg_loss,
-        list_train_avg_loss,
-        list_train_avg_loss_incorrect,
-        list_train_precision_incorrect,
-        list_train_precision,
-        list_eval_precision,
+    h_params,
+    list_eval_avg_loss,
+    list_train_avg_loss,
+    list_train_avg_loss_incorrect,
+    list_train_precision_incorrect,
+    list_train_precision,
+    list_eval_precision,
 ):
     plot_loss(
-        h_params,
-        list_eval_avg_loss,
-        list_train_avg_loss,
-        list_train_avg_loss_incorrect
+        h_params, list_eval_avg_loss, list_train_avg_loss, list_train_avg_loss_incorrect
     )
     if h_params.classification_stage_running:
         plot_accuracy(
             h_params,
             list_train_precision_incorrect,
             list_train_precision,
-            list_eval_precision
+            list_eval_precision,
         )
 
 

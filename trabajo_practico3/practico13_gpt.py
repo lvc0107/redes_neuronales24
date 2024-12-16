@@ -27,7 +27,7 @@ class AutoEncoder(nn.Module):
         conv_channels = h_params.conv_channels
         kernel_size = h_params.kernel_size
         pool_size = h_params.pool_size
-        dropout = h_params.dropout
+        self.dropout = h_params.dropout
 
         self.n = 28 * 28
 
@@ -41,32 +41,26 @@ class AutoEncoder(nn.Module):
                 padding=padding,
             ),  # (1, 28, 28) -> (16, 26, 26)
             nn.ReLU(),
-            nn.Dropout(dropout),
+            nn.Dropout(self.dropout),
             nn.MaxPool2d(pool_size),  # (16, 26, 26) ->  (16, 13, 13) ->
-            # conv 2
-            nn.Conv2d(16, 32, kernel_size=3, padding=0),  # (16, 13, 13) -> (32, 11, 11)
-            nn.ReLU(),  # activacion
-            nn.Dropout(dropout),
-            nn.MaxPool2d(2, 2),  # (32, 11, 11) -> (32, 5, 5)
             nn.Flatten(),
-            nn.Linear(32 * 5 * 5, self.n),
+            nn.Linear(
+                16 * 13 * 13, self.n
+            ),  # fully connected 16 * 13 * 13  => 16 * 13 * 13
             nn.ReLU(),
-            nn.Dropout(dropout),
+            nn.Dropout(self.dropout),
         )
 
         # Decoder: ConvTranspose2D
         self.decoder = nn.Sequential(
-            nn.Linear(self.n, 32 * 5 * 5),
+            nn.Linear(self.n, 16 * 13 * 13),
             nn.ReLU(),
-            nn.Dropout(dropout),
-            nn.Unflatten(1, (32, 5, 5)),  # 32*5*5  -> (32,5,5)
-            nn.ConvTranspose2d(
-                32, 16, kernel_size=5, stride=2, padding=2, output_padding=0, dilation=2
-            ),
+            nn.Dropout(self.dropout),
+            nn.Unflatten(1, (16, 13, 13)),  # 16*13*13 -> (16,13,13)
             nn.ConvTranspose2d(
                 16, 1, kernel_size=6, stride=2, padding=1, output_padding=0, dilation=1
             ),
-            # nn.Sigmoid(),
+            nn.Sigmoid(),
         )
 
     def forward(self, x):
@@ -228,46 +222,56 @@ def main():
                 )
 
             for epochs in h_params.epochs_convolution_options:
-                h_params.epochs_convolution = epochs
-                h_params.epochs = epochs
-                start_time = time.perf_counter()
-                train_and_eval(
-                    autoencoder, train_dataloader, valid_dataloader, h_params
+                compute_convolution(
+                    autoencoder, epochs, h_params, train_dataloader, valid_dataloader
                 )
-                end_time = time.perf_counter()
-                execution_time = end_time - start_time
-                log(execution_time=execution_time)
-
-                if h_params.verbose:
-                    print(autoencoder.state_dict())
-                    # torch.save(model.state_dict(), f"{h_params.filename}_learning.pt")
                 plot_image_and_prediction(autoencoder, train_set, h_params)
-
-                train_dataloader = torch.utils.data.DataLoader(
-                    train_set_orig, batch_size=h_params.batch_size, shuffle=True
+                compute_classification(
+                    autoencoder, h_params, train_set_orig, valid_set_orig
                 )
-                valid_dataloader = torch.utils.data.DataLoader(
-                    valid_set_orig, batch_size=h_params.batch_size, shuffle=True
-                )
-                h_params = Hyperparameters(loss_fn_option=2)
-                h_params.classification_stage_running = True
-                model = Classificator(autoencoder, h_params)
-                h_params.optimizer = torch.optim.Adam(
-                    model.classificator.parameters(), lr=h_params.lr, eps=1e-08
-                )
-                for epochs in h_params.epochs_classification_options:
-                    h_params.epochs_classification = epochs
-                    h_params.epochs = epochs
 
-                    start_time = time.perf_counter()
-                    train_and_eval(model, train_dataloader, valid_dataloader, h_params)
-                    end_time = time.perf_counter()
 
-                    execution_time = end_time - start_time
-                    log(execution_time=execution_time)
-                    if h_params.verbose:
-                        print(model.state_dict())
-                        # torch.save(model.state_dict(), f"{h_params.filename}_learning.pt")
+def compute_classification(autoencoder, h_params, train_set_orig, valid_set_orig):
+    train_dataloader = torch.utils.data.DataLoader(
+        train_set_orig, batch_size=h_params.batch_size, shuffle=True
+    )
+    valid_dataloader = torch.utils.data.DataLoader(
+        valid_set_orig, batch_size=h_params.batch_size, shuffle=True
+    )
+    h_params = Hyperparameters(loss_fn_option=2)
+    h_params.classification_stage_running = True
+    model = Classificator(autoencoder, h_params)
+    h_params.optimizer = torch.optim.Adam(
+        model.classificator.parameters(), lr=h_params.lr, eps=1e-08
+    )
+    for epochs in h_params.epochs_classification_options:
+        h_params.epochs_classification = h_params.epochs = epochs
+
+        start_time = time.perf_counter()
+        train_and_eval(model, train_dataloader, valid_dataloader, h_params)
+        end_time = time.perf_counter()
+
+        execution_time = end_time - start_time
+        log(execution_time=execution_time)
+        if h_params.verbose:
+            print(model.state_dict())
+            # torch.save(model.state_dict(), f"{h_params.filename}_learning.pt")
+
+
+def compute_convolution(
+    autoencoder, epochs, h_params, train_dataloader, valid_dataloader
+):
+    h_params.epochs_convolution = h_params.epochs = epochs
+
+    start_time = time.perf_counter()
+    train_and_eval(autoencoder, train_dataloader, valid_dataloader, h_params)
+    end_time = time.perf_counter()
+
+    execution_time = end_time - start_time
+    log(execution_time=execution_time)
+    if h_params.verbose:
+        print(autoencoder.state_dict())
+        # torch.save(model.state_dict(), f"{h_params.filename}_learning.pt")
 
 
 if __name__ == "__main__":
