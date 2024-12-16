@@ -30,8 +30,7 @@ class Hyperparameters:
     verbose = False
 
     # Convolution Hyperparameters
-    # epochs_convolution_options = [10, 15, 20]
-    epochs_convolution_options = [2]
+    epochs_convolution_options = [10, 15, 20]
     epochs_convolution = 0
     input_channels = 1
     conv_channels = 16
@@ -39,9 +38,7 @@ class Hyperparameters:
     pool_size = 2
 
     # Classification Hyperparameters
-
-    # epochs_classification_options = [10]
-    epochs_classification_options = [2]
+    epochs_classification_options = [10]
     epochs_classification = 0
     classification_stage_running = False
 
@@ -103,6 +100,9 @@ def plot_image_and_prediction(model, train_set, h_params):
     figure = plt.figure()
     rows, cols = 3, 2
     i = 0  # subplot index
+    caption = ", ".join([f"{k}: {v}" for k, v in h_params.autoencoder_attrs.items()])
+
+
     for row in range(1, rows + 1):
         j = torch.randint(len(train_set), size=(1,)).item()
         i += 1
@@ -123,6 +123,9 @@ def plot_image_and_prediction(model, train_set, h_params):
 
     extension = "png"
     full_path = f"{CURRENT_PATH}/prediccion_{h_params.filename}.{extension}"
+    plt.figtext(
+        0.5, -0.08, caption, wrap=True, horizontalalignment="center", fontsize=12
+    )
     plt.savefig(full_path, bbox_inches="tight")
     plt.show()
 

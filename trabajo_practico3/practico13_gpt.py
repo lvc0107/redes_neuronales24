@@ -195,42 +195,6 @@ def train_and_eval(model, train_dataloader, valid_dataloader, h_params):
     )
 
 
-def main():
-    h_params = Hyperparameters(batch_size=100)
-    train_set, train_set_orig, valid_set, valid_set_orig = generate_data()
-    train_dataloader = torch.utils.data.DataLoader(
-        train_set, batch_size=h_params.batch_size, shuffle=True
-    )
-    valid_dataloader = torch.utils.data.DataLoader(
-        valid_set, batch_size=h_params.batch_size, shuffle=True
-    )
-
-    for conv_channels in [16]:
-        h_params.conv_channels = conv_channels
-        # TODO make this parameter configurable in Autoencoder class
-        for kernel_size in [3]:
-            h_params.kernel_size = kernel_size
-
-            autoencoder = AutoEncoder(h_params)
-            if h_params.optimizer_option == 1:
-                h_params.optimizer = torch.optim.SGD(
-                    autoencoder.parameters(), lr=h_params.lr
-                )
-            else:
-                h_params.optimizer = torch.optim.Adam(
-                    autoencoder.parameters(), lr=h_params.lr, eps=1e-08
-                )
-
-            for epochs in h_params.epochs_convolution_options:
-                compute_convolution(
-                    autoencoder, epochs, h_params, train_dataloader, valid_dataloader
-                )
-                plot_image_and_prediction(autoencoder, train_set, h_params)
-                compute_classification(
-                    autoencoder, h_params, train_set_orig, valid_set_orig
-                )
-
-
 def compute_classification(autoencoder, h_params, train_set_orig, valid_set_orig):
     train_dataloader = torch.utils.data.DataLoader(
         train_set_orig, batch_size=h_params.batch_size, shuffle=True
@@ -272,6 +236,44 @@ def compute_convolution(
     if h_params.verbose:
         print(autoencoder.state_dict())
         # torch.save(model.state_dict(), f"{h_params.filename}_learning.pt")
+
+
+
+def main():
+    h_params = Hyperparameters(batch_size=100)
+    train_set, train_set_orig, valid_set, valid_set_orig = generate_data()
+    train_dataloader = torch.utils.data.DataLoader(
+        train_set, batch_size=h_params.batch_size, shuffle=True
+    )
+    valid_dataloader = torch.utils.data.DataLoader(
+        valid_set, batch_size=h_params.batch_size, shuffle=True
+    )
+
+    for conv_channels in [16, 32]:
+        h_params.conv_channels = conv_channels
+        # TODO make this parameter configurable in Autoencoder class
+        for kernel_size in [3]:
+            h_params.kernel_size = kernel_size
+
+            autoencoder = AutoEncoder(h_params)
+            if h_params.optimizer_option == 1:
+                h_params.optimizer = torch.optim.SGD(
+                    autoencoder.parameters(), lr=h_params.lr
+                )
+            else:
+                h_params.optimizer = torch.optim.Adam(
+                    autoencoder.parameters(), lr=h_params.lr, eps=1e-08
+                )
+
+            for epochs in h_params.epochs_convolution_options:
+                compute_convolution(
+                    autoencoder, epochs, h_params, train_dataloader, valid_dataloader
+                )
+                plot_image_and_prediction(autoencoder, train_set, h_params)
+                compute_classification(
+                    autoencoder, h_params, train_set_orig, valid_set_orig
+                )
+
 
 
 if __name__ == "__main__":
