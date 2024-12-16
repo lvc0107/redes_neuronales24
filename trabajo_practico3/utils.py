@@ -38,6 +38,9 @@ class Hyperparameters:
     pool_size = 2
 
     # Classification Hyperparameters
+    hidden_sizes = [128]  # [128, 64],  [128], [256], [64, 32] [64, 32, 32]
+    input_size = 28 * 28
+    output_size = 10
     epochs_classification_options = [10]
     epochs_classification = 0
     classification_stage_running = False
@@ -74,10 +77,12 @@ class Hyperparameters:
     def classificator_attrs(self):
         return {
             "epochs": self.epochs_classification,
+            "loss_fn": "MSE" if self.loss_fn_option == 1 else "CrossEntropy",
+            "optimizer": "SGD" if self.optimizer_option == 1 else "ADAM",
             "batch_size": self.batch_size,
+            "hidden_layers": self.hidden_sizes,
             "dropout": self.dropout,
             "lr": self.lr,
-            "device": self.device.type,
         }
 
     @property
@@ -180,11 +185,16 @@ def plot_loss(
     num_samples = len(list_train_avg_loss_incorrect)
     x = range(1, num_samples + 1)
     fontsize = 12
-    caption = ", ".join([f"{k}: {v}" for k, v in h_params.autoencoder_attrs.items()])
+    if h_params.classification_stage_running:
+        stage = "clasificación"
+        caption = ", ".join([f"{k}: {v}" for k, v in h_params.classificator_attrs.items()])
+    else:
+        stage = "autoencoder"
+        caption = ", ".join([f"{k}: {v}" for k, v in h_params.autoencoder_attrs.items()])
 
     plt.xlabel("Épocas", size=fontsize)
     plt.ylabel("Error", size=fontsize)
-    stage = "clasificación" if h_params.classification_stage_running else "convolución"
+
     plt.title(f"Error promedio por épocas durante {stage}", size=fontsize)
     plt.grid(True)
     # plt.xlim([0, len(x) + 1])

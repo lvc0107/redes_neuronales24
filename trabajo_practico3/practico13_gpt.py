@@ -29,7 +29,7 @@ class AutoEncoder(nn.Module):
         pool_size = h_params.pool_size
         self.dropout = h_params.dropout
 
-        self.n = 28 * 28
+        self.input_size = h_params.input_size
 
         # Encoder: Convolutional + MaxPool2D
         padding = (kernel_size // 2) - 1
@@ -45,7 +45,7 @@ class AutoEncoder(nn.Module):
             nn.MaxPool2d(pool_size),  # (16, 26, 26) ->  (16, 13, 13) ->
             nn.Flatten(),
             nn.Linear(
-                16 * 13 * 13, self.n
+                16 * 13 * 13, self.input_size
             ),  # fully connected 16 * 13 * 13  => 16 * 13 * 13
             nn.ReLU(),
             nn.Dropout(self.dropout),
@@ -53,7 +53,7 @@ class AutoEncoder(nn.Module):
 
         # Decoder: ConvTranspose2D
         self.decoder = nn.Sequential(
-            nn.Linear(self.n, 16 * 13 * 13),
+            nn.Linear(self.input_size, 16 * 13 * 13),
             nn.ReLU(),
             nn.Dropout(self.dropout),
             nn.Unflatten(1, (16, 13, 13)),  # 16*13*13 -> (16,13,13)
@@ -69,14 +69,21 @@ class AutoEncoder(nn.Module):
         return x
 
 
-class Classificator(nn.Module):
+class ClassificatorNeuralNetwork(nn.Module):
     def __init__(self, autoencoder, h_params):
         super().__init__()
 
-        self.n = autoencoder.n
-        self.dropout = h_params.dropout
         self.encoder = copy.deepcopy(autoencoder.encoder)
-        self.classificator = nn.Sequential(nn.Linear(self.n, 10))
+        prev_size = h_params.input_size
+
+        layers = [nn.Flatten()]
+        for size in h_params.hidden_sizes:
+            layers.append(nn.Linear(prev_size, size))
+            layers.append(nn.ReLU())
+            layers.append(nn.Dropout(h_params.dropout))
+            prev_size = size
+        layers.append(nn.Linear(prev_size, h_params.output_size))
+        self.classificator = nn.Sequential(*layers)
 
     def forward(self, x):
         x = self.encoder(x)
@@ -204,7 +211,7 @@ def compute_classification(autoencoder, h_params, train_set_orig, valid_set_orig
     )
     h_params = Hyperparameters(loss_fn_option=2)
     h_params.classification_stage_running = True
-    model = Classificator(autoencoder, h_params)
+    model = ClassificatorNeuralNetwork(autoencoder, h_params)
     h_params.optimizer = torch.optim.Adam(
         model.classificator.parameters(), lr=h_params.lr, eps=1e-08
     )
@@ -249,7 +256,7 @@ def main():
         valid_set, batch_size=h_params.batch_size, shuffle=True
     )
 
-    for conv_channels in [16, 32]:
+    for conv_channels in [16]:
         h_params.conv_channels = conv_channels
         # TODO make this parameter configurable in Autoencoder class
         for kernel_size in [3]:
