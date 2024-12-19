@@ -5,6 +5,8 @@ Created on Sun Dec 15 21:55:11 2024
 @author: luisvargas
 """
 from pathlib import Path
+from dataclasses import dataclass
+import time
 
 import torch
 import torch.nn as nn
@@ -15,6 +17,8 @@ from torchvision import datasets, transforms
 CURRENT_PATH = Path(__file__).resolve().parent
 
 
+
+@dataclass
 class Hyperparameters:
     ####################################
     # Hyperparameters:
@@ -30,8 +34,7 @@ class Hyperparameters:
     verbose = False
 
     # Convolution Hyperparameters
-    epochs_convolution_options = [10, 15, 20]
-    epochs_convolution = 0
+    epochs_convolution = 10
     input_channels = 1
     conv_channels = 16
     kernel_size = 3
@@ -41,12 +44,10 @@ class Hyperparameters:
     hidden_sizes = [128]  # [128, 64],  [128], [256], [64, 32] [64, 32, 32]
     input_size = 28 * 28
     output_size = 10
-    epochs_classification_options = [10]
-    epochs_classification = 0
+    epochs_classification = 10
     classification_stage_running = False
 
-    def __init__(self, batch_size=100, loss_fn_option=1):
-        self.batch_size = batch_size
+    def __init__(self, loss_fn_option=1):
         self.device = self.get_device()
         self.loss_fn_option = loss_fn_option
 
@@ -267,25 +268,6 @@ def plot_accuracy(
     plt.show()
 
 
-def plot_results(
-    h_params,
-    list_eval_avg_loss,
-    list_train_avg_loss,
-    list_train_avg_loss_incorrect,
-    list_train_precision_incorrect,
-    list_train_precision,
-    list_eval_precision,
-):
-    plot_loss(
-        h_params, list_eval_avg_loss, list_train_avg_loss, list_train_avg_loss_incorrect
-    )
-    if h_params.classification_stage_running:
-        plot_accuracy(
-            h_params,
-            list_train_precision_incorrect,
-            list_train_precision,
-            list_eval_precision,
-        )
 
 
 class CustomDataset(Dataset):
@@ -324,3 +306,18 @@ def generate_data():
     train_set = CustomDataset(train_set_orig)
     valid_set = CustomDataset(valid_set_orig)
     return train_set, train_set_orig, valid_set, valid_set_orig
+
+
+
+def count_time(f, *args):
+    def wrapper(*args, **kwargs):
+    
+       start_time = time.perf_counter()
+       f(*args)
+       end_time = time.perf_counter()
+       execution_time = end_time - start_time
+       log(execution_time=execution_time)   
+    
+    return wrapper
+    
+    
