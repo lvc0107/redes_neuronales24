@@ -197,7 +197,7 @@ def train_and_eval(model, train_dataloader, valid_dataloader, h_params):
         )
         
 
-@count_time
+#@count_time
 def compute_classification(autoencoder, h_params, train_set_orig, valid_set_orig):
     train_dataloader = torch.utils.data.DataLoader(
         train_set_orig, batch_size=h_params.batch_size, shuffle=True
@@ -216,7 +216,7 @@ def compute_classification(autoencoder, h_params, train_set_orig, valid_set_orig
 
 
 
-@count_time
+#@count_time
 def compute_convolution(
     autoencoder, h_params, train_dataloader, valid_dataloader
 ):

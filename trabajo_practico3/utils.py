@@ -7,6 +7,7 @@ Created on Sun Dec 15 21:55:11 2024
 from pathlib import Path
 from dataclasses import dataclass
 import time
+import logging
 
 import torch
 import torch.nn as nn
@@ -155,26 +156,30 @@ def log(
     filename = "results"
     full_path = f"{CURRENT_PATH}/{filename}.{extension}"
 
-    with open(full_path, "a") as f:
-        if execution_time:
-            key = "Execution time"
-            print("-" * 30, file=f)
-            print(f"{key:<20} {execution_time:<10}", file=f)
-            return
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
 
-        print("-" * 30, file=f)
-        print("\n", file=f)
+    file_log_handler = logging.FileHandler(full_path)
+    logger.addHandler(file_log_handler)
+    
+    stdout_log_handler = logging.StreamHandler()
+    logger.addHandler(stdout_log_handler)
+    
+    # nice output format
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    file_log_handler.setFormatter(formatter)
+    stdout_log_handler.setFormatter(formatter)
 
-        print(f"{'Hyperparameter':<20} {'Value':<10}", file=f)
-        print("-" * 30, file=f)
-        for k, v in h_params.autoencoder_attrs.items():
-            print(f"{k:<20} {str(v):<10}", file=f)
-        print("-" * 30, file=f)
 
-        print(
-            f"{'Last train avg loss incorrect':<20} {last_train_avg_loss_incorrect:>7f}",
-            file=f,
-        )
+    if execution_time:
+        key = "Execution time"
+        logger.info(f"{key:<20} {execution_time:<10}")
+
+
+    for k, v in h_params.autoencoder_attrs.items():
+        logger.info(f"{k:<20} {str(v):<10}")
+    logger.info("-" * 30)
+
 
 
 def plot_loss(
@@ -316,7 +321,7 @@ def count_time(f, *args):
        f(*args)
        end_time = time.perf_counter()
        execution_time = end_time - start_time
-       log(execution_time=execution_time)   
+       log(h_params=args[1], execution_time=execution_time)   
     
     return wrapper
     
