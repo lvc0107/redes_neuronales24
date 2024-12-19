@@ -12,45 +12,20 @@ import torch.nn as nn
 from utils import (
     Hyperparameters,
     generate_data,
-    plot_image_and_prediction,
     plot_accuracy,
+    plot_image_and_prediction,
     plot_loss,
-    count_time
 )
 
 
-
 class AutoEncoder(nn.Module):
-    def __init__(self, h_params):
+    def __init__(self, h_params, classificator):
         super().__init__()
 
-        input_channels = h_params.input_channels
-        conv_channels = h_params.conv_channels
-        kernel_size = h_params.kernel_size
-        pool_size = h_params.pool_size
         self.dropout = h_params.dropout
-
         self.input_size = h_params.input_size
 
-        # Encoder: Convolutional + MaxPool2D
-        padding = (kernel_size // 2) - 1
-        self.encoder = nn.Sequential(
-            nn.Conv2d(
-                input_channels,
-                conv_channels,
-                kernel_size=kernel_size,
-                padding=padding,
-            ),  # (1, 28, 28) -> (16, 26, 26)
-            nn.ReLU(),
-            nn.Dropout(self.dropout),
-            nn.MaxPool2d(pool_size),  # (16, 26, 26) ->  (16, 13, 13) ->
-            nn.Flatten(),
-            nn.Linear(
-                16 * 13 * 13, self.input_size
-            ),  # fully connected 16 * 13 * 13  => 16 * 13 * 13
-            nn.ReLU(),
-            nn.Dropout(self.dropout),
-        )
+        self.encoder = copy.deepcopy(classificator.encoder)
 
         # Decoder: ConvTranspose2D
         self.decoder = nn.Sequential(
@@ -73,7 +48,6 @@ class AutoEncoder(nn.Module):
 class EncoderClassificatorNeuralNetwork(nn.Module):
     def __init__(self, h_params):
         super().__init__()
-
 
         input_channels = h_params.input_channels
         conv_channels = h_params.conv_channels
@@ -215,7 +189,11 @@ def train_and_eval(model, train_dataloader, valid_dataloader, h_params, title=No
 
     if h_params.classification_stage_running:
         plot_loss(
-            h_params, list_eval_avg_loss, list_train_avg_loss, list_train_avg_loss_incorrect, title
+            h_params,
+            list_eval_avg_loss,
+            list_train_avg_loss,
+            list_train_avg_loss_incorrect,
+            title,
         )
         plot_accuracy(
             h_params,
@@ -226,14 +204,14 @@ def train_and_eval(model, train_dataloader, valid_dataloader, h_params, title=No
         )
     else:
         plot_loss(
-            h_params, list_eval_avg_loss, list_train_avg_loss, list_train_avg_loss_incorrect
+            h_params,
+            list_eval_avg_loss,
+            list_train_avg_loss,
+            list_train_avg_loss_incorrect,
         )
 
 
-
-
 def compute_autoencoder(h_params, train_set, valid_set, classificator):
-    
     train_dataloader = torch.utils.data.DataLoader(
         train_set, batch_size=h_params.batch_size, shuffle=True
     )
@@ -241,10 +219,13 @@ def compute_autoencoder(h_params, train_set, valid_set, classificator):
         valid_set, batch_size=h_params.batch_size, shuffle=True
     )
     h_params = Hyperparameters(loss_fn_option=1)
-    autoencoder = AutoEncoder(h_params)
-    autoencoder.encoder = copy.deepcopy(classificator.encoder)
+    autoencoder = AutoEncoder(h_params, classificator)
 
     # SOLO ENTRENO EL DECODER Y USO EL ENCODER QUE ME DIO EL CLASIFICADOR
+
+    # En este caso SGD me da ruido
+    h_params.optimizer_option = 2
+
     if h_params.optimizer_option == 1:
         h_params.optimizer = torch.optim.SGD(
             autoencoder.decoder.parameters(), lr=h_params.lr
@@ -259,14 +240,11 @@ def compute_autoencoder(h_params, train_set, valid_set, classificator):
         print(autoencoder.state_dict())
         # torch.save(model.state_dict(), f"{h_params.filename}_learning.pt")
 
-    
     plot_image_and_prediction(autoencoder, train_set, h_params)
 
 
-
 def experiment1(h_params, train_set_au, train_set_cl, valid_set_au, valid_set_cl):
-
-    #COMPUTE CLASSIFICATION
+    # COMPUTE CLASSIFICATION
     train_dataloader = torch.utils.data.DataLoader(
         train_set_cl, batch_size=h_params.batch_size, shuffle=True
     )
@@ -282,16 +260,14 @@ def experiment1(h_params, train_set_au, train_set_cl, valid_set_au, valid_set_cl
     )
     title = "Entrenar Encoder y clasificador usando encoder sin entrenar"
     train_and_eval(model, train_dataloader, valid_dataloader, h_params, title)
-    
 
     # CREO un autoencoder solo para tener un decoder
     # no quiero tocar en enconder generado por el clasificador
     # asi que solo voy a optimizar las capas del decoder
-    compute_autoencoder(h_params, train_set_au, valid_set_au, model)   
-    
+    compute_autoencoder(h_params, train_set_au, valid_set_au, model)
+
 
 def experiment4(h_params, train_set_au, train_set_cl, valid_set_au, valid_set_cl):
-
     # COMPUTE CLASSIFICATION
     train_dataloader = torch.utils.data.DataLoader(
         train_set_cl, batch_size=h_params.batch_size, shuffle=True
@@ -303,18 +279,14 @@ def experiment4(h_params, train_set_au, train_set_cl, valid_set_au, valid_set_cl
     h_params.epochs = h_params.epochs_classification
     h_params.classification_stage_running = True
     model = EncoderClassificatorNeuralNetwork(h_params)
-    h_params.optimizer = torch.optim.Adam(
-        model.parameters(), lr=h_params.lr, eps=1e-08
-    )
+    h_params.optimizer = torch.optim.Adam(model.parameters(), lr=h_params.lr, eps=1e-08)
     title = "Entrenar solo clasificador y usando encoder sin entrenar"
     train_and_eval(model, train_dataloader, valid_dataloader, h_params, title)
 
-    
     # CREO un autoencoder solo para tener un decoder
     # no quiero tocar en enconder generado por el clasificador
     # asi que solo voy a optimizar las capas del decoder
-    compute_autoencoder(h_params, train_set_au, valid_set_au, model)   
-    
+    compute_autoencoder(h_params, train_set_au, valid_set_au, model)
 
 
 def main():
@@ -322,20 +294,20 @@ def main():
     train_set_au, train_set_cl, valid_set_au, valid_set_cl = generate_data()
 
     # 1 Entrenar encoder y clasificador juntos partiendo de encoder sin entrenar
-    # No copiar el encoder del autoencoder sino que agregar las layer del encoder en el clasificador
-    # PARA probar la predicion de la imagen copio el encoder a un autoencoder
+    # No copiar el encoder del autoencoder sino que agregar las layer
+    # del encoder en el clasificador
+    # Para probar la predicion de la imagen copio el encoder a un autoencoder
     # y solo entreno al decoder
-    experiment1(h_params, train_set_au, train_set_cl, valid_set_au,  valid_set_cl)
-
+    experiment1(h_params, train_set_au, train_set_cl, valid_set_au, valid_set_cl)
 
     # 4 Entrenar solo clasificador y usando encoder sin entrenar
-    # No copiar el encoder del autoencoder sino que agregaar las layer del encoder en el clasificador
+    # No copiar el encoder del autoencoder sino que agregaar las layer del
+    # encoder en el clasificador
     # pero solo entrenar las layers del clasificador
     # PARA probar la predicion de la imagen copio el encoder a un autoencoder
     # y solo entreno al decoder
 
     experiment4(h_params, train_set_au, train_set_cl, valid_set_au, valid_set_cl)
-
 
 
 if __name__ == "__main__":

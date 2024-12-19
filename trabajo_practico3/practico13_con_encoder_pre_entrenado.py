@@ -12,10 +12,9 @@ import torch.nn as nn
 from utils import (
     Hyperparameters,
     generate_data,
-    plot_image_and_prediction,
     plot_accuracy,
+    plot_image_and_prediction,
     plot_loss,
-    count_time
 )
 
 
@@ -186,7 +185,11 @@ def train_and_eval(model, train_dataloader, valid_dataloader, h_params, title=No
 
     if h_params.classification_stage_running:
         plot_loss(
-            h_params, list_eval_avg_loss, list_train_avg_loss, list_train_avg_loss_incorrect, title
+            h_params,
+            list_eval_avg_loss,
+            list_train_avg_loss,
+            list_train_avg_loss_incorrect,
+            title,
         )
         plot_accuracy(
             h_params,
@@ -197,7 +200,10 @@ def train_and_eval(model, train_dataloader, valid_dataloader, h_params, title=No
         )
     else:
         plot_loss(
-            h_params, list_eval_avg_loss, list_train_avg_loss, list_train_avg_loss_incorrect
+            h_params,
+            list_eval_avg_loss,
+            list_train_avg_loss,
+            list_train_avg_loss_incorrect,
         )
 
 
@@ -210,9 +216,7 @@ def compute_autoencoder(h_params, train_set, valid_set):
     )
     autoencoder = AutoEncoder(h_params)
     if h_params.optimizer_option == 1:
-        h_params.optimizer = torch.optim.SGD(
-            autoencoder.parameters(), lr=h_params.lr
-        )
+        h_params.optimizer = torch.optim.SGD(autoencoder.parameters(), lr=h_params.lr)
     else:
         h_params.optimizer = torch.optim.Adam(
             autoencoder.parameters(), lr=h_params.lr, eps=1e-08
@@ -241,9 +245,7 @@ def experiment2(h_params, train_set_au, valid_set_au, train_set_cl, valid_set_cl
     h_params.classification_stage_running = True
     model = ClassificatorNeuralNetwork(autoencoder, h_params)
     # ACA CORREMOS TODAS LAS CAPAS (fine- tunning)
-    h_params.optimizer = torch.optim.Adam(
-        model.parameters(), lr=h_params.lr, eps=1e-08
-    )
+    h_params.optimizer = torch.optim.Adam(model.parameters(), lr=h_params.lr, eps=1e-08)
     title = "Entrenando clasificador y encoder pre-entrenado"
     train_and_eval(model, train_dataloader, valid_dataloader, h_params, title)
 
@@ -278,8 +280,8 @@ def main():
     # Copiar y que el optimizador corra todas las layers
     experiment2(h_params, train_set_au, valid_set_au, train_set_cl, valid_set_cl)
 
-    # 3 Entrenar solo clasificador y usando encoder pre-entrenado. 
-    # Copiando el encoder pre-entrenado y que el optimizador 
+    # 3 Entrenar solo clasificador y usando encoder pre-entrenado.
+    # Copiando el encoder pre-entrenado y que el optimizador
     # corra solo layers del clasificador
     experiment3(h_params, train_set_au, valid_set_au, train_set_cl, valid_set_cl)
 

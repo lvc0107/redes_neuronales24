@@ -4,10 +4,10 @@ Created on Sun Dec 15 21:55:11 2024
 
 @author: luisvargas
 """
-from pathlib import Path
-from dataclasses import dataclass
-import time
 import logging
+import time
+from dataclasses import dataclass
+from pathlib import Path
 
 import torch
 import torch.nn as nn
@@ -16,7 +16,6 @@ from torch.utils.data import Dataset
 from torchvision import datasets, transforms
 
 CURRENT_PATH = Path(__file__).resolve().parent
-
 
 
 @dataclass
@@ -109,7 +108,6 @@ def plot_image_and_prediction(model, train_set, h_params):
     i = 0  # subplot index
     caption = ", ".join([f"{k}: {v}" for k, v in h_params.autoencoder_attrs.items()])
 
-
     for row in range(1, rows + 1):
         j = torch.randint(len(train_set), size=(1,)).item()
         i += 1
@@ -161,25 +159,24 @@ def log(
 
     file_log_handler = logging.FileHandler(full_path)
     logger.addHandler(file_log_handler)
-    
+
     stdout_log_handler = logging.StreamHandler()
     logger.addHandler(stdout_log_handler)
-    
+
     # nice output format
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
     file_log_handler.setFormatter(formatter)
     stdout_log_handler.setFormatter(formatter)
-
 
     if execution_time:
         key = "Execution time"
         logger.info(f"{key:<20} {execution_time:<10}")
 
-
     for k, v in h_params.autoencoder_attrs.items():
         logger.info(f"{k:<20} {str(v):<10}")
     logger.info("-" * 30)
-
 
 
 def plot_loss(
@@ -187,17 +184,21 @@ def plot_loss(
     list_eval_avg_loss,
     list_train_avg_loss,
     list_train_avg_loss_incorrect,
-    title=None
+    title=None,
 ):
     num_samples = len(list_train_avg_loss_incorrect)
     x = range(1, num_samples + 1)
     fontsize = 12
     if h_params.classification_stage_running:
         stage = "clasificación"
-        caption = ", ".join([f"{k}: {v}" for k, v in h_params.classificator_attrs.items()])
+        caption = ", ".join(
+            [f"{k}: {v}" for k, v in h_params.classificator_attrs.items()]
+        )
     else:
         stage = "autoencoder"
-        caption = ", ".join([f"{k}: {v}" for k, v in h_params.autoencoder_attrs.items()])
+        caption = ", ".join(
+            [f"{k}: {v}" for k, v in h_params.autoencoder_attrs.items()]
+        )
 
     plt.xlabel("Épocas", size=fontsize)
     plt.ylabel("Error", size=fontsize)
@@ -254,7 +255,9 @@ def plot_accuracy(
     )
 
     y = list_train_precision_incorrect
-    plt.title(f"Precision promedio por épocas durante clasificación - {title}", size=fontsize)
+    plt.title(
+        f"Precision promedio por épocas durante clasificación - {title}", size=fontsize
+    )
     plt.plot(x, y, c="r", label="Precisión durante entrenamiento.", linestyle="-")
     plt.plot(x[-1], y[-1], c="r", marker="o", markersize=5)
 
@@ -272,8 +275,6 @@ def plot_accuracy(
     full_path = f"{CURRENT_PATH}/{metric}_{h_params.filename}.{extension}"
     plt.savefig(full_path, bbox_inches="tight")
     plt.show()
-
-
 
 
 class CustomDataset(Dataset):
@@ -311,19 +312,20 @@ def generate_data():
 
     train_set_autoencoder = CustomDataset(train_set_clasif)
     valid_set_autoencoder = CustomDataset(valid_set_clasif)
-    return train_set_autoencoder, train_set_clasif, valid_set_autoencoder, valid_set_clasif
-
+    return (
+        train_set_autoencoder,
+        train_set_clasif,
+        valid_set_autoencoder,
+        valid_set_clasif,
+    )
 
 
 def count_time(f, *args):
     def wrapper(*args, **kwargs):
-    
-       start_time = time.perf_counter()
-       f(*args)
-       end_time = time.perf_counter()
-       execution_time = end_time - start_time
-       log(h_params=args[1], execution_time=execution_time)   
-    
+        start_time = time.perf_counter()
+        f(*args)
+        end_time = time.perf_counter()
+        execution_time = end_time - start_time
+        log(h_params=args[1], execution_time=execution_time)
+
     return wrapper
-    
-    
