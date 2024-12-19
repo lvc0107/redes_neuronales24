@@ -35,7 +35,7 @@ class Hyperparameters:
     verbose = False
 
     # Convolution Hyperparameters
-    epochs_convolution = 10
+    epochs_convolution = 2
     input_channels = 1
     conv_channels = 16
     kernel_size = 3
@@ -45,7 +45,7 @@ class Hyperparameters:
     hidden_sizes = [128]  # [128, 64],  [128], [256], [64, 32] [64, 32, 32]
     input_size = 28 * 28
     output_size = 10
-    epochs_classification = 10
+    epochs_classification = 2
     classification_stage_running = False
 
     def __init__(self, loss_fn_option=1):
