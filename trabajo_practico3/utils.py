@@ -187,6 +187,7 @@ def plot_loss(
     list_eval_avg_loss,
     list_train_avg_loss,
     list_train_avg_loss_incorrect,
+    title=None
 ):
     num_samples = len(list_train_avg_loss_incorrect)
     x = range(1, num_samples + 1)
@@ -200,8 +201,10 @@ def plot_loss(
 
     plt.xlabel("Épocas", size=fontsize)
     plt.ylabel("Error", size=fontsize)
-
-    plt.title(f"Error promedio por épocas durante {stage}", size=fontsize)
+    if title:
+        plt.title(f"Error promedio por épocas durante {stage} - {title}", size=fontsize)
+    else:
+        plt.title(f"Error promedio por épocas durante {stage}", size=fontsize)
     plt.grid(True)
     # plt.xlim([0, len(x) + 1])
     plt.figtext(
@@ -234,6 +237,7 @@ def plot_accuracy(
     list_train_precision_incorrect,
     list_train_precision,
     list_eval_precision,
+    title,
 ):
     num_samples = len(list_train_precision_incorrect)
     x = range(1, num_samples + 1)
@@ -243,7 +247,6 @@ def plot_accuracy(
 
     plt.xlabel("Épocas", size=fontsize)
     plt.ylabel("Precisión", size=fontsize)
-    plt.title("Precisión por épocas", size=fontsize)
     plt.grid(True)
     # plt.xlim([0, len(x) + 1])
     plt.figtext(
@@ -251,17 +254,15 @@ def plot_accuracy(
     )
 
     y = list_train_precision_incorrect
-    plt.title("Precision promedio por épocas durante clasificación", size=fontsize)
+    plt.title(f"Precision promedio por épocas durante clasificación - {title}", size=fontsize)
     plt.plot(x, y, c="r", label="Precisión durante entrenamiento.", linestyle="-")
     plt.plot(x[-1], y[-1], c="r", marker="o", markersize=5)
 
     y = list_train_precision
-    plt.title("Precisión promedio por épocas", size=fontsize)
     plt.plot(x, y, c="g", label="Evaluación en datos de entrenamiento.", linestyle="-.")
     plt.plot(x[-1], y[-1], c="g", marker="o", markersize=5)
 
     y = list_eval_precision
-    plt.title("Precisión promedio por épocas", size=fontsize)
     plt.plot(x, y, c="b", label="Evaluación en datos de validación.", linestyle="--")
     plt.plot(x[-1], y[-1], c="b", marker="o", markersize=5)
     plt.legend()
@@ -293,7 +294,7 @@ def generate_data():
         [transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))]
     )
 
-    train_set_orig = datasets.FashionMNIST(
+    train_set_clasif = datasets.FashionMNIST(
         root="MNIST_data/",
         train=True,
         download=True,
@@ -301,16 +302,16 @@ def generate_data():
     )
 
     # Download test data from open datasets.
-    valid_set_orig = datasets.FashionMNIST(
+    valid_set_clasif = datasets.FashionMNIST(
         root="MNIST_data/",
         train=False,
         download=True,
         transform=transform,
     )
 
-    train_set = CustomDataset(train_set_orig)
-    valid_set = CustomDataset(valid_set_orig)
-    return train_set, train_set_orig, valid_set, valid_set_orig
+    train_set_autoencoder = CustomDataset(train_set_clasif)
+    valid_set_autoencoder = CustomDataset(valid_set_clasif)
+    return train_set_autoencoder, train_set_clasif, valid_set_autoencoder, valid_set_clasif
 
 
 
